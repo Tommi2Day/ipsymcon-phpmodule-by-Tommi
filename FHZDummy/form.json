@@ -1,0 +1,6 @@
+{
+	"elements":
+	[
+		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "Logfile" }
+	]
+}

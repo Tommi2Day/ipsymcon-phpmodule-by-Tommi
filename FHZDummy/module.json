@@ -1,0 +1,11 @@
+{
+	"id": "{D3D9FBB6-4739-418B-A910-9B98BAB13E04}",
+	"name": "FHZDummy",
+	"type": 2,
+	"vendor": "ELV",
+	"aliases": ["FHZDummy"],
+	"parentRequirements": ["{122F60FB-BE1B-4CAB-A427-2613E4C82CBA}"],
+	"childRequirements": ["{DF4F0170-1C5F-4250-840C-FB5B67262530}"],
+	"implemented": ["{122F60FB-BE1B-4CAB-A427-2613E4C82CBA}", "{DF4F0170-1C5F-4250-840C-FB5B67262530}"],
+	"prefix": "FHZDummy"
+}
