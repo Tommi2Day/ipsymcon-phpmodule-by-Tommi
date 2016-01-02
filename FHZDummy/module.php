@@ -5,17 +5,17 @@
  * Dummy Module for FHZ compatibility functions
  *
  *  @author Thomas Dressler
- *  @copyright Thomas Dressler 2011-2015
- *  @version 4.0
- *  @date 2015-11-21
+ *  @copyright Thomas Dressler 2011-2016
+ *  @version 1.2
+ *  @date 2016-01-02
  */
 /** @class FHZDummy
  *
- * IPSymcon PHP Module Class
+ * IPSymcon PHP Splitter Module Class
  * @throws none
  *
- *  @version 1.1
- *  @date 2015-12-29
+ *  @version 4.0
+ *  @date 2016-01-02
  *
  *  Descriptions :
  *  @see http://www.tdressler.net/ipsymcon/fhzdummy.html
@@ -25,26 +25,28 @@
  */
     class FHZDummy extends IPSModule {
         /**
-         * @var string
+         * GUID definitions
+         * @var array
          */
-    	public $name='FHZDummy';
-        /**
-         * Parent Guid (IIPSSendFHZ)
-         * (not used yet)
-         * @var string
-         */
- 			protected $parent_guid='{122F60FB-BE1B-4CAB-A427-2613E4C82CBA}';
-        /**
-         * Child guid (IIPSReceiveFHZ)
-         * (not used yet)
-         * @var String
-         */
- 			protected $child_guid='{DF4F0170-1C5F-4250-840C-FB5B67262530}';
+        private $module_data=array("id"=>"{D3D9FBB6-4739-418B-A910-9B98BAB13E04}", //Modul GUID
+                                "name"=> "FHZDummy", //Modul Name
+                                "type"=> 2, // Type =splitter
+                                "vendor"=> "ELV",
+                                "aliases"=> ["FHZDummy"], //display names
+                                "parentRequirements"=> ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"], //IO-TX
+                                "childRequirements"=> ["{DF4F0170-1C5F-4250-840C-FB5B67262530}"], //FS20-RX
+                                "implemented"=> ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}", //VirtIO RX
+                                                 "{122F60FB-BE1B-4CAB-A427-2613E4C82CBA}"], //FS20-TX
+                                "FS20"=>"{48FCFDC1-11A5-4309-BB0B-A0DB8042A969}", // FS20 Device
+                                "FS20-TX"=>"{122F60FB-BE1B-4CAB-A427-2613E4C82CBA}", //from FS20 Device
+                                "FS20-RX"=>"{DF4F0170-1C5F-4250-840C-FB5B67262530}", //to FS20 Device
+                                "IO-RX"=>"{018EF6B5-AB94-40C6-AA53-46943E824ACF}", //from VirtIO
+                                "IO-TX"=>"{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"); //to VirtIO
+
         /**
          * FHZDummy constructor.
          * @param $InstanceID
          */
-
         public function __construct($InstanceID) {
             // Diese Zeile nicht löschen
             parent::__construct($InstanceID);
@@ -56,6 +58,7 @@
             // Diese Zeile nicht löschen.
             parent::Create();
             $this->RegisterPropertyString("LogFile", "");
+            $this->RegisterPropertyBoolean("Debug", false);
         }
 
         /**
@@ -77,68 +80,106 @@
 
         /**
          * Receive Data from Child (Devices)
-         *
-         * @param $JSONString
+         * @param string $JSONString
          */
-        //Data interface to childs
-        public function ForwardData($JSONString)
-        {
-            // Empfangene Daten von der Device Instanz
-            //IPS_LogMessage($this->name, "Forward:".$JSONString);
-            $this->outlog("Forward:".$JSONString);
-            $this->SendDataToParent($JSONString);
+        //Data interface receive from childs
+        public function ForwardData($JSONString){
+            // decode Data from Device Instanz
+            if (strlen($JSONString)> 0) {
+                $data = json_decode($JSONString);
+                $buffer=$this->decode_child_data($data);
+                // forward to I/O Instanz
+                if (isset($data->DataID)) {
+                    //looks like valid answer, proceed
+                    if ($this->HasActiveParent()) {
+                        $this->debug("ForwardData","SendToParent:". $this->strToHex($buffer));
+                        $this->SendDataToParent(json_encode(
+                                array("DataID" => $this->module_data['IO-TX'] ,
+                                    "Buffer" => $buffer)
+                            )
+                        );
+                    }
+                } else {
+                    $this->debug("ForwardData","No DataID supplied");
+                }
+            }else {
+                $this->debug('ForwardData','strlen(JSONString) == 0');
+            }
         }
-
         /**
          * Receive Data from Parent(IO)
-         *
-         * @param $JSONString
+         * @param string $JSONString
+         */
+
+        //Data interface receive from parent
+        public function ReceiveData($JSONString){
+            // decode Data from Device Instanz
+            if (strlen($JSONString)> 0) {
+                // decode Data from IO Instanz
+                $data = json_decode($JSONString);
+                $buffer=$this->decode_parent_data($data);
+                $this->debug("Receive","Forward to Clients:".$buffer);
+                // ToDo: forward to Child Instances
+            }else {
+                $this->debug('ReceiveData','strlen(JSONString) == 0');
+            }
+        }
+
+        /**
+         * decodes the object from Child generated by json_decode
+         * and returns the string for the IO Buffer
+         * ToDo: do real translation or drop it at all
+         * @param object $data
+         * @return string
+         */
+        private function decode_child_data ($data) {
+            $text='';
+            $buffer='';
+            if (is_object($data)) $data=get_object_vars($data);
+            foreach ($data as $key=>$value) {
+                $text.=$key."=".$data[$key].";";
+                $buffer.=chr($data[$key]); //dummy, this will not work
+            }
+            $this->outlog("DecodeChild",$text);
+            return $buffer;
+        }
+
+        /**
+         * decodes the object from Parent generated by json_decode
+         * and returns the Data for the Device
+         * ToDo: do real translation or drop it at all
+         * @param object $data
+         * @return string
+         */
+        private function decode_parent_data ($data) {
+            $buffer='';
+            $target='';
+            if (is_object($data)) $data=get_object_vars($data);
+            if (isset($data->Buffer)) {
+                $buffer=$data->Buffer;
+                $target=$data->DataID;
+            }
+            $text="Target:".$target.", Data:".$buffer;
+            $this->outlog("DecodeParent",$text);
+            return $buffer;
+        }
+
+        /**
+         * Check if a parent exists and is active
          * @return bool
          */
-        //Data interface from parent
-        public function ReceiveData($JSONString)
+        private function HasActiveParent()
         {
-
-            //IPS_LogMessage($this->name, "ReceiveData:".$JSONString);
-            $this->outlog("ReceiveData:".$JSONString);
-        	$this->SendDataToChildren($JSONString);
-            return true;
+            $instance = IPS_GetInstance($this->InstanceID);
+            if ($instance['ConnectionID'] > 0)
+            {
+                $parent = IPS_GetInstance($instance['ConnectionID']);
+                if ($parent['InstanceStatus'] == 102)
+                    return true;
+            }
+            return false;
         }
-
-        /**
-         * Send Data to Parent(IO)
-         * (will only log, not forward)
-         * @param $data
-         * @return bool
-         */
-        protected function SendDataToParent($JSONString)
-        {
-            //IPS_LogMessage($this->name, "SendDataToParent:".$JSONString);
-            $this->outlog("SendDataToParent:".$JSONString);
-            //IPS_SendDataToParent($this->InstanceID, $JSONString);
-            return true;
-        }
-        /**
-         * legacy IIPSReceiveFHZ (FHZ->Device)
-         * (procedure ReceiveFHZData(Data: TFHZDataRX); stdcall;)
-         *
-         * @param $data
-         *
-         */
-        public function ReceiveFHZData($data) {
-            // dummy
-        }
-
-        /**
-         * legacy IIPSSendFHZ (Device->FHZ)
-         * (procedure SendFHZData(Data: TFHZDataTX; NumBytes: Byte); stdcall;)
-         *
-         * @param $data
-         * @param $NumBytes
-         */
-        public function SendFHZData($data,$NumBytes) {
-            //dummy
-        }
+        //--------helper functions ---------------
 
         /**
          * Enter/Lock semaphore
@@ -150,7 +191,7 @@
     	{
             for ($i = 0; $i < 100; $i++)
         	{
-                if (IPS_SemaphoreEnter($this->name ."-".$resource, 1))
+                if (IPS_SemaphoreEnter($this->module_data['name'] ."-".$resource, 1))
             	{
                     return true;
             	}
@@ -168,30 +209,65 @@
          */
         private function SemLeave($resource)
         {
-            IPS_SemaphoreLeave($this->name ."-". $resource);
+            IPS_SemaphoreLeave($this->module_data['name'] ."-". $resource);
         }
 
         /**
          * Log to file
+         * @param  $topic
          * @param $data
          */
-        private function outlog($data)
+        private function outlog($topic,$data)
         {
+
+            $this->debug($topic,$data);
             $logfile=$this->ReadPropertyString('LogFile');
             if ($logfile=='') return;
+
             $datum=date('Y-m-d H:i:s');
+            $data=$datum." ".$topic." ::".$data;
             try{
                 $this->SemEnter($logfile);
                 $log=fopen($logfile,'a+');
                 if ($log) {
-                    fwrite($log,$datum." ".$data."\n");
+                    fwrite($log,$data."\n");
                     fclose($log);
 
                 }
             }catch (Exception $e){
-                IPS_Logmessage($this->name, 'Log exception: ',  $e->getMessage());
+                $this->debug($topic,'Log exception: '.  $e->getMessage());
             }
             $this->SemLeave($logfile);
+        }
+
+        /**
+         * Log Debug Messages
+         * PHP modules cannot enter data to debug window,use messages instead
+         * @param string $topic
+         * @param string $data
+         */
+        private function debug ($topic,$data) {
+            $data=$topic."::".$data;
+            if ($this->ReadPropertyBoolean('Debug')) {
+                IPS_LogMessage($this->module_data['name'],$data);
+
+            }
+        }
+
+        /**
+         * Make Hex string
+         * http://stackoverflow.com/questions/14674834/php-convert-string-to-hex-and-hex-to-string
+         * @param $string
+         * @return string
+         */
+        private function strToHex($string){
+            $hex = '';
+            for ($i=0; $i<strlen($string); $i++){
+                $ord = ord($string[$i]);
+                $hexCode = dechex($ord);
+                $hex .= ' '.substr('0'.$hexCode, -2);
+            }
+            return strToUpper($hex);
         }
 }
 ?>
