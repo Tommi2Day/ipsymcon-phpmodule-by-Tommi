@@ -11,6 +11,7 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 ### FHZDummy
 Splitter Module for interfacing Busware CUN/CUL-Adapter to standard FHT/HMS and FS20 Devices 
 This PHP module doesnt have the protocol decoding implemented.
+This module is deprecated from April 2016 in favor of CUL module
 
 Project Pages
 * FHZDummy Module: http://tdressler.net/ipsymcon/fhzdummy.html (german)

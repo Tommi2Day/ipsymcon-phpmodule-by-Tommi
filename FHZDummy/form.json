@@ -1,7 +1,7 @@
 {
 	"elements":
 	[
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" },
-		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "Logfile(optional)" }
+		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
 	]
+
 }
