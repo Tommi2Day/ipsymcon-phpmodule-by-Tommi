@@ -1,0 +1,12 @@
+{
+	"id": "{F2FC0924-2CE9-4067-9DB5-D228F0CCF4AD}",
+	"name": "SwitchDev",
+	"type": 3,
+	"vendor": "Tommi2Day",
+	"aliases": ["Switch Device"],
+	"parentRequirements": ["{6FB0F652-2A47-46B1-AFC5-E327E45E59F9}"],
+	"childRequirements": [],
+	"implemented": ["{E8E6E831-3C60-41CD-B05F-B9FE86A6922E}"],
+	"prefix": "SWD"
+}
+

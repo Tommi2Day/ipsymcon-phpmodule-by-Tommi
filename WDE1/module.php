@@ -6,27 +6,46 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.1
- * @date 2016-04-01
+ * @version 1.2
+ * @date 2016-04-05
  */
 
-//module helper class
+/**
+ * common module helper function
+ */
 include_once(__DIR__ . "/../module_helper.php");
+
 /** @class WDE1
  *
  * WDE1 Gateway IPSymcon PHP Splitter Module Class
- * @ throws none
+ * 
+ * @par Prefix: WDE1
  *
- * @version 4.0
- * @date 2016-01-06
+ * @par Properties
+ * 
+ * - \b  Active (Default: Off/Inactive): 
  *
- *  Descriptions :
- * @see http://www.tdressler.net/ipsymcon/ws300series.html
- * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/
- * @see http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
+ * - \b Category (Default 'WDE1 Devices'):  name of category for subsequent devices 
+ *
+ * - \b ParentCategory (Default 0): ID of parent category for newly created category
+ *
+ * - \b RainPerCount (Default 295): How much rain will be counted for one count (mm/1000), Range: 200-500
+ *
+ * - \b Logfile (Default none): optional fully qualified filename of a logfile. 
+ * File will be in csv format with one line per sensor. Header will be in the first line
+ *
+ * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+ * 
+ * - \b Debug: Flag to enable debug output via IPS_LogMessages
+ *
+ * @par Actions (if supported by the attached splitter and the physical device)
+ *
+ * - \b None
+ * 
+ * @see http://www.elv.de/output/controller.aspx?cid=74&detail=10&detail2=44549
  *
  */
-class WDE1 extends IPSModule
+class WDE1 extends T2DModule
 {
     //------------------------------------------------------------------------------
     //module const and vars
@@ -47,52 +66,24 @@ class WDE1 extends IPSModule
      */
     const fieldlist = "Time;Typ;id;Name;Temp;Hum;Bat;Lost;Wind;Rain;IsRaining;RainCounter;Pressure;willi;";
 
-
-    /**
-     * Vital module data build out of module.json
-     * @var array|mixed
-     */
-    private $module_data = array();
-
-    /**
-     * optional filename of a debug log (fully qualified)
-     * @var string
-     */
-    private $DEBUGLOG = '';
-
-    /**
-     * module helper object
-     * @var self
-     */
-    private $mh;
-    
     //--------------------------------------------------------
     // main module functions
     //--------------------------------------------------------
     /**
-     * WS300PC constructor.
+     * Constructor.
      * @param $InstanceID
      */
     public function __construct($InstanceID)
     {
         // Diese Zeile nicht löschen
-        parent::__construct($InstanceID);
-        $json = @file_get_contents(__DIR__ . "/module.json");
-        $data = @json_decode($json, true);
-        $this->module_data = $data;
-        if (!isset($data["name"])) {
-            IPS_LogMessage(__CLASS__, "Reading Moduldata from module.json failed!");
-            return false;
-        }
-        $this->DEBUGLOG = IPS_GetLogDir() . "/" . __CLASS__ . "debug.log";
-        $this->mh = new self($InstanceID, __CLASS__);
-        //IPS_LogMessage(__CLASS__,print_r($data,true));
-        return true;
+        $json = __DIR__ . "/module.json";
+        parent::__construct($InstanceID, $json);
+
     }
 
     //--------------------------------------------------------
     /**
-     * overwrite internal IPS_Create($id) function
+     * overload internal IPS_Create($id) function
      */
     public function Create()
     {
@@ -114,21 +105,30 @@ class WDE1 extends IPSModule
         IPS_SetHidden($this->GetIDForIdent('Buffer'), true);
         $this->RegisterVariableString('LastUpdate', 'Last Update', "", -4);
         IPS_SetHidden($this->GetIDForIdent('LastUpdate'), true);
-        
+
 
         //Timers
-
         $this->RegisterTimer('ReInit', 60000, $this->module_data["prefix"] . '_ReInitEvent($_IPS[\'TARGET\']);');
-        
+
 
         //Connect Parent
-        $this->RequireParent(self::$module_interfaces['SerialPort']);
-        $pid=$this->mh->GetParent();
+        $this->RequireParent($this->module_interfaces['SerialPort']);
+        $pid = $this->GetParent();
         if ($pid) {
-            $name=IPS_GetName($pid);
-            if ($name == "Serial Port") IPS_SetName($pid,__CLASS__." Port");
+            $name = IPS_GetName($pid);
+            if ($name == "Serial Port") IPS_SetName($pid, __CLASS__ . " Port");
         }
 
+        //call init if ready and activated
+        if (IPS_GetKernelRunlevel() == self::KR_READY) {
+            if ($this->isActive()) {
+                $this->SetStatus(self::ST_AKTIV);
+                $this->init();
+            } else {
+                $this->SetStatus(self::ST_INACTIV);
+                $this->SetTimerInterval('ReInit', 0);
+            }
+        }
     }
     //--------------------------------------------------------
     /**
@@ -146,14 +146,14 @@ class WDE1 extends IPSModule
     {
         // Diese Zeile nicht loeschen
         parent::ApplyChanges();
-        if ($this->mh->isActive()){
+        if ($this->isActive() && $this->HasActiveParent()) {
             $this->SetStatus(self::ST_AKTIV);
             $this->init();
-        } else{
+        } else {
             $this->SetStatus(self::ST_INACTIV);
             $this->SetTimerInterval('ReInit', 0);
         }
-        
+
     }
 
     ///--------------------------------------------------------
@@ -188,26 +188,19 @@ class WDE1 extends IPSModule
     {
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
-    /*
-    //--------------------------------------------------------
-    private function GetWswinFile()
-    //ToDo:remove
-    {
-        return (String)IPS_GetProperty($this->InstanceID, 'WSWinFile');
-    }
-/*
-//------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------
     /**
      * Set Property RainPerCount
      * This is the amount of rain per count of wipe in mm*1000
-     * Limit 200..500, default 295 
+     * Limit 200..500, default 295
      * @param Integer $rainpercount
      */
     public function SetRainPerCount($rainpercount)
     {
         if (IPS_GetProperty($this->InstanceID, 'RainPerCount') != $rainpercount) {
-            if (($rainpercount>500)||($rainpercount<200)) {
-                IPS_LogMessage(__CLASS__,__FUNCTION__.":: Rain per Count invalid ($rainpercount mm ), cancel");
+            if (($rainpercount > 500) || ($rainpercount < 200)) {
+                IPS_LogMessage(__CLASS__, __FUNCTION__ . ":: Rain per Count invalid ($rainpercount mm ), cancel");
                 return;
             }
             IPS_SetProperty($this->InstanceID, 'RainPerCount', $rainpercount);
@@ -228,7 +221,7 @@ class WDE1 extends IPSModule
         */
         return (Integer)IPS_GetProperty($this->InstanceID, 'RainPerCount');
     }
-    
+
     //------------------------------------------------------------------------------
     /**
      * Get status variable Buffer
@@ -262,7 +255,7 @@ class WDE1 extends IPSModule
      */
     public function ReInitEvent()
     {
-        $id = $this->GetIDForIdent('LastUpdate');
+        $id = @$this->GetIDForIdent('LastUpdate');
         if (!$id) return;
         $var = IPS_GetVariable($id);
         if (!$var) return;
@@ -271,7 +264,7 @@ class WDE1 extends IPSModule
         $now = time();
         $diff = $now - $last;
         $this->debug(__FUNCTION__, "last update $diff s ago");
-        if (($diff > self::MAXAGE) && $this->mh->isActive()) {
+        if (($diff > self::MAXAGE) && $this->isActive() && $this->HasActiveParent()) {
             $this->init();
         }
     }
@@ -283,11 +276,11 @@ class WDE1 extends IPSModule
      */
     private function SyncParent()
     {
-        $ParentID = $this->mh->GetParent();
+        $ParentID = $this->GetParent();
         if ($ParentID > 0) {
             $this->debug(__FUNCTION__, 'entered');
             $ParentInstance = IPS_GetInstance($ParentID);
-            if ($ParentInstance['ModuleInfo']['ModuleID'] == self::$module_interfaces['SerialPort']) {
+            if ($ParentInstance['ModuleInfo']['ModuleID'] == $this->module_interfaces['SerialPort']) {
                 if (IPS_GetProperty($ParentID, 'DataBits') <> 8)
                     IPS_SetProperty($ParentID, 'DataBits', 8);
                 if (IPS_GetProperty($ParentID, 'StopBits') <> 1)
@@ -301,7 +294,7 @@ class WDE1 extends IPSModule
                     IPS_SetProperty($ParentID, 'Open', false);
                     @IPS_ApplyChanges($ParentID);
                     IPS_Sleep(200);
-                    $port=IPS_GetProperty($ParentID,'Port');
+                    $port = IPS_GetProperty($ParentID, 'Port');
                     if ($port) {
                         IPS_SetProperty($ParentID, 'Open', true);
                         @IPS_ApplyChanges($ParentID);
@@ -310,7 +303,7 @@ class WDE1 extends IPSModule
             }//serialPort
         }//parentID
     }//function
-    
+
     //------------------------------------------------------------------------------
     /**
      * Initialization sequence
@@ -343,7 +336,7 @@ class WDE1 extends IPSModule
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
                 switch ($target) {
-                    case self::$module_interfaces['WS-TX']:
+                    case $this->module_interfaces['WS-TX']:
                         $buffer = utf8_decode($data['Buffer']);
                         $this->debug(__FUNCTION__, 'WS-TX:' . $buffer);
                         break;
@@ -365,7 +358,14 @@ class WDE1 extends IPSModule
      */
     public function ReceiveData($JSONString)
     {
-        $this->mh->HasActiveParent();
+        //status check triggered by data
+        if ($this->isActive() && $this->HasActiveParent()) {
+            $this->SetStatus(self::ST_AKTIV);
+        } else {
+            $this->SetStatus(self::ST_INACTIV);
+            $this->debug(__FUNCTION__, 'Data arrived, but dropped because inactiv:' . $JSONString);
+            return;
+        }
         // decode Data from Device Instanz
         if (strlen($JSONString) > 0) {
             $this->debug(__FUNCTION__, 'Data arrived:' . $JSONString);
@@ -378,7 +378,7 @@ class WDE1 extends IPSModule
             if (is_object($data)) $data = get_object_vars($data);
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
-                if ($target == self::$module_interfaces['IO-RX']) {
+                if ($target == $this->module_interfaces['IO-RX']) {
                     $buffer .= utf8_decode($data['Buffer']);
                     $this->debug(__FUNCTION__, strToHex($buffer));
                     $bl = strlen($buffer);
@@ -386,7 +386,7 @@ class WDE1 extends IPSModule
                         $buffer = substr($buffer, 500);
                         IPS_LogMessage(__CLASS__, "Buffer length exceeded, dropping...");
                     }
-                    $inbuf=$this->ReadRecord($buffer); //returns remaining chars
+                    $inbuf = $this->ReadRecord($buffer); //returns remaining chars
                     $this->SetBuffer($inbuf);
                 }//target
             }//dataid
@@ -397,8 +397,8 @@ class WDE1 extends IPSModule
             $this->debug(__FUNCTION__, 'strlen(JSONString) == 0');
         }//else len json
     }//func
-    
-//------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------
     /**
      * Data Interface to Childs
      * @param $Data
@@ -407,7 +407,7 @@ class WDE1 extends IPSModule
     {
         parent::SendDataToChildren($Data);
     }
-    
+
     //------------------------------------------------------------------------------
     /**
      * Data Interface tp Parent (IO-TX)
@@ -418,11 +418,11 @@ class WDE1 extends IPSModule
     {
         $res = false;
         $json = json_encode(
-            array("DataID" => self::$module_interfaces['IO-TX'],
+            array("DataID" => $this->module_interfaces['IO-TX'],
                 "Buffer" => utf8_encode($Data)));
-        if ($this->mh->HasActiveParent()) {
+        if ($this->HasActiveParent()) {
             $this->debug(__FUNCTION__, strToHex($Data));
-            $res=parent::SendDataToParent($json);
+            $res = parent::SendDataToParent($json);
             $this->debuglog($Data);
         } else {
             $this->debug(__FUNCTION__, 'No Parent');
@@ -435,48 +435,49 @@ class WDE1 extends IPSModule
     //public functions
     //------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------
+    //internal functions
+    //------------------------------------------------------------------------------
+
     //------------------------------------------------------------------------------
     /**
      * Takes an input string and prepare it for parsing
      * @param $inbuf
      * @return string
      */
-    public function ReadRecord($inbuf)
+    private function ReadRecord($inbuf)
     {
-            $this->debug(__FUNCTION__, 'ReadRecord:'.$inbuf);
-            while (strlen($inbuf)>0) {
-                $pos = strpos($inbuf, chr(13));
-                if (!$pos) {
-                    return $inbuf;
-                }
-                $data = substr($inbuf, 0, $pos);
-                $inbuf = substr($inbuf, $pos);
-                if (preg_match("/(S1[0-9,-;]+0$)/",$data,$records)) {
-                    $r=count($records);
-                    $this->debug(__FUNCTION__,"Found $r records");
-                    for ($i=1;$i<$r;$i++) { //matches starting with 1
-                        $data=$records[$i];
-                        $data = str_replace(',', '.', $data);
-                        $ws300_data = $this->parse_weather($data);
-                        //if result
-                        if ($ws300_data) {
-                            $this->SendWSData($ws300_data);
-                            $this->log_weather($ws300_data);
+        $this->debug(__FUNCTION__, 'ReadRecord:' . $inbuf);
+        while (strlen($inbuf) > 0) {
+            $pos = strpos($inbuf, chr(13));
+            if (!$pos) {
+                return $inbuf;
+            }
+            $data = substr($inbuf, 0, $pos);
+            $inbuf = substr($inbuf, $pos);
+            if (preg_match("/(S1[0-9,-;]+0$)/", $data, $records)) {
+                $r = count($records);
+                $this->debug(__FUNCTION__, "Found $r records");
+                for ($i = 1; $i < $r; $i++) { //matches starting with 1
+                    $data = $records[$i];
+                    $data = str_replace(',', '.', $data);
+                    $ws300_data = $this->parse_weather($data);
+                    //if result
+                    if ($ws300_data) {
+                        $this->SendWSData($ws300_data);
+                        $this->log_weather($ws300_data);
 
-                        }else{
-                            $this->debug(__FUNCTION__,"No wsdata returned for $data");
-                        }//if wsdata
-                    }//for
-                }else{
-                    $this->debug(__FUNCTION__,"No match in inbuf");
-                }//if pregmatch
-            }//while
-            return $inbuf;
+                    } else {
+                        $this->debug(__FUNCTION__, "No wsdata returned for $data");
+                    }//if wsdata
+                }//for
+            } else {
+                $this->debug(__FUNCTION__, "No match in inbuf");
+            }//if pregmatch
+        }//while
+        return $inbuf;
     }//function
-
-    //------------------------------------------------------------------------------
-    //internal functions
-    //------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------
     /**
@@ -488,7 +489,7 @@ class WDE1 extends IPSModule
     {
         //clear record
         //S1;1;;21,2;22,4;25,1;14,6;15,8;12,1;;24,5;37;;78;72;;75;;:50;16,0;42;8,0;455;1;0<cr><lf>
-        $this->debug(__FUNCTION__,'Entered:'.$data);
+        $this->debug(__FUNCTION__, 'Entered:' . $data);
         $wde1_data = array();
         $records = array();
         for ($p = 0; $p < self::MAXSENSORS; $p++) {
@@ -499,50 +500,50 @@ class WDE1 extends IPSModule
         $wde1_data['wind'] = '';
         $wde1_data['rain'] = '';
         $wde1_data['israining'] = '';
-        $fields=explode(';',$data);
-        $f=0;
-        $this->debug(__FUNCTION__,"Data: ".print_r($fields,true));
-        while ($f< count($fields)-1) {
-             $f++;
-            $s=$fields[$f];
-            if ($s=='') continue;
-            $this->debug(__FUNCTION__,'Field:'.$f.'='.$s);
-            if ($f>=3 && $f<=10) {
-                $wde1_data['records'][$f-3]['temp']=$s;
-                $wde1_data['records'][$f-3]['id']=$f-3;
-                $wde1_data['records'][$f-3]['typ']='T';
+        $fields = explode(';', $data);
+        $f = 0;
+        $this->debug(__FUNCTION__, "Data: " . print_r($fields, true));
+        while ($f < count($fields) - 1) {
+            $f++;
+            $s = $fields[$f];
+            if ($s == '') continue;
+            $this->debug(__FUNCTION__, 'Field:' . $f . '=' . $s);
+            if ($f >= 3 && $f <= 10) {
+                $wde1_data['records'][$f - 3]['temp'] = $s;
+                $wde1_data['records'][$f - 3]['id'] = $f - 3;
+                $wde1_data['records'][$f - 3]['typ'] = 'T';
 
-            }elseif ($f>=11 && $f<=18) {
-                $wde1_data['records'][$f-11]['hum']=$s;
-                $wde1_data['records'][$f-11]['typ']='T/F';
-            }elseif ($f==19) {
-                $wde1_data['records'][8]['temp']=$s;
-                $wde1_data['records'][8]['id']=8;
-                $wde1_data['records'][8]['typ']='Kombisensor';
-            }elseif ($f==20) {
-                $wde1_data['records'][8]['hum']=$s;
-            }elseif ($f==21) {
-                $wde1_data['wind']=$s;
-            }elseif ($f==22) {
-                $wde1_data['rainc']=$s;
-                if (strlen($s)>0) {
-                    $rainc=(int)$s;
-                    $rc=$this->GetRainPerCount();
-                    $val=$rc/1000*$rainc;
-                    $m=round($val,1);
-                    $wde1_data['rain']=$m;
+            } elseif ($f >= 11 && $f <= 18) {
+                $wde1_data['records'][$f - 11]['hum'] = $s;
+                $wde1_data['records'][$f - 11]['typ'] = 'T/F';
+            } elseif ($f == 19) {
+                $wde1_data['records'][8]['temp'] = $s;
+                $wde1_data['records'][8]['id'] = 8;
+                $wde1_data['records'][8]['typ'] = 'Kombisensor';
+            } elseif ($f == 20) {
+                $wde1_data['records'][8]['hum'] = $s;
+            } elseif ($f == 21) {
+                $wde1_data['wind'] = $s;
+            } elseif ($f == 22) {
+                $wde1_data['rainc'] = $s;
+                if (strlen($s) > 0) {
+                    $rainc = (int)$s;
+                    $rc = $this->GetRainPerCount();
+                    $val = $rc / 1000 * $rainc;
+                    $m = round($val, 1);
+                    $wde1_data['rain'] = $m;
                 }
-            }elseif ($f==23) {
-                $wde1_data['israining']=($s=='1')?'YES':'NO';
+            } elseif ($f == 23) {
+                $wde1_data['israining'] = ($s == '1') ? 'YES' : 'NO';
             }//if
         }//while
 
-        if ($f>=23) {
-            $this->debug(__FUNCTION__,'OK');
-        }else{
-            $this->debug(__FUNCTION__,"Field Error (24 expected, $f received)");
+        if ($f >= 23) {
+            $this->debug(__FUNCTION__, 'OK');
+        } else {
+            $this->debug(__FUNCTION__, "Field Error (24 expected, $f received)");
         }
-        $this->debug(__FUNCTION__," Parsed Data:".print_r($wde1_data,true));
+        $this->debug(__FUNCTION__, " Parsed Data:" . print_r($wde1_data, true));
         return $wde1_data;
     }//function
 
@@ -562,7 +563,7 @@ class WDE1 extends IPSModule
         $weather_data['date'] = time();
         $dt = $weather_data['date'];
         $datum = date('Y-m-d H:i:s', $dt);
-        
+
         for ($Device = 0; $Device < self::MAXSENSORS; $Device++) {
             $id = $weather_data['records'][$Device]['id'];
             $typ = $weather_data['records'][$Device]['typ'];
@@ -573,11 +574,11 @@ class WDE1 extends IPSModule
             $data['Typ'] = $typ;
             $data['Date'] = $datum;
 
-            $caps="Temp";
+            $caps = "Temp";
             $data['Temp'] = $temp;
-            if (($typ=='T/F')) {
+            if (($typ == 'T/F')) {
                 $data['Hum'] = $hum;
-                $caps.=";Hum";
+                $caps .= ";Hum";
             }
             if ($Device == 8) {
                 $rain = $weather_data['rain'];
@@ -600,14 +601,14 @@ class WDE1 extends IPSModule
             $this->debug(__FUNCTION__, "Sensor: . $id Caps: $caps Prepared Data:" . print_r($data, true));
             $found = false;
             $instID = 0;
-            $instances = IPS_GetInstanceListByModuleID(self::$module_interfaces['WSDEV']);
+            $instances = IPS_GetInstanceListByModuleID($this->module_interfaces['WSDEV']);
             foreach ($instances as $instID) {
                 $I = @IPS_GetInstance($instID);
                 if ($I && ($I['ConnectionID'] == $this->InstanceID)) { //my child
                     $iid = (String)IPS_GetProperty($instID, 'DeviceID');
                     $ityp = (String)IPS_GetProperty($instID, 'Typ');
                     $class = (String)IPS_GetProperty($instID, 'Class');
-                    if (($iid == $Device) && ($ityp == $typ)&& ($class == __CLASS__)) {
+                    if (($iid == $Device) && ($ityp == $typ) && ($class == __CLASS__)) {
                         $this->debug(__FUNCTION__, 'Use existing ID:' . $instID);
                         $found = true;
                         break;
@@ -632,7 +633,7 @@ class WDE1 extends IPSModule
             if ($found && ($instID > 0)) {
                 //send record to children
                 $json = json_encode(
-                    array("DataID" => self::$module_interfaces['WS-RX'],
+                    array("DataID" => $this->module_interfaces['WS-RX'],
                         "DeviceID" => $Device,
                         "Typ" => $typ,
                         "Class" => __CLASS__,
@@ -642,9 +643,8 @@ class WDE1 extends IPSModule
             }//found
         }//for
         $this->debug(__FUNCTION__, 'Finished');
-        $vid = $this->GetIDForIdent('LastUpdate');
+        $vid = @$this->GetIDForIdent('LastUpdate');
         SetValueString($vid, $datum);
-
     }//function
 
 
@@ -658,9 +658,9 @@ class WDE1 extends IPSModule
     private function CreateWSDevice($data, $caps)
     {
         $instID = 0;
-        $Device=$data['Id'];
-        $typ=$data['Typ'];
-        $ModuleID = self::$module_interfaces['WSDEV'];
+        $Device = $data['Id'];
+        $typ = $data['Typ'];
+        $ModuleID = $this->module_interfaces['WSDEV'];
         if (IPS_ModuleExists($ModuleID)) {
             //return $result;
             $this->debug(__FUNCTION__, "Create Device $Device,Type $typ");
@@ -684,7 +684,7 @@ class WDE1 extends IPSModule
                         IPS_SetName($instID, "unknown Sensor('" . strToHex($Device) . "')");
                         break;
                 }//switch
-                $ident =__CLASS__ . "_WS_$Device";
+                $ident = __CLASS__ . "_WS_$Device";
                 $ident = preg_replace("/\W/", "_", $ident);//nicht-Buchstaben/zahlen entfernen
                 IPS_SetIdent($instID, $ident);
                 IPS_ApplyChanges($instID);
@@ -727,10 +727,6 @@ class WDE1 extends IPSModule
         $fname = $this->GetLogFile();
         if ($fname > '') $this->log2file($fname, $weather_data);
 
-        //ToDo:old wswin implementation, check to remove finally
-        //wswin-logfile
-        //$fname = $this->GetWswinFile();
-        //if ($fname > '') $this->log2wswin($fname, $weather_data);
     }//function
 
     //--------------------------------------------------------
@@ -746,11 +742,11 @@ class WDE1 extends IPSModule
         $exists = file_exists($fname);
         $o = @fopen($fname, "a");
         if (!$o) {
-            $this->debug(__FUNCTION__, 'Cannot open ' . $fname);
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . '::Cannot open ' . $fname);
             return;
         }
         if (!$exists) {
-            fwrite($o, self::fieldlist . "\n");
+            fwrite($o, self::fieldlist . "\r\n");
         } //if exists
         //DateSeperator:='-';
         $dt = $weather_data['date'];
@@ -773,93 +769,9 @@ class WDE1 extends IPSModule
             if ($i == 8) $data = sprintf('%s;%s;%s;%s;%s;%s;;;%s;%s;%s;%s;', $datum, $typ, $id, $sensor, $temp, $wind, $rain, $israining, $rainc);
             if ($temp > 0) {
                 @fwrite($o, $data);
-                fwrite($o, "\n");
+                fwrite($o, "\r\n");
             }//if temp
         }//for
         fclose($o);
     }//function
-
-/*
-        //------------------------------------------------------------------------------
-        /**
-        * old wswin implementation
-        * ToDo: Remove 
-    private function log2wswin($fname, $weather_data)
-    {
-        //inline function null values
-        function nv($v)
-        {
-            if ($v == '') $v = '0';
-            return $v;
-        }
-
-        if ($fname > '') {
-            $dt = $weather_data['date'];
-            if ($dt == 0) {
-                $dt = time();
-            }//if date
-            $o = @fopen($fname, "a");
-            if (!$o) {
-                $this->debug(__FUNCTION__, 'Cannot open ' . $fname);
-                return;
-            }
-            fwrite($o, ",,2,18,3,19,4,20,5,21,6,22,7,23,8,24,9,25,10,26,1,17,33,134,35\n");
-            $datum = date('d.m.Y H:i', $dt);
-            fwrite($o, $datum);
-            for ($i = 0; $i < self::MAXSENSORS; $i++) {
-                fwrite($o, ',', nv($weather_data['records'][$i]['temp']) . ',' . nv($weather_data['records'][$i]['hum']));
-            }
-            fwrite($o, ',' . nv($weather_data['press']) . ',' . nv($weather_data['rain']) . ',' . nv($weather_data['wind']));
-            fwrite($o, "\n");
-            fclose($o);
-        }//if
-    }
-    */
-
-    //------------------------------------------------------------------------------
-    //helper functions ---------------
-    //------------------------------------------------------------------------------
-    /**
-     * Log an debug message
-     * PHP modules cannot enter data to debug window,use messages instead
-     * @param String $topic
-     * @param String $data
-     */
-    private function debug($topic, $data)
-    {
-        $data = "(ID #$this->InstanceID) $topic ::" . $data;
-        if ($this->isDebug()) {
-            IPS_LogMessage(__CLASS__, $data);
-
-        }
-    }
-    //------------------------------------------------------------------------------
-    /**
-     * Check if Debug is enabled
-     * @return bool
-     */
-    private function isDebug()
-    {
-        $debug = @IPS_GetProperty($this->InstanceID, 'Debug');
-        return ($debug === true);
-    }
-
-    //--------------------------------------------------------
-    /**
-     * Log Debug to its own file
-     * @param $data
-     */
-    public function debuglog($data)
-    {
-        if (!$this->isDebug()) return;
-        $fname = $this->DEBUGLOG;
-        $o = @fopen($fname, "a");
-        if (!$o) {
-            $this->debug(__FUNCTION__, 'Cannot open ' . $fname);
-            return;
-        }
-        fwrite($o, $data . "\n");
-        fclose($o);
-    }
-
 }//class
