@@ -103,8 +103,9 @@ class SwitchDev extends T2DModule
         $this->RegisterPropertyString('CapList', '');
         $this->RegisterPropertyBoolean('Debug', false);
 
-        $this->CreateStatusVars();
         $this->RegisterTimer('DeviceTimer', 0, $this->module_data["prefix"] . '_TimerEvent($_IPS[\'TARGET\']);');
+
+        $this->CreateStatusVars();
 
     }//func
 
@@ -562,17 +563,15 @@ class SwitchDev extends T2DModule
     {
         parent::SetStatusVariables();
         $caps = $this->GetCaps();
+        if (count($caps) < 1) {
+            return;
+        }
         if (!isset($caps['Timer'])) {
             $tid = @IPS_GetEventIDByName("DeviceTimer", $this->InstanceID);
             if ($tid > 0) {
                 IPS_LogMessage(__CLASS__, __FUNCTION__ . "Drop DeviceTimer ($tid)");
                 IPS_DeleteEvent($tid);
             }
-            /*
-            else{
-                IPS_LogMessage(__CLASS__,__FUNCTION__."DeviceTimer missed");
-            }
-            */
         }
 
     }
@@ -743,9 +742,7 @@ class SwitchDev extends T2DModule
                     if ($dvid) SetValueInteger($dvid, $intensity);
                     //timer
                     if ($tvid) {
-                        if ($new_timer <> $timer) {
-                            $this->SetTimerInterval('DeviceTimer', $new_timer * 1000);
-                        }
+                        $this->SetTimerInterval('DeviceTimer', $new_timer * 1000);
                         SetValueInteger($tvid, $new_timer);
                     }
                     //action
