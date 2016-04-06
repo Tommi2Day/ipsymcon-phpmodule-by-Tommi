@@ -1,0 +1,12 @@
+{
+	"id": "{F0302960-A22D-40CC-8994-B7C40F045023}",
+	"name": "EnergyDev",
+	"type": 3,
+	"vendor": "Tommi2Day",
+	"aliases": ["Energy Device"],
+	"parentRequirements": ["{63056B9B-EF14-4F65-8235-D292391AE591}"],
+	"childRequirements": [],
+	"implemented": ["{3C60BF34-7DD3-4234-B865-AF1606BB267C}"],
+	"prefix": "END"
+}
+

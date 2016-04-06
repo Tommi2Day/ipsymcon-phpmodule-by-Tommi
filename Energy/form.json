@@ -1,0 +1,14 @@
+{
+	"elements":
+	[
+		{ "name": "DeviceID", "type": "ValidationTextBox", "caption": "DeviceID" },
+		{ "name": "Typ", "type": "ValidationTextBox", "caption": "Typ" },
+        { "name": "Class", "type": "ValidationTextBox", "caption": "Creator" },
+		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+	],
+	"actions":
+	[
+		{ "type": "Button", "label": "On", "onClick": "SWD_SetSwitchMode($id,'On');" },
+		{ "type": "Button", "label": "Off", "onClick": "SWD_SetSwitchMode($id,'Off');" }
+	]
+}
