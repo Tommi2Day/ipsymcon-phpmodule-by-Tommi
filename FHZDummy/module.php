@@ -9,44 +9,38 @@
  * @version 1.3
  * @date 2016-04-03
  */
-include_once(__DIR__ . "/../fhz_helper.php");
-include_once(__DIR__ . "/../module_helper.php");
 
 /**
- *IPSymcon PHP Splitter Module Class
+ * common module helper function
+ */
+include_once(__DIR__ . "/../module_helper.php");
+/**
+ * fhz/fs20 specific data and functions
+ */
+include_once(__DIR__ . "/../fhz_helper.php");
+
+/**
  * @class FHZDummy
+ *
+ *  IPSymcon PHP Splitter Module Class to give FS20Instances an parent if no FHZ is available. 
+ *  It decodes incoming Data into IPS_LogMessages
+ * 
  * @deprecated
+ * 
+ * @par Prefix: FHZDummy
+ *
+ * @par Properties
  *
  *
- * @version 4.0
- * @date 2016-01-06
+ * - \b Debug: Flag to enable debug output via IPS_LogMessages
  *
- *  Descriptions :
- * @see http://www.tdressler.net/ipsymcon/fhzdummy.html
- * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/
- * @see http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
+ * @par Actions (if supported by the attached splitter and the physical device)
+ *
+ * - \b None
  *
  */
-class FHZDummy extends IPSModule
+class FHZDummy extends T2DModule
 {
-    /**
-     * Vital module data build out of module.json
-     * @var array|mixed
-     */
-    private $module_data = array();
-
-    /**
-     * optional filename of a debug log (fully qualified)
-     * @var string
-     */
-    private $DEBUGLOG = '';
-
-    /**
-     * module helper object
-     * @var module_helper
-     */
-    private $mh;
-
     //--------------------------------------------------------
     // main module functions
     //--------------------------------------------------------
@@ -57,21 +51,12 @@ class FHZDummy extends IPSModule
     public function __construct($InstanceID)
     {
         // Diese Zeile nicht löschen
-        parent::__construct($InstanceID);
-        $json = @file_get_contents(__DIR__ . "/module.json");
-        $data = @json_decode($json, true);
-        $this->module_data = $data;
-        if (!isset($data["name"])) {
-            IPS_LogMessage(__CLASS__, "Reading Moduldata from module.json failed!");
-            return false;
-        }
-        $this->DEBUGLOG = IPS_GetLogDir() . "/" . __CLASS__ . "debug.log";
-        $this->mh = new module_helper($InstanceID, $this->module_data['name']);
-        return true;
+        $json=__DIR__."/module.json";
+        parent::__construct($InstanceID,$json);
     }
     //--------------------------------------------------------
     /**
-     * overwrite internal IPS_Create($id) function
+     * overload internal IPS_Create($id) function
      */
     public function Create()
     {
@@ -86,13 +71,11 @@ class FHZDummy extends IPSModule
      */
     public function Destroy()
     {
-        //Save Settings
-        //$this->mh->SemLeave('Log');
         parent::Destroy();
     }
     //--------------------------------------------------------
     /**
-     * overwrite internal IPS_ApplyChanges($id) function
+     * overload internal IPS_ApplyChanges($id) function
      */
     public function ApplyChanges()
     {
@@ -121,15 +104,15 @@ class FHZDummy extends IPSModule
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
                 switch ($target) {
-                    case module_helper::$module_interfaces['IO-TX']:
+                    case $this->module_interfaces['IO-TX']:
                         $buffer = utf8_decode($data['Buffer']);
                         $this->debug(__FUNCTION__, strToHex($buffer));
                         $this->debuglog("IOTX-HEX:".strToHex($buffer));
                         break;
-                    case module_helper::$module_interfaces['FS20-TX']: //to FHZ
+                    case $this->module_interfaces['FS20-TX']: //to FHZ
                         $this->debug(__FUNCTION__, 'FS20-TX');
                         $this->decode_fs20tx($data);
-                        if ($this->mh->HasActiveParent())
+                        if ($this->HasActiveParent())
                             $this->SendDataToParent($JSONString);
                         break;
 
@@ -163,12 +146,12 @@ class FHZDummy extends IPSModule
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
                 switch ($target) {
-                    case module_helper::$module_interfaces['IO-RX']:
+                    case $this->module_interfaces['IO-RX']:
                         $buffer = utf8_decode($data['Buffer']);
                         $this->debug(__FUNCTION__, strToHex($buffer));
                         $this->debuglog("IORX-HEX:".strToHex($buffer));
                         break;
-                    case module_helper::$module_interfaces['FS20-RX']:
+                    case $this->module_interfaces['FS20-RX']:
                         $this->decode_fs20rx($data);
                         $this->SendDataToChildren($JSONString);
                         break;
@@ -231,51 +214,5 @@ class FHZDummy extends IPSModule
         $this->debug(__FUNCTION__, $text);
         $this->debuglog('FS20RX:'.$text);
 
-    }
-    
-    //------------------------------------------------------------------------------
-    //--------helper functions ---------------
-    //------------------------------------------------------------------------------
-    /**
-     * Log an debug message
-     * PHP modules cannot enter data to debug window,use messages instead
-     * @param $topic
-     * @param $data
-     */
-    private function debug($topic, $data)
-    {
-        $data = "(ID #$this->InstanceID) $topic ::" . $data;
-        if ($this->isDebug()) {
-            IPS_LogMessage(__CLASS__, $data);
-
-        }
-    }
-
-    //------------------------------------------------------------------------------
-    /**
-     * check if debug is enabled
-     * @return bool
-     */
-    private function isDebug()
-    {
-        $debug = @IPS_GetProperty($this->InstanceID, 'Debug');
-        return ($debug === true);
-    }
-    //--------------------------------------------------------
-    /**
-     * Log Debug to its own file
-     * @param $data
-     */
-    public function debuglog($data)
-    {
-        if (!$this->isDebug()) return;
-        $fname = $this->DEBUGLOG;
-        $o = @fopen($fname, "a");
-        if (!$o) {
-            $this->debug(__FUNCTION__, 'Cannot open ' . $fname);
-            return;
-        }
-        fwrite($o, $data . "\n");
-        fclose($o);
     }
 }//class

@@ -6,16 +6,14 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.0
- * @date 2016-04-03
+ * @version 1.1
+ * @date 2016-04-06
  */
 
 /** @class FHZ_helper
  *
- * IPS Module Helper Class
+ * FS20 static Helper Class
  *
- * @version 4.0
- * @date 2016-04-01
  *
  */
 class FHZ_helper
@@ -26,19 +24,16 @@ class FHZ_helper
     //------------------------------------------------------------------------------
     /**
      * Protocol code definitions
-     * @var array
      */
     public static $FHZProtocol = Array('pFS20' => 0, 'pFHT' => 1, 'pHMS' => 2, 'pKS300' => 3, 'pFHTResponse' => 4, 'pDateTime' => 5);
     /**
      * Device code definitions
-     * @var array
      */
     public static $FHZDevice = Array('FS20' => 0, 'FHT' => 1,
         'HMSTempFeucht' => 2, 'HMSTemp' => 3, 'HMSWasser' => 4, 'HMS100RM' => 5, 'HMS100TFK' => 6, 'SwitchIN' => 7,
         'GasSensor1' => 8, 'GasSensor2' => 9, 'COSensor' => 10, 'KS300' => 11, 'FIT' => 12, 'ALW' => 13);
     /**
      * Queue status definitions
-     * @var array
      */
     public static $FHZQueueStatus = Array(
         'Queued' => 0,  //Item is queued and Waiting
@@ -50,7 +45,6 @@ class FHZ_helper
 
     /**
      * fs20 codes definitions
-     * @var array
      */
     public static $fs20_codes = array(
         //definitions taken from http://www.elv.de/downloads/faq/Zuordnung_interne_Programmbezeichnungen_zu_FS20_Befehlcodes.pdf
@@ -122,7 +116,6 @@ class FHZ_helper
 
     /**
      * FHT TFK codes
-     * @var array
      */
     public static $FHT_tfk_codes = array(
         "02" => "Window:Closed",
@@ -138,7 +131,6 @@ class FHZ_helper
 
     /**
      * FHT data codes
-     * @var array
      */
     public static $FHT_codes = array(
         "00" => "actuator",
@@ -216,7 +208,6 @@ class FHZ_helper
 
     /**
      * FHT warning codes
-     * @var array
      */
     public static $FHT_warnings = array(
         "battery" => 1,
@@ -227,7 +218,6 @@ class FHZ_helper
 
     /**
      * FHT priority codes
-     * @var array
      */
     public static $FHT_priority = array(
         "desired-temp" => 1,
@@ -337,7 +327,7 @@ class FHZ_helper
         }
         return $r;
     }
-    
+
     //------------------------------------------------------------------------------
     /**
      * convert readable four code into binary code
@@ -363,4 +353,4 @@ class FHZ_helper
 
     }//function
 
-}
+}//class
