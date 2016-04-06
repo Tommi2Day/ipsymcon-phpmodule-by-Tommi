@@ -1,0 +1,11 @@
+{
+	"id": "{EE7F90DD-7668-459C-A233-8241C46864A5}",
+	"name": "WDE1",
+	"type": 2,
+	"vendor": "ELV",
+	"aliases": ["WDE1"],
+	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+	"childRequirements": ["{CD3D1E2D-83ED-4595-90CD-3444A22AAA66}"],
+	"implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}", "{F7B329D4-6E4E-4D0C-B059-E1894B23D8CE}"],
+	"prefix": "WDE1"
+}

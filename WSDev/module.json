@@ -1,0 +1,12 @@
+{
+	"id": "{4228137D-EDE3-41BF-9B0A-CA0DB1AC6353}",
+	"name": "WSDEV",
+	"type": 3,
+	"vendor": "Tommi2Day",
+	"aliases": ["Weather Sensor"],
+	"parentRequirements": ["{F7B329D4-6E4E-4D0C-B059-E1894B23D8CE}"],
+	"childRequirements": [],
+	"implemented": ["{CD3D1E2D-83ED-4595-90CD-3444A22AAA66}"],
+	"prefix": "WSD"
+}
+

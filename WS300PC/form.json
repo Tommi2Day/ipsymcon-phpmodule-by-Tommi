@@ -1,0 +1,22 @@
+{
+	"elements":
+	[
+		{ "name": "Active", "type": "CheckBox", "caption": "Activate Instance" },
+		{ "name": "WS300PCInterval", "type": "IntervalBox", "caption": "Update Interval in Sec" },
+		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
+		{ "type": "Label", "label": "--- optional settings ---------" },
+		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" },
+		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "LogFile (optional)" },
+		{ "type": "Label",  "label": "--- Changes here needs Apply followed by 'Write WS300PC config'" },
+		{ "name": "RecordInterval", "type": "IntervalBox", "caption": "Record Interval in min (5-100)" },
+		{ "name": "RainPerCount", "type": "NumberSpinner", "caption": "mm per count (*1000)" },
+		{ "name": "Altitude", "type": "NumberSpinner", "caption": "Altitude (m)" }
+	],
+	"actions":
+	[
+		{ "type": "Button", "label": "Update", "onClick": "WS300PC_UpdateEvent($id);" },
+		{ "type": "Label",  "label": "--- The following will rewrite your WS300PC settings followed by a Resync" },
+		{ "type": "Button", "label": "Write WS300PC config", "onClick": "WS300PC_WriteConfig($id);" }
+	]
+
+}

@@ -1,0 +1,17 @@
+{
+  "elements":
+  [
+    { "name": "DeviceID", "type": "ValidationTextBox", "caption": "DeviceID" },
+    { "name": "Typ", "type": "ValidationTextBox", "caption": "Typ" },
+    { "name": "Class", "type": "ValidationTextBox", "caption": "Creator" },
+    { "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+  ],
+  "status":
+  [
+    { "code": 101, "icon": "active", "caption": "Configuring" },
+    { "code": 102, "icon": "active", "caption": "Active" },
+    { "code": 104, "icon": "inactive", "caption": "Not Active" },
+    { "code": 201, "icon": "error", "caption": "Internal Error" },
+    { "code": 202, "icon": "inactive", "caption": "No active Parent" }
+  ]
+}
