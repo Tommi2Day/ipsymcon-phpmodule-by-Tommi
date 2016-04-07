@@ -59,7 +59,7 @@ class WSDEV extends T2DModule
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
         "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7),
         "IsRaining" => array("ident" => "IsRaining", "type" => self::VT_Boolean, "name" => 'Raining', "profile" => 'Raining', "pos" => 8),
-        "Willi" => array("ident" => "Willi", "type" => self::VT_Integer, "name" => 'Indicator', "profile" => 'WS300_Willi', "pos" => 9),
+        "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10),
         "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => '', "pos" => 11),
     );
@@ -88,16 +88,7 @@ class WSDEV extends T2DModule
         // Diese Zeile nicht löschen.
         parent::Create();
         //Hint: $this->debug will not work in this stage! must use IPS_LogMessage
-
-        //willi profile
-        if (!IPS_VariableProfileExists('WS300_Willi')) {
-            IPS_CreateVariableProfile('WS300_Willi', 1); //integer
-            IPS_SetVariableProfileAssociation('WS300_Willi', 0, 'Sunny', 'Sun', -1);
-            IPS_SetVariableProfileAssociation('WS300_Willi', 1, 'some Clouds', 'Cloud', -1);
-            IPS_SetVariableProfileAssociation('WS300_Willi', 2, 'Cloudy', 'Cloud', -1);
-            IPS_SetVariableProfileAssociation('WS300_Willi', 3, 'Rainy', 'Drops', -1);
-        }
-
+        
         // register property
         $this->RegisterPropertyString('DeviceID', '');
         $this->RegisterPropertyString('Typ', '');
@@ -262,7 +253,7 @@ class WSDEV extends T2DModule
                 case 'WindDir'://wind
                 case 'RainCounter'://raincounter
                 case 'Press'://pressure
-                case 'Willi'://willi
+                case 'Forecast'://willi
                 case 'Lost'://lost
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);

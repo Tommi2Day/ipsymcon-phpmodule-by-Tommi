@@ -119,6 +119,14 @@ class WS300PC extends T2DModule
         $this->RegisterPropertyBoolean('Debug', false);
         $this->RegisterPropertyBoolean('Active', false);
 
+        //willi profile
+        if (!IPS_VariableProfileExists('WS300_Willi')) {
+            IPS_CreateVariableProfile('WS300_Willi', 1); //integer
+            IPS_SetVariableProfileAssociation('WS300_Willi', 0, 'Sunny', 'Sun', -1);
+            IPS_SetVariableProfileAssociation('WS300_Willi', 1, 'some Clouds', 'Cloud', -1);
+            IPS_SetVariableProfileAssociation('WS300_Willi', 2, 'Cloudy', 'Cloud', -1);
+            IPS_SetVariableProfileAssociation('WS300_Willi', 3, 'Rainy', 'Drops', -1);
+        }
         //Vars
         $this->RegisterVariableInteger('RecCount', 'History Record Count');
         $this->RegisterVariableString('Last', 'Last History Record');
@@ -1208,8 +1216,8 @@ class WS300PC extends T2DModule
                 $willi = $weather_data['willi'];
                 $data['Typ'] = $typ;
                 $data["Press"] = $press;
-                $data['Willi'] = $willi;
-                $caps .= ";Hum;Press;Willi";
+                $data['Forecast'] = $willi;
+                $caps .= ";Hum;Press;Forecast";
             }
 
             if (strlen($temp) == 0) {
@@ -1330,6 +1338,10 @@ class WS300PC extends T2DModule
                 };
                 $this->debug(__FUNCTION__, 'New ID:' . $instID);
                 //if instID
+
+                //set willi profile for forecast
+                $vid=@IPS_GetObjectIDByIdent('Forecast',$instID);
+                if ($vid>0) IPS_SetVariableCustomProfile($vid, "WS300_Willi");
             } else {
                 $this->debug(__FUNCTION__, 'Instance  is not created!');
             }
