@@ -38,6 +38,7 @@ include_once(__DIR__ . "/../fhz_helper.php");
  * seperated by semicolon, set by splitter. Idents must match definitions in $capvars
  * @snippet Switch/module.php capvars
  *
+ *
  * - \b Debug: Flag to enable debug output via IPS_LogMessages
  *
  * @par Actions (if supported by the attached splitter and the physical device)
@@ -65,8 +66,8 @@ class SwitchDev extends T2DModule
      */
     protected $capvars = array(
         'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
-        "Switch" => array("ident" => 'Switch', "type" => self::VT_Boolean, "name" => 'Status', "profile" => 'Switch', "pos" => 1, "action" => true),
-        "Dimmer" => array("ident" => 'Dimmer', "type" => self::VT_Integer, "name" => 'Dimmer', "profile" => 'Intensity.100', "pos" => 2, "action" => true),
+        "Switch" => array("ident" => 'Switch', "type" => self::VT_Boolean, "name" => 'Status', "profile" => 'Switch', "pos" => 1),
+        "Dimmer" => array("ident" => 'Dimmer', "type" => self::VT_Integer, "name" => 'Dimmer', "profile" => 'Intensity.100', "pos" => 2),
         "Timer" => array("ident" => 'Timer', "type" => self::VT_Integer, "name" => 'Timer', "profile" => '', "pos" => 3),
         'TimerActionCode' => array("ident" => 'TimerActionCode', "type" => self::VT_String, "name" => 'next Timer Action', "profile" => '', "pos" => 3, "hidden" => true),
         "FS20" => array("ident" => 'FS20', "type" => self::VT_String, "name" => 'last FS20 code', "profile" => '', "pos" => 4),

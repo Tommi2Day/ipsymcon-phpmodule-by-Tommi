@@ -122,6 +122,12 @@ class T2DModule extends IPSModule
     protected $capvars = array();
 
     /**
+     * Device action capabilities
+     * to be overwrite in implementation
+     * @var array $actions
+     */
+    protected $actions = array();
+    /**
      * often needed module GUIDs
      * @var array $module_interfaces
      */
@@ -268,7 +274,7 @@ class T2DModule extends IPSModule
             $instance = IPS_GetInstance($id);
             $parent = $instance['ConnectionID'];
         } else {
-            $this->debug(__FUNCTION__, "Instance #$id dosnt exists");
+            $this->debug(__FUNCTION__, "Instance #$id doesn't exists");
         }
         return $parent;
     }
@@ -280,12 +286,14 @@ class T2DModule extends IPSModule
      */
     protected function GetCapList()
     {
-        return (String)IPS_GetProperty($this->InstanceID, 'CapList');
+        return (String)@IPS_GetProperty($this->InstanceID, 'CapList');
     }
+
 
     //------------------------------------------------------------------------------
     /**
      * returns array of defined capabilities for this device
+     * Format:"cap:action;"
      * @return array
      */
     protected function GetCaps()
@@ -295,19 +303,36 @@ class T2DModule extends IPSModule
         $caplist = $this->GetCapList();
         $caps = explode(";", $caplist);
         //$this->debug(__FUNCTION__,"CapVars:".print_r($this->capvars,true));
-        foreach ($caps as $cap) {
+        foreach ($caps as $tag) {
+            $parts=explode(":",$tag);
+            $cap=$parts[0];
             if (isset($this->capvars[$cap])) {
                 $ident = $this->capvars[$cap]['ident'];
                 if ($ident) {
                     $result[$cap] = $ident;
+                    if (isset($parts[1])) {
+                        $this->actions[$ident] = $parts[1];
+                    }
                     //$this->debug(__FUNCTION__, "Cap '$cap': use Var '$ident''");
-                }
+                }//ident
             } else {
                 $this->debug(__FUNCTION__, "Cap $cap: No Variable configured");
-            }
-        }
+            }//isset cap
+        }//for
         return $result;
-    }
+    }//function
+
+    //------------------------------------------------------------------------------
+    /**
+     * returns array of defined Actions for this device
+     * @return array
+     */
+    protected function GetActions()
+    {
+        $this->GetCaps(); //actions are assigne in caps list
+        $result = $this->actions;
+        return $result;
+    }//function
 
     //------------------------------------------------------------------------------
     /**
@@ -315,6 +340,7 @@ class T2DModule extends IPSModule
      */
     protected function CreateStatusVars()
     {
+        //use logmessages instead of debug because this isnt available in early stage
         $vid = 0;
         $caps = $this->capvars;
         //IPS_LogMessage(__CLASS__,__FUNCTION__. "::ID #".$this->InstanceID. " Caps ".print_r($caps,true));
@@ -335,14 +361,14 @@ class T2DModule extends IPSModule
                     $vid = $this->RegisterVariableString($var["ident"], $var["name"], $var["profile"], $var["pos"]);
                     break;
                 default:
-                    //IPS_LogMessage(__CLASS__,__FUNCTION__."::Unknown Typ ($type)");
+                    //IPS_LogMessage(__CLASS__,__FUNCTION__."(#".$this->InstanceID.") Unknown Typ ($type)");
 
             }
             if ($vid) {
-                IPS_LogMessage($this->name, __FUNCTION__ . "Create Variable for Cap $cap ( $vid)");
+                IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Create Variable for Cap $cap ( $vid)");
             } else {
 
-                IPS_LogMessage($this->name, __FUNCTION__ . ":: Create Variable failed");
+                IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.")  Create Variable failed");
             }
 
 
@@ -357,10 +383,12 @@ class T2DModule extends IPSModule
 
     protected function SetStatusVariables()
     {
+        //use logmessages instead of debug because this isnt available in early stage
         $caps = $this->GetCaps();
-        //IPS_LogMessage($this->name, __FUNCTION__ ." entered for Caps:".print_r($caps,true));
+        $actions= $this->GetActions();
+        IPS_LogMessage($this->name, __FUNCTION__ ."(#".$this->InstanceID.") entered for Caps:".print_r($caps,true)."Actions:".print_r($actions,true));
         if (count($caps) < 1) {
-            IPS_LogMessage($this->name, __FUNCTION__ . " Caps empty");
+            IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Caps empty");
             return;
         }
         foreach (array_keys($this->capvars) as $cap) {
@@ -368,18 +396,18 @@ class T2DModule extends IPSModule
             $ident = $var["ident"];
             $id = @$this->GetIDForIdent($ident);
             if ($id > 0) {
-                //IPS_LogMessage($this->name, __FUNCTION__ ." Maintain Var for Cap $cap ID $id Keep :$keep");
+                IPS_LogMessage($this->name, __FUNCTION__ ."(#".$this->InstanceID.") Maintain Var for Cap $cap");
                 if (!isset($caps[$cap])) {
                     $this->drop_var($ident);
                 } else {
                     if (isset($var["hidden"])) {
                         IPS_SetHidden($id, $var["hidden"]);
                     }//hidden
-                    if (isset($var["action"])) {
-                        $action = $var["action"];
+                    if (isset($actions[$cap])) {
+                        $action = $actions[$cap];
                         //if (is_bool($action)) {
                         if ($action) {
-                            //IPS_LogMessage($this->name,__FUNCTION__."Enable Standard Action for $cap");
+                            IPS_LogMessage($this->name,__FUNCTION__."(#".$this->InstanceID.") Enable Standard Action for $cap");
                             $this->EnableAction($cap);
                         } else {
                             //IPS_LogMessage($this->name,__FUNCTION__."Disable Standard Action for $cap");
@@ -389,7 +417,7 @@ class T2DModule extends IPSModule
                     }//actiom
                 }//caps
             } else {
-                IPS_LogMessage($this->name, __FUNCTION__ . " Var with Ident $ident not found");
+                IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.")  Var with Ident $ident not found");
             }//id
         }//for
     }//function
@@ -438,9 +466,10 @@ class T2DModule extends IPSModule
      */
     protected function check_profile($pname, $typ, $prefix, $suffix, $icon, $min, $max, $step, $digit = 0, $drop = false)
     {
+        //use logmessages instead of debug because this isnt available in early stage
         if (IPS_VariableProfileExists($pname) && $drop) IPS_DeleteVariableProfile($pname);
         if (!IPS_VariableProfileExists($pname)) {
-            IPS_LogMessage($this->name, __FUNCTION__ . "::Create VariableProfile $pname");
+            IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Create VariableProfile $pname");
             if (IPS_CreateVariableProfile($pname, $typ)) {
                 IPS_SetVariableProfileText($pname, $prefix, $suffix);
                 if (isset($min) && isset($max) && isset($step)) {
@@ -453,7 +482,7 @@ class T2DModule extends IPSModule
                     IPS_SetVariableProfileIcon($pname, $icon);
                 }
             } else {
-                IPS_LogMessage($this->name, __FUNCTION__ . "::Cannot Create VariableProfile $pname");
+                IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Cannot Create VariableProfile $pname");
             }
         }
     }
@@ -465,7 +494,8 @@ class T2DModule extends IPSModule
      */
     protected function drop_var($ident)
     {
-        //IPS_LogMessage($this->name, __FUNCTION__ . "::Drop Var $ident");
+        //use logmessages instead of debug because this isnt available in early stage
+        //IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Drop Var $ident");
         $vid = @$this->GetIDForIdent($ident);
         if (($vid > 0) && IPS_VariableExists($vid)) {
             $events = IPS_GetVariableEventList($vid);
@@ -475,7 +505,7 @@ class T2DModule extends IPSModule
             @IPS_DeleteVariable($vid);
             return;
         }
-        IPS_LogMessage($this->name, __FUNCTION__ . "::Error Variable $ident not found");
+        IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Error Variable $ident not found");
     }
 
     //------------------------------------------------------------------------------

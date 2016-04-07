@@ -23,12 +23,19 @@ include_once(__DIR__ . "/../module_helper.php");
  * read AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.) 
  * 
  * supported Devices:
- * -Fritz Powerline 546E,
- * -Fritz Dect200(need FritzOS6.20+ for Temeperature),
- * -Repeater 100 (need FritzOS6.50+),
- * -Comet Dect HKR (need FritzOS6.50+
- * 
+ * -Fritz Powerline 546E
  *
+ * -Fritz Dect200(need FritzOS6.20+ for Temperature),
+ *
+ * -Repeater 100 (need FritzOS6.50+)
+ *
+ * Data handling:
+ * - Power measures will be displayed in an Energey Device instance
+ *
+ * - Temperature mesures will be displayed in a Weather Sensor Device instance
+ *
+ * - Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
+
  * @par Prefix: AHA
  *
  * @par Properties
@@ -555,7 +562,7 @@ class AVMAHA extends T2DModule
                 if (isset($device->switch)) {
                     $status = (string)$device->switch->state;
                     $status = ($status == "1");
-                    $caps = 'Switch';
+                    $caps = 'Switch:1'; //enable action
                     $data['Switch'] = $status;
                     $txt = " Switch(Status:" . ($status ? "On" : "Off") . "); ";
                     $this->debug(__FUNCTION__ . "_Switch", $txt);
