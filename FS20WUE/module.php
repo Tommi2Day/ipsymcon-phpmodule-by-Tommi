@@ -122,7 +122,6 @@ class FS20WUE extends T2DModule
                 $this->init();
             } else {
                 $this->SetStatus(self::ST_INACTIV);
-                $this->SetTimerInterval('ReInit', 0);
             }
         }
 
@@ -150,7 +149,6 @@ class FS20WUE extends T2DModule
             $this->init();
         } else {
             $this->SetStatus(self::ST_INACTIV);
-            $this->SetTimerInterval('ReInit', 0);
         }
 
     }
@@ -311,7 +309,6 @@ class FS20WUE extends T2DModule
         $this->debug(__FUNCTION__, 'Init entered');
         $this->SyncParent();
         $this->SetBuffer('');
-        $this->SetTimerInterval('ReInit', 60000);
         if (!$this->HasActiveParent()) {
             $this->debug(__FUNCTION__, 'No active parent');
             return;
