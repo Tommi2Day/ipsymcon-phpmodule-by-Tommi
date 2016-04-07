@@ -2,12 +2,12 @@
 /**
  * @file
  *
- * WS300PC Gateway IPSymcon PHP Splitter Module Class
+ * WDE1 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.2
- * @date 2016-04-05
+ * @version 1.3
+ * @date 2016-04-07
  */
 
 /**
@@ -214,11 +214,6 @@ class WDE1 extends T2DModule
      */
     private function GetRainPerCount()
     {
-        /*
-        if (IPS_GetKernelRunlevel() == KR_READY) {
-        if ($this->config == '') $this->getConfig();
-        }
-        */
         return (Integer)IPS_GetProperty($this->InstanceID, 'RainPerCount');
     }
 
