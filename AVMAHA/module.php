@@ -594,8 +594,12 @@ class AVMAHA extends T2DModule
         }
         if (is_null($username)) $username = '';
         // get challenge string
-        $http_response = file_get_contents($loginurl);
-        $response = $http_response_header[0];
+        $http_response = @file_get_contents($loginurl);
+        if (isset($http_response_header[0])) {
+            $response = $http_response_header[0];
+        }else{
+            $response=error_get_last()['message'];
+        }
         if (preg_match("/200\s+OK$/", $response)) {
             $xml = simplexml_load_string($http_response);
             $challenge = (string)$xml->Challenge;
