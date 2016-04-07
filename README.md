@@ -104,5 +104,10 @@ Prefix: AHA_
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
 
+### additional documentation
+You may generate additional documentation using <a href="http://www.stack.nl/~dimitri/doxygen/index.html"> Doxygen</a>
+<pre>
+doxygen ./Doxyfile
+</pre>
 ### License:
 CC By-NC 4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
