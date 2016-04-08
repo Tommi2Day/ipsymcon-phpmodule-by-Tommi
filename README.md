@@ -1,12 +1,15 @@
 # ipsymcon-phpmodule
 PHPModules for Symcon V4+
 
-This is a Library of PHP Modules for the home automation software "Symcon" 
+This is a Library of PHP Modules for the home automation software "Symcon"
+
 
 ### Requirements:
 * Symcon (https://www.symcon.de/en/) Version 4.0+
 
 ### Modules provides in this library:
+
+ ![Module Hierarchy](doc/images/PHPModules.png)
 
 #### FHZDummy
 Splitter Module for interfacing Busware CUN/CUL-Adapter to standard FHT/HMS and FS20 Devices
