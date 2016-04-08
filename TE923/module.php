@@ -6,13 +6,10 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.0
+ * @version 1.1
  * @date 2016-04-08
  */
 
-/**
- * common module helper function
- */
 include_once(__DIR__ . "/../module_helper.php");
 
 /** @class TE923
@@ -22,54 +19,6 @@ include_once(__DIR__ . "/../module_helper.php");
  *
  *  TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
  *  This requires a running webservice providing output from te923con binary.
- *  The following simple get_data.cgi script is sufficient
- * @code .bash
-#!/bin/bash
-TE923=/usr/bin/te923con
-#header content type end empty line
-echo "Content-type: text/plain"
-echo
-#end header
-
-#parameter
-PARAM="$QUERY_STRING" #oder $1
-#run
-if [ -x $TE923 ]; then
-#binary must be placed into same dir
-#this runs only if apache user www-data is member of group plugdev
-#and udev rule is added
-    case "$PARAM" in
-        data) $TE923 -i 'i';;
-        status)  $TE923 -s -i 'i';;
-        debug)  $TE923 -D -i 'i';;
-        version)  $TE923 -v;;
-    esac
-fi
-@endcode
- *
- * @par Prefix: TE923_
- *
- * @par Properties
- *
- * - \b  Active (Default: Off/Inactive):
- *
- * - \b Category (Default 'WDE1 Devices'):  name of category for subsequent devices
- *
- * - \b ParentCategory (Default 0): ID of parent category for newly created category
- *
- * - \b URL: URL to query TE923con
- *
- *
- * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b None
- *
- * @see http://www.tdressler.net/ipsymcon/te923.html
- * @see http://te923.fukz.org/
  *
  */
 class TE923 extends T2DModule

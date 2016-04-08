@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.6
- * @date 2016-04-06
+ * @version 1.7
+ * @date 2016-04-08
  */
 
 /**
@@ -19,48 +19,8 @@ include_once(__DIR__ . "/../module_helper.php");
  * @class WS300PC
  *
  * WS300PC Gateway IPSymcon PHP Splitter Module Class
- * (* This Device is EOL and out of Stock anyway *)
- *
- * @par Prefix: WS300PC
- *
- * @par Properties
- *
- * - \b  Active (Default: Off/Inactive):
- *
- * - \b Category (Default 'WS300PC Devices'):  name of category for subsequent devices
- *
- * - \b Logfile (Default none): optional fully qualified filename of a logfile.
- * File will be in csv format with one line per sensor. Header will be in the first line
- *
- * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * Internal Configuration properties:
- *
- * - \b ParentCategory (Default 0): ID of parent category for newly created category
- *
- * - \b RainPerCount (Default 295): How much rain will be added for one count (mm/1000), Range: 200-500
  * 
- * - \b Altitude (Default 0): Altitude of location for pressure correctiob
- * Range: -130 - 8000
- *
- * - \b ReadInterval (Default 5): internal Logging interval in min, Range: 5-30
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b WS300PC_GetVersion($id): Returns WS300PC firmware version. Usefull for testing communication
- *
- * - \b WS300PC_ReadCurrentRecord($id): Read current Record from WS300PC
- *
- * - \b WS300PC_ReadNextRecord($id): Read and delete oldest available historic record. 
- * Reading all historic records at once will take a lot of time and exeeds usually max_execution_time 
- *
- * - \b WS300PC_WriteConfig($id): Writes a new configuration record 
- * (contains RainPerCount, Altitude and ReadIntervall to WS300PC. This will trigger a device reset and a 10min sync period)
- * 
- * @see http://www.elv.de/PC-Funk-Wetterstation-WS-300-PC/x.aspx/cid_726/detail_32113 (german)
- *
+ * This Device is EOL and out of Stock anyway :)
  *
  */
 class WS300PC extends T2DModule

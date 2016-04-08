@@ -5,65 +5,18 @@
  * AVM AHA-API IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016
- * @version 1.1
- * @date 2016-04-05
+ * @copyright Thomas Dressler 2013-2016
+ * @version 1.2
+ * @date 2016-04-08
  */
 
-/**
- * common module helper function
- */
 include_once(__DIR__ . "/../module_helper.php");
 
 /**
  * @class AVMAHA
  *
  * AVM AHA-API IPSymcon PHP Splitter Module Class
- *
- * read AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.) 
  * 
- * supported Devices:
- * -Fritz Powerline 546E
- *
- * -Fritz Dect200(need FritzOS6.20+ for Temperature),
- *
- * -Repeater 100 (need FritzOS6.50+)
- *
- * Data handling:
- * - Power measures will be displayed in an Energey Device instance
- *
- * - Temperature mesures will be displayed in a Weather Sensor Device instance
- *
- * - Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
-
- * @par Prefix: AHA
- *
- * @par Properties
- *
- * - \b  Active (Default: Off/Inactive):
- *
- * - \b Category (Default 'WDE1 Devices'):  name of category for subsequent devices
- *
- * - \b ParentCategory (Default 0): ID of parent category for newly created category
- *
- * - \b UpdateInterval (Default 60): Query Interval in sec
- *
- * - \b Host (default fritz.box): Hostname or IP of AHA Server
- *
- * - \b User (default none): Username for Frotz!OS login (if required)
- *
- * - \b Password (default none): Password for Fritz!OS Login 
- *
- * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b None
- * @see http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf
- * @see http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf
- *
  */
 class AVMAHA extends T2DModule
 {

@@ -6,38 +6,17 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.1
- * @date 2016-04-05
+ * @version 1.2
+ * @date 2016-04-08
  */
 
-/**
- * common module helper function
- */
+
 include_once(__DIR__ . "/../module_helper.php");
 
 /**
  * @class EnergyDev
  *
  * generic Energy Device Module Class for IPSymcon
- *
- * @par Prefix: END_
- *
- * @par Properties
- *
- * - \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
- *
- * - \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
- *
- * - \b Class: Class of the creator. Will be matched when receiving Data
- *
- * - \b Caplist; Keywords of actual capabilies for matching status variables,
- * seperated by semicolon, set by splitter. Idents must match definitions in $capvars
- * @snippet Energy/module.php capvars
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- * - \b None
  *
  *
  */

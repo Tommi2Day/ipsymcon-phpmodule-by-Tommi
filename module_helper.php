@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 2.1
- * @date 2016-04-05
+ * @version 2.2
+ * @date 2016-04-08
  */
 //disable html errors in modules
 ini_set("html_errors", "0");
@@ -17,8 +17,6 @@ ini_set("html_errors", "0");
  *
  * IPS Module Helper Class
  * combines often used functions and constants
- *
- * @see https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi
  *
  */
 class T2DModule extends IPSModule

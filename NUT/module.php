@@ -10,9 +10,6 @@
  * @date 2016-04-08
  */
 
-/**
- * common module helper function
- */
 include_once(__DIR__ . "/../module_helper.php");
 
 /** @class NUT

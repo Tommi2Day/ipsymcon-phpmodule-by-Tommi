@@ -151,6 +151,7 @@ Prefix: NUT_
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 * TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 * NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
+
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
 

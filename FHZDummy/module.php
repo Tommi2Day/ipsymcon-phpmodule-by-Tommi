@@ -6,37 +6,22 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.3
- * @date 2016-04-03
+ * @version 1.4
+ * @date 2016-04-08
  */
 
-/**
- * common module helper function
- */
 include_once(__DIR__ . "/../module_helper.php");
-/**
- * fhz/fs20 specific data and functions
- */
 include_once(__DIR__ . "/../fhz_helper.php");
 
 /**
  * @class FHZDummy
  *
- *  IPSymcon PHP Splitter Module Class to give FS20Instances an parent if no FHZ is available. 
+ *  IPSymcon PHP Splitter Module Class 
+ * 
+ *  Allows FS20Instances to have a parent other than FHZ . 
  *  It decodes incoming Data into IPS_LogMessages
- * 
- * @deprecated
- * 
- * @par Prefix: FHZDummy
  *
- * @par Properties
- *
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b None
+ * This module is deprecated
  *
  */
 class FHZDummy extends T2DModule

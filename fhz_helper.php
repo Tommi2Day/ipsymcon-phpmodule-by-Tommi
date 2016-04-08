@@ -6,13 +6,13 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.1
- * @date 2016-04-06
+ * @version 1.2
+ * @date 2016-04-08
  */
 
 /** @class FHZ_helper
  *
- * FS20 static Helper Class
+ * FHZ/FS20 coding static Helper Class
  *
  *
  */

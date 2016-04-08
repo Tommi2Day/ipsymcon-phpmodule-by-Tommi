@@ -6,13 +6,15 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.0
- * @date 2016-04-07
+ * @version 1.1
+ * @date 2016-04-08
  */
 /**
-@mainpage Content
+@mainpage Index
 
 This is a Library of PHP Modules for the home automation software <a href="https://www.symcon.de">"Symcon"</a>
+
+@par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi
 
 @section Devices
 
@@ -23,7 +25,17 @@ This is a Library of PHP Modules for the home automation software <a href="https
  Displays depending of the capability of the connected sensor out of the following measures:
 @snippet WSDEV/module.php capvars
 
-- Prefix: WSD_
+@par Prefix: WSD_
+@par Properties
+- \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
+- \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
+- \b Class: Class of the creator. Will be matched when receiving Data
+- \b Caplist; Keywords of actual capabilies for matching status variables,
+ seperated by semicolon, set by splitter. Idents must match definitions in $capvars
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Standard Actions:"
+- \b None
+
 
 @subsection EnergyDev
 
@@ -31,8 +43,16 @@ This is a Library of PHP Modules for the home automation software <a href="https
  
 Displays depending of the capability of the connected sensor out of the following measures:
 @snippet Energy/module.php capvars
+@par Properties
+- \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
+- \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
+- \b Class: Class of the creator. Will be matched when receiving Data
+- \b Caplist; Keywords of actual capabilies for matching status variables,
+ seperated by semicolon, set by splitter. Idents must match definitions in $capvars
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par Standard Actions (if supported by the attached splitter and the physical device)
+- \b None
 
-- Prefix: END_
 
 @subsection SwitchDev
 
@@ -41,86 +61,209 @@ SwitchDev :Generic Device module to present weather data
 Displays depending of the capability of the connected sensor out of the following measures:
 @snippet Switch/module.php capvars
 
-- Prefix: SWD_
+@par Prefix: SWD_
+@par Properties
+- \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
+- \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
+- \b Class: Class of the creator. Will be matched when receiving Data
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+- \b CapList; Keywords of actual capabilies for matching status variables,
+   seperated by semicolon, set by splitter. Idents must match definitions in $capvars.
+    If the standard action for the matching status variable should be enable the Splitter should append ":1"
+ to the capability to be send when creating an instance.
+ @code
+ IPS_SetProperty($id,'CapList','Switch:1;Timer;Dimer:1;');
+ @endcode
 
-- Public Functions:
-forward data to splitter only, real actor control will need a Splitter with matching capabilities like AVMAHA or CUL
- - SWD_SwitchMode($id,$state): set the switch to the desired state
- - SWD_SetIntensity($id,$percent): Dim to the given level
+@par "Standard Actions:"
+(if supported by the attached splitter and the physical device. The Splitter must set the action flag in CapList property, see caplist)
+- Switch Status
+- Dimmer Intensity
+
+@par "Public Functions:"
+- \b SetSwitchMode: raise a switch command
+@code
+SWD_SetSwitchMode($id,$newstate);
+@endcode
+
+- \b DimUp: Raise the level of  dimmer one step (up to 100%)
+@code
+SWD_DimUp($id);
+@endcode
+
+- \b DimDown : Lower the level of  dimmer one step (down to 0%)
+@code
+SWD_DimDown($id);
+@endcode
+
+- \b SetIntensity : Set the dimming Level in percent
+@code
+SWD_SetIntensity($id,$percent);
+@endcode
 
 @section Splitter
 
- @subsection WS300PC
+@subsection WS300PC
 
- WS300PC Splittermodul for reading ELV %WS300PC Datalogger. The Logger will be accessed via serial port.
+WS300PC Splittermodul for reading ELV %WS300PC Datalogger. The Logger will be accessed via USB serial port.
 
-- Supported Devices:
+@par "Supported Devices:"
 The logger supports 8 external T/H WS300 Series Sensor (S300TH,PS50), one KS300 Kombisensor (T/H, Wind, Rain)
 and the internal Indoor Sensor (T/H, Pressure, Forecast(Willi) Indicator).
 
-- Data Handling:
+@par "Data Handling:"
  The Data will be presented as Weather Device instances
 
-- Prefix: WS300PC_
+@par Prefix: WS300PC_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default 'WS300PC Devices'):  name of category for subsequent devices
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+File will be in csv format with one line per sensor. Header will be in the first line
 
-- Public Functions:
- - WS300PC_ReadCurrentRecord($id): read current sensor status, returns csv fragment. Is empty, an error occured
- - WS300PC_ReadNextRecord($id): Read next history record, returns csv fragment. If empty, is error or no more records are available
-Reading of all historic data at once in a loop will consume a lot of time and will usually exceed PHP max_execution_time.
- - WS300PC_WriteConfig($id): write internal configuration record. this will include the properties
-RainPerCount, Altitude and RecordInterval. After executing the Logger will go in Resync for 10min
- - WS300PC_GetVersion($id): Query and returns Logger firmware version
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b RainPerCount (Default 295): How much rain will be added for one count (mm/1000), Range: 200-500
+- \b Altitude (Default 0): Altitude of location for pressure correction, Range: -130 - 8000
+- \b ReadInterval (Default 5): internal Logging interval in min, Range: 5-30
+@par "Public Functions:"
+- \b Update: manual data refresh
+@code
+WS300PC_Update($id);
+@endcode
 
+- \b Get_Version: Returns WS300PC firmware version. Usefull for testing communication
+@code
+WS300PC_GetVersion($id);
+@endcode
 
+- \b ReadCurrentRecord($id): Read current Record from WS300PC
+@code
+WS300PC_ReadCurrentRecord($id);
+@endcode
+
+- \b WS300PC_ReadNextRecord($id): Read and delete oldest available historic record.
+@code
+WS300PC_ReadNextRecord($id);
+@endcode
+
+Reading all historic records at once will take a lot of time and exeeds usually max_execution_time
+
+- \b WriteConfig: Writes a new configuration record
+(contains RainPerCount, Altitude and ReadIntervall to WS300PC. This will trigger a device reset and a 10min sync period)
+@code
+WS300PC_WriteConfig($id);
+@endcode
+
+ @see http://www.elv.de/PC-Funk-Wetterstation-WS-300-PC/x.aspx/cid_726/detail_32113 (german)
 
 @subsection WDE1
 
 WDE1 Splittermodul for reading ELV %WDE1 Datalogger.  The Logger will be accessed via serial port.
 
-- Supported Devices:
+@par "Supported Devices:"
 The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
 
-- Data Handling: The Data will be presented as Weather Device instances
+@par "Data Handling:"
+ The Data will be presented as Weather Device instances
 
-- Prefix: WDE1_
+@par Prefix: WDE1_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%WDE1 Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b RainPerCount (Default 295): How much rain will be counted for one count (mm/1000), Range: 200-500
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+File will be in csv format with one line per sensor. Header will be in the first line
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+- \b None
+
+ @see http://www.elv.de/output/controller.aspx?cid=74&detail=10&detail2=44549
 
 @subsection FS20WUE
 
  FS20WUE Splittermodul for reading ELV %FS20WUE Receiver. The Receiver will be accessed via serial port provides WS300 Series Weather and FS20 Data records.
 
-- Supported Devices:
- - Weather: The Receiver supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
- - FS20: reading of ELV FS20 telegrams for Switch devices, but cannot control such device.
+@par "Supported Devices:"
+- Weather: The Receiver supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
+- FS20: reading of ELV FS20 telegrams for Switch devices, but cannot control such device.
 
-- Data Handling:
- - Weather: The Data will be presented as Weather Device instances
- - FS20: The Data will be presented as Switch instances. FS20 codes will be transformed
+@par "Data Handling:"
+- Weather: The Data will be presented as Weather Device instances
+- FS20: The Data will be presented as Switch instances. FS20 codes will be transformed
 
-- Prefix: WUE_
+@par Prefix: WUE_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%FS20WUE Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b RainPerCount (Default 295): How much rain will be counted for one count (mm/1000), Range: 200-500
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+File will be in csv format with one line per sensor. Header will be in the first line
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+- \b None
 
+@see http://www.elv.de/fs20-und-wetterdaten-uart-empfaenger-fs20-wue-komplettbausatz.html
 
 @subsection AVMAHA
 
  AVMAHA :Splitter for AVM Smarthome Devices. Reads AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.) via http
 
-- supported Devices:
- - Fritz Powerline 546E
- - Fritz Dect200(need FritzOS6.20+ for Temperature),
- - Repeater 100 (need FritzOS6.50+)
+@par "supported Devices:"
+- Fritz Powerline 546E
+- Fritz Dect200(need FritzOS6.20+ for Temperature),
+- Repeater 100 (need FritzOS6.50+)
 
-- Data Handling:
- - Power measures will be displayed in an Energey Device instance
- - Temperature mesures will be displayed in a Weather Sensor Device instance
- - Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
+@par "Data Handling:"
+- Power measures will be displayed in an Energey Device instance
+- Temperature mesures will be displayed in a Weather Sensor Device instance
+- Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
 
-- Prefix: AHA_
-
+@par Prefix: AHA_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default 'AVM SmartHome Devices on $hostname'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b UpdateInterval (Default 60): Query Interval in sec
+- \b Host (default fritz.box): Hostname or IP of AHA Server
+- \b User (default none): Username for Frotz!OS login (if required)
+- \b Password (default none): Password for Fritz!OS Login
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+- Query: manual data refresh
+@code
+AHA_Query($id);
+@endcode
 
 @subsection TE923
 
 TE923 :Splitter for %TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
 
-- This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
+@par "Supported Devices:" 5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
+@par "Data Handling:" The Data will be presented as Weather Device instances
+@par Prefix: TE923_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%TE923 Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b URL: URL to query TE923con
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+- Query: manual data refresh
+@code
+TE923_Query($id);
+@endcode
+
+@par Hint:
+This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
 The following simple get_data.cgi script is sufficient
 
 @code
@@ -147,26 +290,47 @@ if [ -x $TE923 ]; then
 fi
 @endcode
 
-- Supported Devices: 5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
-- Data Handling : The Data will be presented as Weather Device instances
-- Prefix: TE923_
-
 @subsection NUT
 
-  NUT : Splitter modul to query a %NUT daemon for attached UPS/USV
+  NUT : Splitter modul to query a %NUT daemon for attached UPS/USV via Socket
 
-- supported Devices: Any via %NUT accessible UPS/USV.
-- Data Handling : The Data will be presented as Energy Device instances
+@par "supported Devices:"
+Any via %NUT accessible UPS/USV.
+@par "Data Handling:"
+The Data will be presented as Energy Device instances
+@par Prefix: NUT_
+
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%NUT Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b Host: Host to query remote %NUT deamon
+- \b Port (Default:3493): Port to query remote %NUT deamon
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+ - Query: manual data refresh
+@code
+ NUT_Query($id);
+@endcode
+
+ @par Hint:
   The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
   For explanation see http://networkupstools.org/documentation.html
-- Prefix: NUT_
+
+
+@section debug Debug:
+
+By activating the Debug property (if available) a lot of noise will appear as LogMessages
+
 
 @section adddoc additional documentation in german
 
-- %WS300PC, %FS20WUE, %WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
+- %WS300PC, %FS20WUE, %WDE1: http://www.tdressler.net/ipsymcon/ws300series.html
 - %AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
-- %TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
-- %NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
+- %TE923 Weather Station Module: http://www.tdressler.net/ipsymcon/te923.html
+- %NUT Module: http://www.tdressler.net/ipsymcon/nut_ips.html
 
 @section gendoc general documentation
 

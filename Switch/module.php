@@ -6,50 +6,18 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.5
- * @date 2016-04-05
+ * @version 1.6
+ * @date 2016-04-08
  */
 
- /**
- * common module helper function
- */
+
 include_once(__DIR__ . "/../module_helper.php");
-/**
- * fhz/fs20 specific data and functions
- */
 include_once(__DIR__ . "/../fhz_helper.php");
 
 /**
  * @class SwitchDev
  *
  * generic Switch Device Module Class for IPSymcon
- *
- * @par Prefix: SWD_
- *
- * @par Properties
- *
- * - \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
- *
- * - \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
- *
- * - \b Class: Class of the creator. Will be matched when receiving Data
- *
- * - \b Caplist; Keywords of actual capabilies for matching status variables,
- * seperated by semicolon, set by splitter. Idents must match definitions in $capvars
- * @snippet Switch/module.php capvars
- *
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b SWD_SetSwitchMode($id,$state): raise a switch command, Default action for status variable
- *
- * - \b SWD_DimUp($id): Raise the level of  dimmer one step (up to 100%)
- *
- * - \b SWD_DimDown($id) : Lower the level of  dimmer one step (down to 0%)
- *
- * - \b SWD_SetIntensity($id,$percent) : Set the dimming Level in percent
  *
  */
 
@@ -59,11 +27,13 @@ class SwitchDev extends T2DModule
     //module const and vars
     //------------------------------------------------------------------------------
 
-    ///[capvars]
+    /** [capvars] */
     /**
      * mapping array for capabilities to variables
      * @var array $capvars
+     * 
      */
+
     protected $capvars = array(
         'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
         "Switch" => array("ident" => 'Switch', "type" => self::VT_Boolean, "name" => 'Status', "profile" => 'Switch', "pos" => 1),
@@ -72,7 +42,7 @@ class SwitchDev extends T2DModule
         'TimerActionCode' => array("ident" => 'TimerActionCode', "type" => self::VT_String, "name" => 'next Timer Action', "profile" => '', "pos" => 3, "hidden" => true),
         "FS20" => array("ident" => 'FS20', "type" => self::VT_String, "name" => 'last FS20 code', "profile" => '', "pos" => 4),
     );
-    ///[capvars]
+    /** [capvars] */
 
     //------------------------------------------------------------------------------
     //main module functions 

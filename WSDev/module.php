@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.5
- * @date 2016-04-05
+ * @version 1.6
+ * @date 2016-04-08
  */
 
 /**
@@ -18,25 +18,6 @@ include_once(__DIR__ . "/../module_helper.php");
  * @class WSDEV
  *
  * generic Weather Station Sensor PHP Device Module Class for IPSymcon
- * 
- * @par Prefix: WSD_
- *
- * @par Properties
- *
- * - \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
- *
- * - \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
- *
- * - \b Class: Class of the creator. Will be matched when receiving Data
- *
- * - \b Caplist; Keywords of actual capabilies for matching status variables,
- * seperated by semicolon, set by splitter. Idents must match definitions in $capvars
- * @snippet WSDev/module.php capvars
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- * - \b None
  *
  */
 class WSDEV extends T2DModule

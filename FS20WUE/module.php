@@ -6,47 +6,16 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.5
- * @date 2016-04-06
+ * @version 1.6
+ * @date 2016-04-08
  */
-/**
- * common module helper function
- */
+
 include_once(__DIR__ . "/../module_helper.php");
-/**
- * fhz/fs20 specific data and functions
- */
 include_once(__DIR__ . "/../fhz_helper.php");
 
 /** @class FS20WUE
  *
  * FS20WUE IPSymcon PHP Splitter Module Class
- * 
- * @par Prefix: WUE
- *
- * @par Properties
- *
- * - \b  Active (Default: Off/Inactive):
- *
- * - \b Category (Default 'WDE1 Devices'):  name of category for subsequent devices
- *
- * - \b ParentCategory (Default 0): ID of parent category for newly created category
- *
- * - \b RainPerCount (Default 295): How much rain will be counted for one count (mm/1000), Range: 200-500
- *
- * - \b Logfile (Default none): optional fully qualified filename of a logfile.
- * File will be in csv format with one line per sensor. Header will be in the first line
- * 
- * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b None
- *
- * @see http://www.elv.de/fs20-und-wetterdaten-uart-empfaenger-fs20-wue-komplettbausatz.html
- *
  */
 class FS20WUE extends T2DModule
 {
