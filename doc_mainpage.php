@@ -16,6 +16,8 @@ This is a Library of PHP Modules for the home automation software <a href="https
 
 @par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi
 
+ @image html PHPModules.png "Modul hierarchy"
+
 @section Devices
 
 @subsection WSDEV
