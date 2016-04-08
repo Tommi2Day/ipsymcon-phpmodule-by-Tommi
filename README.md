@@ -96,10 +96,46 @@ Data Handling:
 
 Prefix: AHA_
 
+#### TE923
+Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
+ * This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
+ The following simple get_data.cgi script is sufficient
+ <pre>
+ #!/bin/bash
+ TE923=/usr/bin/te923con
+ #header content type end empty line
+ echo "Content-type: text/plain"
+ echo
+ #end header
+
+ #parameter
+ PARAM="$QUERY_STRING" #oder $1
+ #run
+ if [ -x $TE923 ]; then
+ #binary must be placed into same dir
+ #this runs only if apache user www-data is member of group plugdev
+ #and udev rule is added
+   case "$PARAM" in
+         data) $TE923 -i 'i';;
+         status)  $TE923 -s -i 'i';;
+         debug)  $TE923 -D -i 'i';;
+         version)  $TE923 -v;;
+   esac
+ fi
+ </pre>
+
+Supported Devices:
+5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
+
+Data Handling: The Data will be presented as Weather Device instances
+
+Prefix: TE923_
+
 ### see also (in german)
 * FHZDummy Module: http://tdressler.net/ipsymcon/fhzdummy.html (german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
+* TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
