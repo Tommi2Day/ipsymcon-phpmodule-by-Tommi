@@ -151,11 +151,22 @@ fi
 - Data Handling : The Data will be presented as Weather Device instances
 - Prefix: TE923_
 
+@subsection NUT
+
+  NUT : Splitter modul to query a %NUT daemon for attached UPS/USV
+
+- supported Devices: Any via %NUT accessible UPS/USV.
+- Data Handling : The Data will be presented as Energy Device instances
+  The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
+  For explanation see http://networkupstools.org/documentation.html
+- Prefix: NUT_
+
 @section adddoc additional documentation in german
 
 - %WS300PC, %FS20WUE, %WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 - %AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 - %TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
+- %NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
 
 @section gendoc general documentation
 

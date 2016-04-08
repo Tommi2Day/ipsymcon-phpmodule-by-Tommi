@@ -61,16 +61,16 @@ class EnergyDev extends T2DModule
         "Counter" => array("ident" => 'Counter', "type" => self::VT_Integer, "name" => 'Counter', "profile" => '', "pos" => 2),
         "OCounter" => array("ident" => 'OCounter', "type" => self::VT_Integer, "name" => 'Counter Offset', "profile" => '', "pos" => 2, "hidden" => true),
         //usv
-        "VoltIn" => array("ident" => 'VoltIn', "type" => self::VT_Integer, "name" => 'Voltage Input', "profile" => '~Volt.230', "pos" => 4),
-        "VoltOut" => array("ident" => 'VoltOut', "type" => self::VT_Integer, "name" => 'Voltage Output', "profile" => '~Volt.230', "pos" => 5),
-        "Freq" => array("ident" => 'Freq', "type" => self::VT_Float, "name" => 'Frequency', "profile" => '~Hertz.50', "pos" => 6),
-        'LoadPct' => array("ident" => 'LoadPct', "type" => self::VT_Integer, "name" => 'Load', 'profile' => '~Battery.100', "pos" => 8),
-        'Charged' => array("ident" => 'Charged', "type" => self::VT_Integer, "name" => 'Charged', 'profile' => '~Battery.100', "pos" => 7),
-        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Integer, "name" => 'Nominal', 'profile' => '~Watt.3680', "pos" => 9, "hidden" => true),
-        'Watt' => array("ident" => 'Watt', "type" => self::VT_Integer, "name" => 'Load absolute', 'profile' => '~Watt.3680', "pos" => 9),
+        "VoltIn" => array("ident" => 'VoltIn', "type" => self::VT_Integer, "name" => 'Voltage Input', "profile" => 'Volt.230', "pos" => 4),
+        "VoltOut" => array("ident" => 'VoltOut', "type" => self::VT_Integer, "name" => 'Voltage Output', "profile" => 'Volt.230', "pos" => 5),
+        "Freq" => array("ident" => 'Freq', "type" => self::VT_Float, "name" => 'Frequency', "profile" => 'Hertz.50', "pos" => 6),
+        'LoadPct' => array("ident" => 'LoadPct', "type" => self::VT_Integer, "name" => 'Load', 'profile' => 'Battery.100', "pos" => 8),
+        'Charged' => array("ident" => 'Charged', "type" => self::VT_Integer, "name" => 'Charged', 'profile' => 'Battery.100', "pos" => 7),
+        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Integer, "name" => 'Nominal Load', 'profile' => 'Watt.3680', "pos" => 9,),
+        'Watt' => array("ident" => 'Watt', "type" => self::VT_Integer, "name" => 'Load absolute', 'profile' => 'Watt.3680', "pos" => 9),
         'TimeLeft' => array("ident" => 'TimeLeft', "type" => self::VT_Float, "name" => 'Time Left', 'profile' => 'Time.min', "pos" => 10),
-        'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => '~String', "pos" => 11),
-        'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => '~Alert.Reversed', "pos" => 12),
+        'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => 'String', "pos" => 11),
+        'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => 'Alert.Reversed', "pos" => 12),
 
     );
     ///[capvars]
@@ -107,7 +107,6 @@ class EnergyDev extends T2DModule
 
         //NonStandard Profiles (needed for Webfront)
         $this->check_profile('Time.min', 2, "", ' min', "Hourglass", null, null, null, 1, false);
-        //$this->mh->check_profile('Freq.netz',2,"",' Hz',45,55,1,1,false);
         $this->check_profile('Power_W.3', 2, "", " W", "Electricity", 0, 9999, 1, 3, false);
         $this->check_profile('Power_Wh', 2, "", " Wh", "Electricity", 0, 9999, 1, 0, false);
 
@@ -190,6 +189,8 @@ class EnergyDev extends T2DModule
                     } else {
                         $this->debug(__FUNCTION__, 'Interface Data Error');
                     }
+                }else{
+                    $this->debug(__FUNCTION__, 'Wrong Target: '.$target);
                 }
             }
         } else {
@@ -254,8 +255,8 @@ class EnergyDev extends T2DModule
     private function ParseData($data)
     {
         //
+        $this->debug(__FUNCTION__,'Parse');
         $caps = $this->GetCaps();
-        //$this->debug(__FUNCTION__,print_r($this->all_caps,true));
         foreach (array_keys($caps) as $cap) {
             $ident = $caps[$cap];
             $vid = @$this->GetIDForIdent($ident);
@@ -268,7 +269,7 @@ class EnergyDev extends T2DModule
             switch ($cap) {
                 //boolean types
                 case 'Alert'://Status
-                    $state = ($s != 'OK');
+                    $state = ($s != 'YES'); //reversed display
                     SetValueBoolean($vid, $state);
                     break;
                 //Int types

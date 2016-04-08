@@ -1,0 +1,11 @@
+{
+	"id": "{431281F9-77DC-46A6-8AA9-A6E2C60A5FB2}",
+	"name": "NUT",
+	"type": 2,
+	"vendor": "Tommi2Day",
+	"aliases": ["NUT attached USV"],
+	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+	"childRequirements": ["{3C60BF34-7DD3-4234-B865-AF1606BB267C}"],
+	"implemented": ["{63056B9B-EF14-4F65-8235-D292391AE591}"],
+	"prefix": "NUT"
+}
