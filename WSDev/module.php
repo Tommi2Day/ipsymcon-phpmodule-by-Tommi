@@ -52,16 +52,22 @@ class WSDEV extends T2DModule
     protected $capvars = array(
         'Name'=>array("ident"=>'Name',"type"=>self::VT_String,"name"=>'Name','profile'=>'~String',"pos"=>0),
         "Temp" => array("ident" => 'Temperatur', "type" => self::VT_Float, "name" => 'Temperatur', "profile" => 'Temperature', "pos" => 0),
+        "WindChill" => array("ident" => 'WindChill', "type" => self::VT_Float, "name" => 'Wind Chill', "profile" => 'Temperature', "pos" => 0),
         "Hum" => array("ident" => 'Humidity', "type" => self::VT_Integer, "name" => 'Feuchte', "profile" => 'Humidity', "pos" => 1),
         "Press" => array("ident" => 'Pressure', "type" => self::VT_Integer, "name" => 'Pressure', "profile" => 'AirPressure', "pos" => 2),
         "Wind" => array("ident" => 'Windspeed', "type" => self::VT_Float, "name" => 'Wind Speed', "profile" => 'WindSpeed.kmh', "pos" => 3),
+        "WindGust" => array("ident" => 'WindGust', "type" => self::VT_Float, "name" => 'Wind Gust', "profile" => 'WindSpeed.kmh', "pos" => 3),
         "WindDir" => array("ident" => 'WindDir', "type" => self::VT_Integer, "name" => 'Wind Direction', "profile" => 'WindDirection.Text', "pos" => 4),
+        "Storm" => array("ident" => "Storm", "type" => self::VT_Boolean, "name" => 'Storm Indicator', "profile" => '', "pos" => 5), //reversed state
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
+        "RainDaily" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
         "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7),
         "IsRaining" => array("ident" => "IsRaining", "type" => self::VT_Boolean, "name" => 'Raining', "profile" => 'Raining', "pos" => 8),
         "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10),
         "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => '', "pos" => 11),
+        "UV" => array("ident" => "UV", "type" => self::VT_Integer, "name" => 'UV Index', "profile" => 'UVIndex', "pos" => 12),
+        "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 40),
     );
     ///[capvars]
 
@@ -254,6 +260,8 @@ class WSDEV extends T2DModule
                 case 'RainCounter'://raincounter
                 case 'Press'://pressure
                 case 'Forecast'://willi
+                case 'UV'; //UVIndex
+                case 'TS'; //TimeStamp
                 case 'Lost'://lost
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
@@ -261,7 +269,10 @@ class WSDEV extends T2DModule
                 //float
                 case 'Temp'://temp
                 case 'Wind'://wind
+                case 'WindChill'://wind
+                case 'WindGust'://wind
                 case 'Rain'://rain
+                case 'RainDaily'://rain
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;
@@ -270,6 +281,8 @@ class WSDEV extends T2DModule
                     $st = utf8_decode($s);
                     SetValueString($vid, $st);
                     break;
+
+                //special
                 case 'IsRaining'://israining
                     if ($s == 'YES') {
                         SetValueBoolean($vid, true);
@@ -280,6 +293,16 @@ class WSDEV extends T2DModule
                     }
                     break;
                 //special
+                case 'Storm'://israining
+                    if ($s == 'YES') {
+                        //is reversed
+                        SetValueBoolean($vid, false);
+                        $s = "Its Storm";
+                    } else {
+                        SetValueBoolean($vid, true);
+                        $s = "OK";
+                    }
+                    break;
                 case 'Battery'://battery
                     if ($s == 'LOW') {
                         SetValueBoolean($vid, false);

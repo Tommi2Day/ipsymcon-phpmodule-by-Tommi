@@ -557,3 +557,16 @@ function hexToStr($hex)
     }
     return $string;
 }
+
+/**
+ * Check for new Day from Timestamp
+ * @param $ts Unix Timestamp
+ * @return boolean
+ */
+function is_new_day($ts) {
+    $lastday=date_create();
+    date_timestamp_set($lastday,$ts);
+    $newday=date_create();
+    date_time_set($newday,0,0,0);
+    return ($newday>$lastday);
+}

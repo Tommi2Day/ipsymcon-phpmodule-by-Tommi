@@ -1,0 +1,11 @@
+{
+	"id": "{137511E0-F98B-49F3-9A6C-95234DF2E1FB}",
+	"name": "TE923",
+	"type": 2,
+	"vendor": "Tommi2Day",
+	"aliases": ["TE923","Ventus 831", "Mebus 923", "TFA Nexus"],
+	"parentRequirements": [],
+	"childRequirements": ["{CD3D1E2D-83ED-4595-90CD-3444A22AAA66}"],
+	"implemented": ["{F7B329D4-6E4E-4D0C-B059-E1894B23D8CE}"],
+	"prefix": "TE923"
+}
