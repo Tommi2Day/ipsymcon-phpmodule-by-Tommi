@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.6
- * @date 2016-04-08
+ * @version 1.7
+ * @date 2016-04-10
  */
 
 /**
@@ -42,13 +42,15 @@ class WSDEV extends T2DModule
         "Storm" => array("ident" => "Storm", "type" => self::VT_Boolean, "name" => 'Storm Indicator', "profile" => '', "pos" => 5), //reversed state
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
         "RainDaily" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
-        "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7),
+        "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7,"hidden" => true),
         "IsRaining" => array("ident" => "IsRaining", "type" => self::VT_Boolean, "name" => 'Raining', "profile" => 'Raining', "pos" => 8),
         "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
-        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10),
-        "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => '', "pos" => 11),
+        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
+        "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => 'Signal', "pos" => 11,"hidden" => true),
         "UV" => array("ident" => "UV", "type" => self::VT_Integer, "name" => 'UV Index', "profile" => 'UVIndex', "pos" => 12),
-        "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 40),
+        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
+        "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 41,"hidden" => true)
+
     );
     ///[capvars]
 
@@ -244,6 +246,7 @@ class WSDEV extends T2DModule
                 case 'UV'; //UVIndex
                 case 'TS'; //TimeStamp
                 case 'Lost'://lost
+                case 'Signal':
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
@@ -285,11 +288,8 @@ class WSDEV extends T2DModule
                     }
                     break;
                 case 'Battery'://battery
-                    if ($s == 'LOW') {
-                        SetValueBoolean($vid, false);
-                    } else {
-                        SetValueBoolean($vid, true);
-                    }
+                    $state=(!preg_match("/LOW|WARN/i",$s)); //reversed
+                    SetValueBoolean($vid, $state);
                     break;
 
 
