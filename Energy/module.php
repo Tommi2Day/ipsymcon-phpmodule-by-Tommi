@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.2
- * @date 2016-04-08
+ * @version 1.3
+ * @date 2016-04-10
  */
 
 
@@ -34,22 +34,30 @@ class EnergyDev extends T2DModule
     protected $capvars = array(
         'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
         "APower" => array("ident" => 'APower', "type" => self::VT_Float, "name" => 'Power Actual', "profile" => 'Power_W.3', "pos" => 1),
-        "TPower" => array("ident" => 'TPower', "type" => self::VT_Float, "name" => 'Power Total', "profile" => 'Power_Wh', "pos" => 1),
+        "TPower" => array("ident" => 'TPower', "type" => self::VT_Float, "name" => 'Power Total', "profile" => 'Electricity', "pos" => 1),
+        "AGas" => array("ident" => 'AGas', "type" => self::VT_Float, "name" => 'Gas Actual', "profile" => 'Gas', "pos" => 1),
+        "TGas" => array("ident" => 'TGas', "type" => self::VT_Float, "name" => 'Gas Total', "profile" => 'Gas', "pos" => 1),
+        "AWasser" => array("ident" => 'AWasser', "type" => self::VT_Float, "name" => 'Wasser Actual', "profile" => 'Water', "pos" => 1),
+        "TWasser" => array("ident" => 'TWasser', "type" => self::VT_Float, "name" => 'Wasser Total', "profile" => 'Water', "pos" => 1),
         "Amp" => array("ident" => 'Amp', "type" => self::VT_Float, "name" => 'Ampere', "profile" => '~Ampere.16', "pos" => 2),
         //counter based
-        "Counter" => array("ident" => 'Counter', "type" => self::VT_Integer, "name" => 'Counter', "profile" => '', "pos" => 2),
+        "Counter" => array("ident" => 'Counter', "type" => self::VT_Integer, "name" => 'Counter', "profile" => '', "pos" => 2,"hidden" => true),
         "OCounter" => array("ident" => 'OCounter', "type" => self::VT_Integer, "name" => 'Counter Offset', "profile" => '', "pos" => 2, "hidden" => true),
+        "ACounter" => array("ident" => 'ACounter', "type" => self::VT_Integer, "name" => 'Current Counter', "profile" => '', "pos" => 2, "hidden" => true),
+        "PCounter" => array("ident" => 'PCounter', "type" => self::VT_Integer, "name" => 'Peak Counter', "profile" => '', "pos" => 2, "hidden" => true),
         //usv
         "VoltIn" => array("ident" => 'VoltIn', "type" => self::VT_Integer, "name" => 'Voltage Input', "profile" => 'Volt.230', "pos" => 4),
         "VoltOut" => array("ident" => 'VoltOut', "type" => self::VT_Integer, "name" => 'Voltage Output', "profile" => 'Volt.230', "pos" => 5),
         "Freq" => array("ident" => 'Freq', "type" => self::VT_Float, "name" => 'Frequency', "profile" => 'Hertz.50', "pos" => 6),
         'LoadPct' => array("ident" => 'LoadPct', "type" => self::VT_Integer, "name" => 'Load', 'profile' => 'Battery.100', "pos" => 8),
         'Charged' => array("ident" => 'Charged', "type" => self::VT_Integer, "name" => 'Charged', 'profile' => 'Battery.100', "pos" => 7),
-        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Integer, "name" => 'Nominal Load', 'profile' => 'Watt.3680', "pos" => 9,),
+        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Integer, "name" => 'Nominal Load', 'profile' => 'Watt.3680', "pos" => 9,"hidden" => true),
         'Watt' => array("ident" => 'Watt', "type" => self::VT_Integer, "name" => 'Load absolute', 'profile' => 'Watt.3680', "pos" => 9),
         'TimeLeft' => array("ident" => 'TimeLeft', "type" => self::VT_Float, "name" => 'Time Left', 'profile' => 'Time.min', "pos" => 10),
         'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => 'String', "pos" => 11),
         'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => 'Alert.Reversed', "pos" => 12),
+        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 13,"hidden" => true),
+        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true)
 
     );
     ///[capvars]
@@ -83,6 +91,7 @@ class EnergyDev extends T2DModule
         $this->RegisterPropertyString('Class', '');
         $this->RegisterPropertyString('CapList', '');
         $this->RegisterPropertyBoolean('Debug', false);
+        $this->RegisterPropertyFloat('CounterFactor',0);
 
         //NonStandard Profiles (needed for Webfront)
         $this->check_profile('Time.min', 2, "", ' min', "Hourglass", null, null, null, 1, false);
@@ -228,6 +237,16 @@ class EnergyDev extends T2DModule
 
     //------------------------------------------------------------------------------
     /**
+     * GetProperty Modul class of creator
+     * @return string
+     */
+    private function GetCounterFactor()
+    {
+        return (String)IPS_GetProperty($this->InstanceID, 'CounterFactor');
+    }
+
+    //------------------------------------------------------------------------------
+    /**
      * handle incoming data along capabilities
      * @param array $data
      */
@@ -251,21 +270,93 @@ class EnergyDev extends T2DModule
                     $state = ($s != 'YES'); //reversed display
                     SetValueBoolean($vid, $state);
                     break;
-                //Int types
+                //Counter types
+                case 'Counter':
+                    $iv = (int)$s;
+
+                    switch ($this->GetType()) {
+                        case 'EMWZ':
+                        case 'EMEM':
+                            $last=GetValueInteger($vid);
+                            $opid=$this->GetIDForIdent('OCounter');
+                            if ($opid) {
+                                $offset=GetValueInteger($opid);
+                                if ($last>$iv) {
+                                    $offset+=65535;
+                                    SetValueInteger($opid,$offset);
+                                }
+                                $iv=$iv+$offset;
+                            }
+
+                            $pvid=$this->GetIDForIdent('TPower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+
+                            break;
+                        case 'EMGZ':
+                            $pvid=$this->GetIDForIdent('TGas');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+                            break;
+
+                    }
+                    SetValueInteger($vid, $iv);
+                    break;
+                case 'ACounter':
+                    $iv = (int)$s;
+                    switch ($this->GetType()) {
+                        case 'EMEM':
+                            $pvid=$this->GetIDForIdent('APower');
+                            if ($pvid) {
+                                SetValueFloat($pvid,$iv);
+                            }
+                        break;
+                        case 'EMWZ':
+                            $pvid=$this->GetIDForIdent('APower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+                            break;
+                        case 'EMGZ':
+                            $pvid=$this->GetIDForIdent('AGas');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+                            break;
+
+                    }
+                    SetValueInteger($vid, $iv);
+                    break;
+                //int types
+                case 'Signal': //RSSI
                 case 'VoltIn'://InputVolt
                 case 'VoltOut'://Output Volt
                 case 'LoadPct'://Load in Pct
                 case 'Charged'://Charged in Pct
                 case 'Nominal'://Nominal Power
                 case 'Watt'://Absolute Load
-                case 'Counter':
                 case 'OCounter':
+                case 'PCounter':
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
                 //float types
-                case 'APower'://Actual Power
-                case 'TPower'://Total power
+                case 'AGas'://Actual 
+                case 'TGas'://Total 
+                case 'APower'://Actual 
+                case 'TPower'://Total 
+                case 'AWater'://Actual 
+                case 'TWater'://Total 
                 case 'Freq'://Frequency
                 case 'TimeLeft'://TimeLeft
                     $fv = (float)$s;
