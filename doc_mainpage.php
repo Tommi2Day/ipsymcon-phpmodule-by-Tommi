@@ -242,6 +242,8 @@ File will be in csv format with one line per sensor. Header will be in the first
 @code
 AHA_Query($id);
 @endcode
+@par Actions:
+Switching of capable Devices like DECT!200 and Fritz!Powerline 546. Changes on status will be transmitted to the connected actor
 
 @subsection TE923
 
@@ -321,6 +323,37 @@ The Data will be presented as Energy Device instances
   The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
   For explanation see http://networkupstools.org/documentation.html
 
+
+ @subsection CUL
+ CUL : IPSymcon PHP Splitter Module to receives Data from a CULFW driven tranceiver gadget like Busware
+ 
+These devices receives and decodes a lot of common smarthome protocols used by ELV Sensors and devices. 
+
+@par "Supported Busware Devices: CUL,CUN,CUNO,COC
+
+- decoded Protocols
+  - ELV EM1000 Energy Messures EM-WZ, EM-GZ and EMEM
+  - ELV FS20: Any contact sensor and switch actor. Dimmer are implemented, but because lack of such device untested
+  - ELV HMS: HMS100T(also used as Emulation for connected 1Wire DS1820 Sensors), HMS100TF,HMS100-TFK ...
+  - ELV WS300: S300TH,PS50,KS300 Weather Sensors
+  - ELV FHT: TFK  Window opening Sensor only. %FHT Heating Controls like FHT80b are not implemented!
+  - ELV ESA: some of the Energy Sensors. see source code. Untested!
+
+@par "Data Handling:"
+ * Power measures will be displayed in an Energey Device instance
+ * Temperature mesures will be displayed in a Weather Sensor Device instance
+ * Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
+
+@par Actions:
+ Switching of FS20 Devices. Changes on status will be transmitted to the connected actor
+
+@par Prefix: CUL_
+
+ @par Hint
+Receivers may be connect to a serial port or client socket instance. You must create such one for
+your %CUL instance as parent for yourself
+
+ @see http://culfw.de/commandref.html
 
 @section debug Debug:
 

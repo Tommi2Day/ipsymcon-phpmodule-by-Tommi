@@ -95,7 +95,11 @@ supported Devices:
 Data Handling:
 * Power measures will be displayed in an Energey Device instance
 * Temperature mesures will be displayed in a Weather Sensor Device instance
-* Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
+* Switch status will be displayed in a Switch Device instance.
+
+Actions:
+ * Switching of capable Devices like DECT!200 and Fritz!Powerline 546.
+Changes on the status will be transmitted to the connected actor
 
 Prefix: AHA_
 
@@ -148,12 +152,45 @@ The Data will be presented as Energy Device instances
 
 Prefix: NUT_
 
+#### CUL
+
+CUL IPSymcon PHP Splitter Module Class
+
+receives Data from a CULFW driven tranceiver gadget like Busware
+These devices receives and decodes a lot of common smarthome protocols used by ELV Sensors and devices
+supported Receivers may be connect to a serial port or client socket instance. You must create such one for
+your CUL instance as parent for yourself
+
+* Receivers: CUL,CUN,CUNO,COC
+* decoded Protocols
+
+ ELV EM1000 Energy Messures EM-WZ, EM-GZ and EMEM
+
+ ELV FS20: Any TFK and Switch actor. Dimmer are implemented, but because lack of such device untested
+
+ ELV HMS: HMS100T(also used as Emulation for connected 1Wire DS1820 Sensors), HMS100TF,HMS100-TFK ...
+
+ ELV WS300: S300TH,PS50,KS300 Weather Sensors
+ ELV FHT: TFK  Window opening Sensor only. FHT Heating Controls like FHT80b are not implemented!
+ ELV ESA: some of the Energy Sensors. see source code. Untested!
+
+Data Handling:
+* Power measures will be displayed in an Energey Device instance
+* Temperature mesures will be displayed in a Weather Sensor Device instance
+* Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
+
+Actions:
+ * Switching of FS20 Devices.
+ Changes on the status will be transmitted to the connected actor
+
+Prefix: CUL_
 ### see also (in german)
 * FHZDummy Module: http://tdressler.net/ipsymcon/fhzdummy.html (german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 * TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 * NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
+* CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
 
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
