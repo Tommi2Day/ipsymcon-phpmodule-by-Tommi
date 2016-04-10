@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.6
- * @date 2016-04-08
+ * @version 1.7
+ * @date 2016-04-10
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -654,7 +654,7 @@ class FS20WUE extends T2DModule
                 switch ($Device) {
                     case 0:
                     case $Device < 8 :
-                        IPS_SetName($instID, 'Sensor ' . $Device);
+                        IPS_SetName($instID, 'WS300 Sensor ' . $Device);
                         break;
                     case 8:
                         IPS_SetName($instID, 'KombiSensor');
