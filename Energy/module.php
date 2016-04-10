@@ -97,6 +97,7 @@ class EnergyDev extends T2DModule
         $this->check_profile('Time.min', 2, "", ' min', "Hourglass", null, null, null, 1, false);
         $this->check_profile('Power_W.3', 2, "", " W", "Electricity", 0, 9999, 1, 3, false);
         $this->check_profile('Power_Wh', 2, "", " Wh", "Electricity", 0, 9999, 1, 0, false);
+        $this->check_profile('Signal', 1, "", " dB", "Gauge", -120, +10, 1, 0, false);
 
         $this->CreateStatusVars();
     }//func

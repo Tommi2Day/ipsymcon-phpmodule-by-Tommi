@@ -68,10 +68,7 @@ class CUL extends T2DModule
         $this->RegisterPropertyBoolean('Debug', false);
         $this->RegisterPropertyBoolean('Active', false);
         $this->RegisterPropertyBoolean('UseOW', false);
-
-        //profile for signal
-        $this->check_profile('Signal', 1, "", " dB", "Gauge", -120, +10, 1, 0, false);
-
+        
         //status Vars
         $this->RegisterVariableString('Buffer', 'Buffer', "", -1);
         IPS_SetHidden($this->GetIDForIdent('Buffer'), true);

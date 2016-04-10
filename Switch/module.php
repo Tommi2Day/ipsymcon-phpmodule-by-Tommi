@@ -79,6 +79,9 @@ class SwitchDev extends T2DModule
         $this->RegisterPropertyString('CapList', '');
         $this->RegisterPropertyBoolean('Debug', false);
 
+        //nonstandard profile
+        $this->check_profile('Signal', 1, "", " dB", "Gauge", -120, +10, 1, 0, false);
+        //timer
         $this->RegisterTimer('DeviceTimer', 0, $this->module_data["prefix"] . '_TimerEvent($_IPS[\'TARGET\']);');
 
         $this->CreateStatusVars();
