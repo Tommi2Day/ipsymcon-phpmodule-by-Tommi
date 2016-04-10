@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2016
- * @version 1.2
- * @date 2016-04-08
+ * @version 1.3
+ * @date 2016-04-10
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -379,26 +379,7 @@ class AVMAHA extends T2DModule
     //------------------------------------------------------------------------------
     //internal functions
     //------------------------------------------------------------------------------
-
-    /**
-     * parses switch status values to true/false
-     * @param bool|mixed $val
-     * @return bool
-     */
-    private function SwitchStatus($val)
-    {
-        if (is_bool($val)) {
-            $status = $val;
-        } elseif (is_string($val)) {
-            $status = preg_match("/ON|1|True/i", $val);
-        } elseif (is_integer($val)) {
-            $status = ($val > 0);
-        } else {
-            $status = (bool)$val;
-        }
-        return $status;
-    }
-
+    
 
     //------------------------------------------------------------------------------
     /**
