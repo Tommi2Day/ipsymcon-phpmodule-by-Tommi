@@ -38,9 +38,14 @@ class SwitchDev extends T2DModule
         'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
         "Switch" => array("ident" => 'Switch', "type" => self::VT_Boolean, "name" => 'Status', "profile" => 'Switch', "pos" => 1),
         "Dimmer" => array("ident" => 'Dimmer', "type" => self::VT_Integer, "name" => 'Dimmer', "profile" => 'Intensity.100', "pos" => 2),
+        "Shutter" => array("ident" => 'Shutter', "type" => self::VT_Integer, "name" => 'Shutter', "profile" => 'Shutter', "pos" => 2),
         "Timer" => array("ident" => 'Timer', "type" => self::VT_Integer, "name" => 'Timer', "profile" => '', "pos" => 3),
         'TimerActionCode' => array("ident" => 'TimerActionCode', "type" => self::VT_String, "name" => 'next Timer Action', "profile" => '', "pos" => 3, "hidden" => true),
-        "FS20" => array("ident" => 'FS20', "type" => self::VT_String, "name" => 'last FS20 code', "profile" => '', "pos" => 4),
+        "FS20" => array("ident" => 'FS20', "type" => self::VT_String, "name" => 'last FS20 code', "profile" => '', "pos" => 4,"hidden" => true),
+        "Lock" => array("ident" => 'Lock', "type" => self::VT_Boolean, "name" => 'Locked', "profile" => 'Lock', "pos" => 5),
+        "Alert" => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alarm', "profile" => 'Alert.Reversed', "pos" => 5),
+        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
+        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true)
     );
     /** [capvars] */
 
@@ -546,25 +551,6 @@ class SwitchDev extends T2DModule
         }
 
     }
-    //------------------------------------------------------------------------------
-    /**
-     * parses switch status values to true/false
-     * @param mixed $val
-     * @return bool
-     */
-    private function SwitchStatus($val)
-    {
-        if (is_bool($val)) {
-            $status = $val;
-        } elseif (is_string($val)) {
-            $status = preg_match("/ON|1|True/i", $val);
-        } elseif (is_integer($val)) {
-            $status = ($val > 0);
-        } else {
-            $status = (bool)$val;
-        }
-        return $status;
-    }
 
     //------------------------------------------------------------------------------
     /**
@@ -586,8 +572,10 @@ class SwitchDev extends T2DModule
             $s = $data[$cap];
             switch ($cap) {
                 //integer
+                case 'Signal'://RSSI
                 case 'Timer'://Duration code
                 case 'Dimmer'://intensity 100%
+                case 'Shutter'://intensity 100%
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
@@ -599,6 +587,19 @@ class SwitchDev extends T2DModule
                 //special
                 case 'Switch'://Status
                     $state = $this->SwitchStatus($s);
+                    SetValueBoolean($vid, $state);
+                    break;
+                case 'Lock'://Status
+                    $state = (preg_match("/YES|CLOSE|OK/i",$s)); //reversed
+                    SetValueBoolean($vid, $state);
+                    break;
+                case 'Alert'://Status
+                    $state = (!preg_match("/YES|ALERT/i",$s));; //reversed
+                    SetValueBoolean($vid, $state);
+                    break;
+                
+                case 'Battery'://battery
+                    $state=(!preg_match("/LOW|WARN/i",$s)); //reversed
                     SetValueBoolean($vid, $state);
                     break;
                 case 'FS20':
@@ -670,7 +671,7 @@ class SwitchDev extends T2DModule
 
                         case 0x18: //off-for-timer
                             $state = 'Off';
-                            $action = 'Switch:On';
+                            $actioncode = 'Switch:On';
                             break;
                         case 0x19: //on-for-timer than out
                             $state = true;
