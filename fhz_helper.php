@@ -231,6 +231,15 @@ class FHZ_helper
     );
 
 
+    /**
+     * FHT operation mode codes
+     */
+    public static $FHT_c2m = array(
+        0 => "auto", 
+        1 => "manual", 
+        2 => "holiday", 
+        3 => "holiday_short"
+    );
     //------------------------------------------------------------------------------
     // static functions
     //------------------------------------------------------------------------------
@@ -279,13 +288,13 @@ class FHZ_helper
     /**
      * converting CUL Hex IDs into ELV-4-Ids
      * translated from 10_fs20
-     * @param string $v Hex-Value
+     * @param string $hex Hex-Value
      * @returns string ELV-ID
      */
-    public static function hex2four($v)
+    public static function hex2four($hex)
     {
         $r = "";
-        foreach (str_split($v) as $x) {
+        foreach (str_split($hex) as $x) {
             $r .= sprintf("%d%d", (hexdec($x) / 4) + 1, (hexdec($x) % 4) + 1);
         }
         return $r;
@@ -294,15 +303,15 @@ class FHZ_helper
     //------------------------------------------------------------------------------
     /**
      * transform fs20 binary code string into readable string
-     * @param $v
+     * @param $bin
      * @return string
      */
-    public static function bin2four($v)
+    public static function bin2four($bin)
     {
         $r = '';
-        $l = strlen($v);
+        $l = strlen($bin);
         for ($i = 0; $i < $l; $i++) {
-            $a = ord($v[$i]);
+            $a = ord($bin[$i]);
             $b = $a & 0xf;
             $a = $a >> 4;
             $r .= sprintf(' %d%d', ($a / 4) + 1, ($a % 4) + 1);
@@ -316,34 +325,40 @@ class FHZ_helper
     //------------------------------------------------------------------------------
     /**
      * transform FS20 four code into CUL hex code
-     * @param $v
+     * @param $four
      * @return string
      */
-    public static function four2hex($v)
-    {
-        $r = "";
-        foreach (str_split($v) as $x) {
-            $r .= sprintf("%d%d", (hexdec($x) / 4) + 1, (hexdec($x) % 4) + 1);
-        }
-        return $r;
-    }
+    public static function four2hex($four){
 
+        $r = 0;
+        foreach  (str_split($four) as $x) {
+            $r = $r*4+(intval($x)-1);
+        }
+        $out="";
+        $len=strlen($four);
+        switch ($len) {
+            case 4:$out=sprintf("%02X",$r);break;
+            case 8:$out=sprintf("%04X",$r);break;
+            default: IPS_LogMessage(__CLASS__,__FUNCTION__." invalid len $len ($four)");
+        }
+        return $out;
+    }
     //------------------------------------------------------------------------------
     /**
      * convert readable four code into binary code
-     * @param $v
+     * @param $four
      * @return string
      */
-    public static function four2bin($v)
+    public static function four2bin($four)
     {
         $res = '';
-        $l = strlen($v);
+        $l = strlen($four);
         if (($l % 4) > 0) return '';
         $p = 1;
         while ($p < $l) {
             $r = 0;
             for ($i = 0; $i < 4; $i++) {
-                $a = ord($v[$p]) - 0x30;
+                $a = ord($four[$p]) - 0x30;
                 $r = ($r * 4) + ($a - 1);
                 $p++;
             }
