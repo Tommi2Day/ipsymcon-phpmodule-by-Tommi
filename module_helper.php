@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 2.2
- * @date 2016-04-08
+ * @version 2.3
+ * @date 2016-04-10
  */
 //disable html errors in modules
 ini_set("html_errors", "0");
@@ -386,7 +386,27 @@ class T2DModule extends IPSModule
             }//id
         }//for
     }//function
+    //------------------------------------------------------------------------------
+    /**
+     * parses switch status values to true/false
+     * @param bool|mixed $val
+     * @return bool
+     */
+    protected function SwitchStatus($val)
+    {
+        if (is_bool($val)) {
+            $status = $val;
+        } elseif (is_string($val)) {
+            $status = preg_match("/ON|1|True/i", $val);
+        } elseif (is_integer($val)) {
+            $status = ($val > 0);
+        } else {
+            $status = (bool)$val;
+        }
+        return $status;
+    }
 
+   
     //------------------------------------------------------------------------------
     /**
      * Enter/Lock semaphore
