@@ -52,7 +52,8 @@ Prefix: WS300PC_
  Public Functions:
 * WS300PC_ReadCurrentRecord($id): read current sensor status, returns csv fragment. Is empty, an error occured
 * WS300PC_ReadNextRecord($id): Read next history record, returns csv fragment. If empty, is error or no more records are available
-Reading of all historic data at once in a loop will consume a lot of time and will usually exceed PHP max_execution_time.
+Reading of all historic data at once in a loop will consume a lot of time and will usually exceed PHP max_execution_time. 
+See ws300pc_history.php for an idea running it outside using IPS_JSON Wrapper Api
 * WS300PC_WriteConfig($id): write internal configuration record. this will include the properties
         RainPerCount, Altitude and RecordInterval. After executing the Logger will go in Resync for 10min
 * WS300PC_GetVersion($id): Query and returns Logger firmware version
@@ -191,6 +192,7 @@ Prefix: CUL_
 * TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 * NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
 * CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
+* IPS_JSON Wrapper API: http://www.tdressler.net/ipsymcon/jsonapi.html
 
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
