@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.7
- * @date 2016-04-08
+ * @version 1.8
+ * @date 2016-05-01
  */
 
 /**
@@ -808,7 +808,7 @@ class WS300PC extends T2DModule
                                 $this->debug(__FUNCTION__, 'Got Record ' . $reccount);
                             }//if result
                             break;
-                        case 3:
+                        case 4:
                             $this->debug(__FUNCTION__, 'No more records');
                             break;
                         default:
@@ -913,16 +913,16 @@ class WS300PC extends T2DModule
                 $willi = $willi & 0x0F;
                 break; //if 33
 
-            case 0x31:
+            case 0x31: 
                 $offs = 12;
                 $val = substr($hmsg, 8, 4);
-                $this->debug(__FUNCTION__, 'TimeDiff:' . $val);
+                $this->debug(__FUNCTION__, 'History Rec TimeDiff:' . $val);
                 $timediff = hexdec($val);
                 $zeit = $zeit - ($timediff * 60);
-                $val = date('Y-m-d h:i:s', $zeit);
+                $val = date('c', $zeit); //with timezone to compare
                 $this->debug(__FUNCTION__, 'history Record:-' . $timediff . ' min ' . $val);
                 SetValueString($this->GetIDForIdent('Last'), $val);
-                break; //if 33
+                break; //if 31
             default:
 
                 $this->debug(__FUNCTION__, 'WS300 illegal data ');
