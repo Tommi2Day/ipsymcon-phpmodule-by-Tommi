@@ -11,9 +11,6 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 
  ![Module Hierarchy](doc/images/PHPModules.png)
 
-#### FHZDummy
-Splitter Module for interfacing Busware CUN/CUL-Adapter to standard FHT/HMS and FS20 Devices
-This module is deprecated from April 2016 in favor of CUL module
 
 #### Weather Device
 Generic Device module to present weather data

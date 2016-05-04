@@ -1,7 +1,0 @@
-{
-	"elements":
-	[
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
-	]
-
-}
