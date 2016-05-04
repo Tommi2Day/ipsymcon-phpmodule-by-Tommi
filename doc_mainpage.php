@@ -359,6 +359,28 @@ your %CUL instance as parent for yourself
 
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
 
+@subsection OWNet
+
+OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wire sensors
+@par Prefix: OWN_
+
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%OWNet Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b Host: Host to query remote %OWNet daemon
+- \b Port (Default:4304): Port to query remote %OWNet daemon
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+
+@par Actions (if supported by the attached splitter and the physical device)
+
+- \b None
+
+@see http://www.tdressler.net/ipsymcon/ownet_reader.html (german)
+@see http://owfs.org/index.php?page=owserver
+@see http://owfs.org/index.php?page=ownet-php
+@see http://owfs.org/index.php?page=standard-devices
 
 @section adddoc additional documentation in german
 
@@ -366,6 +388,8 @@ By activating the Debug property (if available) a lot of noise will appear as Lo
 - %AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 - %TE923 Weather Station Module: http://www.tdressler.net/ipsymcon/te923.html
 - %NUT Module: http://www.tdressler.net/ipsymcon/nut_ips.html
+- %OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
+
 
 @section gendoc general documentation
 

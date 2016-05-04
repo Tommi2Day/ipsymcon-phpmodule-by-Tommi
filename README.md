@@ -185,14 +185,31 @@ Actions:
  Changes on the status will be transmitted to the connected actor
 
 Prefix: CUL_
+
+### OWNet
+
+Splittermodule to query a 1Wire Device connected to server running OWServer with OWNet API
+
+Supported Devices:
+* DS18B20, DS18S20, DS1820 temperature sensors
+
+Data Handling:
+The Temperature sensors will be presented as weather devices
+
+For more details about OWServer see
+http://owfs.org/index.php?page=owserver
+
+
+Prefix: OWN_
+
 ### see also (in german)
-* FHZDummy Module: http://tdressler.net/ipsymcon/fhzdummy.html (german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 * TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 * NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
 * CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
 * IPS_JSON Wrapper API: http://www.tdressler.net/ipsymcon/jsonapi.html
+* OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
 
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages
