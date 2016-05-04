@@ -15,37 +15,6 @@ include_once(__DIR__ . "/../module_helper.php");
 /** @class NUT
  *
  * %NUT  IPSymcon PHP Splitter Module Class
- *
- * The %NUT Splitter will query a %NUT daemon for attached UPS/USV
- *
- * The DeviceID should be supplied via ups.serial field. The Status Variable refers to the %NUT ups.status field.
- * Pls refer %NUT documentation for details
- *
- * @par Prefix: NUT_
- *
- * @par Properties
- *
- * - \b  Active (Default: Off/Inactive):
- *
- * - \b Category (Default '%NUT Devices'):  name of category for subsequent devices
- *
- * - \b ParentCategory (Default 0): ID of parent category for newly created category
- *
- * - \b Host: Host to query remote %NUT deamon
- *
- * - \b Port (Default:3493): Port to query remote %NUT deamon
- *
- * - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
- *
- * - \b Debug: Flag to enable debug output via IPS_LogMessages
- *
- * @par Actions (if supported by the attached splitter and the physical device)
- *
- * - \b None
- *
- * @see http://www.tdressler.net/ipsymcon/nut_ips.html (german)
- * @see http://networkupstools.org/documentation.html
- *
  */
 class NUT extends T2DModule
 {
