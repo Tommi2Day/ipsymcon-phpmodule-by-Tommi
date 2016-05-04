@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.3
- * @date 2016-04-08
+ * @version 1.4
+ * @date 2016-05-04
  */
 
 
@@ -38,7 +38,7 @@ class WDE1 extends T2DModule
     /**
      * Fieldlist for Logging
      */
-    const fieldlist = "Time;Typ;id;Name;Temp;Hum;Bat;Lost;Wind;Rain;IsRaining;RainCounter;Pressure;willi;";
+    const fieldlist = "Time;Typ;Id;Name;Temp;Hum;Bat;Lost;Wind;Rain;IsRaining;RainCounter;Pressure;willi;";
 
     //--------------------------------------------------------
     // main module functions
@@ -415,7 +415,7 @@ class WDE1 extends T2DModule
      * @param $inbuf
      * @return string
      */
-    private function ReadRecord($inbuf)
+    public function ReadRecord($inbuf)
     {
         $this->debug(__FUNCTION__, 'ReadRecord:' . $inbuf);
         while (strlen($inbuf) > 0) {
@@ -425,17 +425,17 @@ class WDE1 extends T2DModule
             }
             $data = substr($inbuf, 0, $pos);
             $inbuf = substr($inbuf, $pos);
-            if (preg_match("/(S1[0-9,-;]+0$)/", $data, $records)) {
+            if (preg_match('/\$([0-9,-;]+0)$/', $data, $records)) {
                 $r = count($records);
                 $this->debug(__FUNCTION__, "Found $r records");
                 for ($i = 1; $i < $r; $i++) { //matches starting with 1
                     $data = $records[$i];
                     $data = str_replace(',', '.', $data);
-                    $ws300_data = $this->parse_weather($data);
+                    $wde1_data = $this->parse_weather($data);
                     //if result
-                    if ($ws300_data) {
-                        $this->SendWSData($ws300_data);
-                        $this->log_weather($ws300_data);
+                    if ($wde1_data) {
+                        $this->SendWSData($wde1_data);
+                        $this->log_weather($wde1_data);
 
                     } else {
                         $this->debug(__FUNCTION__, "No wsdata returned for $data");
@@ -457,7 +457,7 @@ class WDE1 extends T2DModule
     private function parse_weather($data)
     {
         //clear record
-        //S1;1;;21,2;22,4;25,1;14,6;15,8;12,1;;24,5;37;;78;72;;75;;:50;16,0;42;8,0;455;1;0<cr><lf>
+        //$1;1;;21,2;22,4;25,1;14,6;15,8;12,1;;24,5;37;;78;72;;75;;:50;16,0;42;8,0;455;1;0<cr><lf>
         $this->debug(__FUNCTION__, 'Entered:' . $data);
         $wde1_data = array();
         $records = array();
