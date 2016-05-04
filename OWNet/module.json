@@ -1,0 +1,11 @@
+{
+	"id": "{A68F9DEC-A490-4E35-B500-B45FC5F4FF6A}",
+	"name": "OWN",
+	"type": 2,
+	"vendor": "Tommi2Day",
+	"aliases": ["OWNet Server"],
+	"parentRequirements": [],
+	"childRequirements": ["{CD3D1E2D-83ED-4595-90CD-3444A22AAA66}"],
+	"implemented": ["{F7B329D4-6E4E-4D0C-B059-E1894B23D8CE}"],
+	"prefix": "OWN"
+}
