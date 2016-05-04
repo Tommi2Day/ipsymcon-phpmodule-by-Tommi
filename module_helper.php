@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 2.3
- * @date 2016-04-10
+ * @version 2.5
+ * @date 2016-05-03
  */
 //disable html errors in modules
 ini_set("html_errors", "0");
@@ -105,12 +105,14 @@ class T2DModule extends IPSModule
         "CUL" => "{5B0BB3C6-C35A-4438-94E4-8A6CF9EF3A4A}", //Busware CUL/CUN/COC Splitter
         "NUT" => "{431281F9-77DC-46A6-8AA9-A6E2C60A5FB2}", //NUT USV Splitter
         "TE923" => "{137511E0-F98B-49F3-9A6C-95234DF2E1FB}", //TE923,Ventus etc Weather Splitter
+        "OWN" => "{A68F9DEC-A490-4E35-B500-B45FC5F4FF6A}", //OWNet Splitter
         "XS1" => "{8B015BFA-3CDD-4D45-99C8-3F250AEF1E83}", //XS1 Splitter
+        "WS2500PC" => "{90F68511-0628-4718-A7BF-EDBBC2BB55D4}", //WS2500 Splitter
+        
         //IO
         "VirtIO" => "{6179ED6A-FC31-413C-BB8E-1204150CF376}",
         "SerialPort" => "{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}",
         "ClientSocket" => "{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}",
-        "FTDI" => "{C1D478E9-2A3E-4344-BCC4-37C892F58751}",
 
         //devices
         "FS20" => "{48FCFDC1-11A5-4309-BB0B-A0DB8042A969}", // FS20 Device
@@ -504,6 +506,10 @@ class T2DModule extends IPSModule
      */
     protected function debug($topic, $data)
     {
+        if (method_exists($this,"SendDebug")) {
+            //available as of #150 (2016-04-22)
+            $this->SendDebug($topic,$data,0);
+        }
         $data = "(ID #$this->InstanceID) $topic ::" . $data;
         if ($this->isDebug()) {
             IPS_LogMessage($this->name, $data);
