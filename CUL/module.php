@@ -559,12 +559,12 @@ class CUL extends T2DModule
             $caps .= 'TPower;APower;PPower;ACounter;PCounter;';
         } elseif ($addr_num >= 5 && $addr_num <= 8) {
             $data['Typ'] = 'EMEM';
-            $data['CounterFactor'] = 0.001;
-            $caps .= 'TPower;APower;ACounter;';
+            $data['CounterFactor'] = 0.01;
+            $caps .= 'TPower;APower;PPower;ACounter;PCounter;';
         } elseif ($addr_num >= 9 && $addr_num <= 12) {
             $data['Typ'] = 'EMGZ';
             $data['CounterFactor'] = 0.01;
-            $caps .= 'TGas;AGas;ACounter;';
+            $caps .= 'TGas;AGas;ACounter;PGas;PCounter;';
         } else {
             $this->incError();
             return;

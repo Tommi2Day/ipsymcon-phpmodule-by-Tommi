@@ -340,6 +340,37 @@ class EnergyDev extends T2DModule
                     }
                     SetValueInteger($vid, $iv);
                     break;
+                case 'PCounter':
+                    $iv = (int)$s;
+                    switch ($this->GetType()) {
+                        case 'EMEM':
+                            $pvid=$this->GetIDForIdent('PPower');
+                            if ($pvid) {
+                                SetValueFloat($pvid,$iv);
+                            }
+                            break;
+                        case 'EMWZ':
+                            $pvid=$this->GetIDForIdent('PPower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+                            break;
+                        case 'EMGZ':
+                            $pvid=$this->GetIDForIdent('PGas');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                $val=$iv*$factor;
+                                SetValueFloat($pvid,$val);
+                            }
+                            break;
+                        default:
+                            SetValueInteger($vid, $iv);
+                            break;
+                    }
+                    
+                    break;
                 //int types
                 case 'Signal': //RSSI
                 
@@ -347,7 +378,6 @@ class EnergyDev extends T2DModule
                 case 'Charged'://Charged in Pct
                 
                 case 'OCounter': //old counter
-                case 'PCounter': //peack counter
                 case 'TS': //Timestamp 
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
