@@ -179,7 +179,7 @@ Data Handling:
 
 Actions:
  * Switching of FS20 Devices.
- Changes on the status will be transmitted to the connected actor
+ Changes of the status variable will be transmitted to the connected actor
 
 Prefix: CUL_
 
@@ -196,8 +196,29 @@ The Temperature sensors will be presented as weather devices
 For more details about OWServer see
 http://owfs.org/index.php?page=owserver
 
+### XS1
 
-Prefix: OWN_
+Splittermodule to access Ezcontrol XS1 Homeautomation Receiver/Controler
+
+Supportet Devices:
+* XS1 may receive and control up to 128 Sensors metrics and 64 actors.
+Because lack of availablility, not all Actors and Sensors types are implemented. See sources.
+
+Data Handling:
+Data will be quieried via http JSON API. Unfortunately, the API will hide the physical device typ
+by mapping to internal generixc types. So far as possible we map these types to our own system.
+* Power Consumtion Sensors will be mapped to Energy Devices
+* Environment Measures will be presented as Weather Devices
+* Alarming Sensors and all Actors will be presented as Switch Devices
+
+
+Actions (if supported by the physical device)
+ * Switching(On/Off) of attached actors.
+ Changes of the status variable will be transmitted to the connected actor
+
+Prefix: XS1_
+
+For a complete XS1 description see vendor documentation at http://www.ezcontrol.de/content/view/36/28/ (german)
 
 ### see also (in german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
@@ -207,6 +228,7 @@ Prefix: OWN_
 * CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
 * IPS_JSON Wrapper API: http://www.tdressler.net/ipsymcon/jsonapi.html
 * OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
+* XS1 Module: http://www.tdressler.net/ipsymcon/xs1_ips.html
 
 #### Debug:
 By activating the Debug property (if available) a lot of noise will appear as LogMessages

@@ -355,9 +355,6 @@ your %CUL instance as parent for yourself
 
  @see http://culfw.de/commandref.html
 
-@section debug Debug:
-
-By activating the Debug property (if available) a lot of noise will appear as LogMessages
 
 @subsection OWNet
 
@@ -377,10 +374,29 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 
 - \b None
 
-@see http://www.tdressler.net/ipsymcon/ownet_reader.html (german)
 @see http://owfs.org/index.php?page=owserver
 @see http://owfs.org/index.php?page=ownet-php
 @see http://owfs.org/index.php?page=standard-devices
+
+@subsection XS1
+
+XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controler
+@par Prefix: XS1_
+
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%OWNet Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b Host: Host to query remote %OWNet daemon
+- \b Port (Default:4304): Port to query remote %OWNet daemon
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+
+@par Actions (if supported by the attached splitter and the physical device)
+
+- \b Switching of attached actors
+
+@see vendor docs on http://www.ezcontrol.de/content/view/36/28/ (german)
 
 @section adddoc additional documentation in german
 
@@ -389,7 +405,11 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 - %TE923 Weather Station Module: http://www.tdressler.net/ipsymcon/te923.html
 - %NUT Module: http://www.tdressler.net/ipsymcon/nut_ips.html
 - %OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
+- %XS1 Module: http://www.tdressler.net/ipsymcon/xs1_ips.html
 
+@section debug Debug:
+
+By activating the Debug property (if available) a lot of noise will appear as LogMessages
 
 @section gendoc general documentation
 
