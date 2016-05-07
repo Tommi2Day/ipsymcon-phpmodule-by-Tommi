@@ -38,7 +38,7 @@ class WSDEV extends T2DModule
         "Press" => array("ident" => 'Pressure', "type" => self::VT_Integer, "name" => 'Pressure', "profile" => 'AirPressure', "pos" => 2),
         "Wind" => array("ident" => 'Windspeed', "type" => self::VT_Float, "name" => 'Wind Speed', "profile" => 'WindSpeed.kmh', "pos" => 3),
         "WindGust" => array("ident" => 'WindGust', "type" => self::VT_Float, "name" => 'Wind Gust', "profile" => 'WindSpeed.kmh', "pos" => 3),
-        "WindDir" => array("ident" => 'WindDir', "type" => self::VT_Integer, "name" => 'Wind Direction', "profile" => 'WindDirection.Text', "pos" => 4),
+        "WindDir" => array("ident" => 'WindDir', "type" => self::VT_Float, "name" => 'Wind Direction', "profile" => 'WindDirection.Text', "pos" => 4),
         "Storm" => array("ident" => "Storm", "type" => self::VT_Boolean, "name" => 'Storm Indicator', "profile" => '', "pos" => 5), //reversed state
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
         "RainHourly" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
@@ -243,7 +243,6 @@ class WSDEV extends T2DModule
             switch ($cap) {
                 //Integer
                 case 'Hum'://hum
-                case 'WindDir'://wind
                 case 'RainCounter'://raincounter
                 case 'Press'://pressure
                 case 'Forecast'://willi
@@ -261,6 +260,7 @@ class WSDEV extends T2DModule
                 case 'Wind'://wind
                 case 'WindChill'://wind
                 case 'WindGust'://wind
+                case 'WindDir'://wind
                 case 'Rain'://rain
                 case 'RainDaily'://rain 24h
                 case 'RainHourly'://rain 1h

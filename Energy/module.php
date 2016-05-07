@@ -49,13 +49,13 @@ class EnergyDev extends T2DModule
         "ACounter" => array("ident" => 'ACounter', "type" => self::VT_Integer, "name" => 'Current Counter', "profile" => '', "pos" => 2, "hidden" => true),
         "PCounter" => array("ident" => 'PCounter', "type" => self::VT_Integer, "name" => 'Peak Counter', "profile" => '', "pos" => 2, "hidden" => true),
         //usv
-        "VoltIn" => array("ident" => 'VoltIn', "type" => self::VT_Integer, "name" => 'Voltage Input', "profile" => 'Volt.230', "pos" => 4),
-        "VoltOut" => array("ident" => 'VoltOut', "type" => self::VT_Integer, "name" => 'Voltage Output', "profile" => 'Volt.230', "pos" => 5),
+        "VoltIn" => array("ident" => 'VoltIn', "type" => self::VT_Float, "name" => 'Voltage Input', "profile" => 'Volt.230', "pos" => 4),
+        "VoltOut" => array("ident" => 'VoltOut', "type" => self::VT_Float, "name" => 'Voltage Output', "profile" => 'Volt.230', "pos" => 5),
         "Freq" => array("ident" => 'Freq', "type" => self::VT_Float, "name" => 'Frequency', "profile" => 'Hertz.50', "pos" => 6),
         'LoadPct' => array("ident" => 'LoadPct', "type" => self::VT_Integer, "name" => 'Load', 'profile' => 'Battery.100', "pos" => 8),
         'Charged' => array("ident" => 'Charged', "type" => self::VT_Integer, "name" => 'Charged', 'profile' => 'Battery.100', "pos" => 7),
-        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Integer, "name" => 'Nominal Load', 'profile' => 'Watt.3680', "pos" => 9,"hidden" => true),
-        'Watt' => array("ident" => 'Watt', "type" => self::VT_Integer, "name" => 'Load absolute', 'profile' => 'Watt.3680', "pos" => 9),
+        'Nominal' => array("ident" => 'Nominal', "type" => self::VT_Float, "name" => 'Nominal Load', 'profile' => 'Watt.3680', "pos" => 9,"hidden" => true),
+        'Watt' => array("ident" => 'Watt', "type" => self::VT_Float, "name" => 'Watt', 'profile' => 'Watt.3680', "pos" => 9),
         'TimeLeft' => array("ident" => 'TimeLeft', "type" => self::VT_Float, "name" => 'Time Left', 'profile' => 'Time.min', "pos" => 10),
         'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => 'String', "pos" => 11),
         'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => 'Alert.Reversed', "pos" => 12),
@@ -342,12 +342,10 @@ class EnergyDev extends T2DModule
                     break;
                 //int types
                 case 'Signal': //RSSI
-                case 'VoltIn'://InputVolt
-                case 'VoltOut'://Output Volt
+                
                 case 'LoadPct'://Load in Pct
                 case 'Charged'://Charged in Pct
-                case 'Nominal'://Nominal Power
-                case 'Watt'://Absolute Load
+                
                 case 'OCounter': //old counter
                 case 'PCounter': //peack counter
                 case 'TS': //Timestamp 
@@ -370,6 +368,10 @@ class EnergyDev extends T2DModule
                     SetValueFloat($vid, $val);
                     break;
                 //float types
+                case 'VoltIn'://InputVolt
+                case 'VoltOut'://Output Volt
+                case 'Nominal'://Nominal Power
+                case 'Watt'://Absolute Load
                 case 'Freq'://Frequency
                 case 'TimeLeft'://TimeLeft
                     $fv = (float)$s;
