@@ -45,7 +45,8 @@ class SwitchDev extends T2DModule
         "Lock" => array("ident" => 'Lock', "type" => self::VT_Boolean, "name" => 'Locked', "profile" => 'Lock', "pos" => 5),
         "Alert" => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alarm', "profile" => 'Alert.Reversed', "pos" => 5),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
-        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true)
+        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
+        "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 41,"hidden" => true)
     );
     /** [capvars] */
 
@@ -181,14 +182,12 @@ class SwitchDev extends T2DModule
                         $myID = $this->GetDeviceID();
                         $myType = $this->GetType();
                         $myClass = $this->GetClass();
-                        if (($myID == $Device) && ($myType == $typ) && ($myClass = $class)) {
+                        if (($myID == $Device) && ($myType == $typ) && ($myClass == $class)) {
                             $this->debug(__FUNCTION__, "$Device(Typ:$typ,Class:$class)");
                             $sw_data = $data['SWData'];
                             if (is_object($sw_data)) $sw_data = get_object_vars($sw_data);
                             $this->ParseData($sw_data);
-                        } else {
-                            $this->debug(__FUNCTION__, 'Wrong Target: ' . $Device . " (Typ:$typ,Class=$class)" . '-->' . $myID . " (Typ:$myType,Class=$myClass)");
-                        }
+                        } 
                     } else {
                         $this->debug(__FUNCTION__, 'Interface Data Error');
                     }
@@ -570,11 +569,13 @@ class SwitchDev extends T2DModule
             $vid = @$this->GetIDForIdent($ident);
             if ($vid == 0) {
                 $this->debug(__FUNCTION__, "Cap $cap Ident $ident: Variable missed");
+                continue;
             }
             if (!isset($data[$cap])) continue;
             $s = $data[$cap];
             switch ($cap) {
                 //integer
+                case 'TS': //Timestamp
                 case 'Signal'://RSSI
                 case 'Timer'://Duration code
                 case 'Dimmer'://intensity 100%

@@ -35,10 +35,13 @@ class EnergyDev extends T2DModule
         'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
         "APower" => array("ident" => 'APower', "type" => self::VT_Float, "name" => 'Power Actual', "profile" => 'Power_W.3', "pos" => 1),
         "TPower" => array("ident" => 'TPower', "type" => self::VT_Float, "name" => 'Power Total', "profile" => 'Electricity', "pos" => 1),
+        "PPower" => array("ident" => 'PPower', "type" => self::VT_Float, "name" => 'Power Peak', "profile" => 'Power_W.3', "pos" => 1),
         "AGas" => array("ident" => 'AGas', "type" => self::VT_Float, "name" => 'Gas Actual', "profile" => 'Gas', "pos" => 1),
         "TGas" => array("ident" => 'TGas', "type" => self::VT_Float, "name" => 'Gas Total', "profile" => 'Gas', "pos" => 1),
+        "PGas" => array("ident" => 'PGas', "type" => self::VT_Float, "name" => 'Gas Peak', "profile" => 'Gas', "pos" => 1),
         "AWasser" => array("ident" => 'AWasser', "type" => self::VT_Float, "name" => 'Wasser Actual', "profile" => 'Water', "pos" => 1),
         "TWasser" => array("ident" => 'TWasser', "type" => self::VT_Float, "name" => 'Wasser Total', "profile" => 'Water', "pos" => 1),
+        "PWasser" => array("ident" => 'PWasser', "type" => self::VT_Float, "name" => 'Wasser Peak', "profile" => 'Water', "pos" => 1),
         "Amp" => array("ident" => 'Amp', "type" => self::VT_Float, "name" => 'Ampere', "profile" => '~Ampere.16', "pos" => 2),
         //counter based
         "Counter" => array("ident" => 'Counter', "type" => self::VT_Integer, "name" => 'Counter', "profile" => '', "pos" => 2,"hidden" => true),
@@ -57,7 +60,8 @@ class EnergyDev extends T2DModule
         'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => 'String', "pos" => 11),
         'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => 'Alert.Reversed', "pos" => 12),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 13,"hidden" => true),
-        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true)
+        'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
+        "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 41,"hidden" => true)
 
     );
     ///[capvars]
@@ -91,7 +95,7 @@ class EnergyDev extends T2DModule
         $this->RegisterPropertyString('Class', '');
         $this->RegisterPropertyString('CapList', '');
         $this->RegisterPropertyBoolean('Debug', false);
-        $this->RegisterPropertyFloat('CounterFactor',0);
+        $this->RegisterPropertyFloat('CounterFactor',1);
 
         //NonStandard Profiles (needed for Webfront)
         $this->check_profile('Time.min', 2, "", ' min', "Hourglass", null, null, null, 1, false);
@@ -167,19 +171,15 @@ class EnergyDev extends T2DModule
                         $myID = $this->GetDeviceID();
                         $myType = $this->GetType();
                         $myClass = $this->GetClass();
-                        if (($myID == $Device) && ($myType == $typ) && ($myClass = $class)) {
+                        if (($myID == $Device) && ($myType == $typ) && ($myClass == $class)) {
                             $this->debug(__FUNCTION__, "$Device(Typ:$typ,Class:$class)");
                             $sw_data = $data['ENData'];
                             if (is_object($sw_data)) $sw_data = get_object_vars($sw_data);
                             $this->ParseData($sw_data);
-                        } else {
-                            $this->debug(__FUNCTION__, 'Wrong Target: ' . $Device . " (Typ:$typ,Class=$class)" . '-->' . $myID . " (Typ:$myType,Class=$myClass)");
-                        }
+                        } 
                     } else {
                         $this->debug(__FUNCTION__, 'Interface Data Error');
                     }
-                }else{
-                    $this->debug(__FUNCTION__, 'Wrong Target: '.$target);
                 }
             }
         } else {
@@ -261,6 +261,7 @@ class EnergyDev extends T2DModule
             $vid = @$this->GetIDForIdent($ident);
             if ($vid == 0) {
                 $this->debug(__FUNCTION__, "Cap $cap Ident $ident: Variable missed");
+                continue;
             }
             if (!isset($data[$cap])) continue;
             $s = $data[$cap];
@@ -271,7 +272,7 @@ class EnergyDev extends T2DModule
                     $state = ($s != 'YES'); //reversed display
                     SetValueBoolean($vid, $state);
                     break;
-                //Counter types
+                //Counter types with factor
                 case 'Counter':
                     $iv = (int)$s;
 
@@ -305,9 +306,10 @@ class EnergyDev extends T2DModule
                                 SetValueFloat($pvid,$val);
                             }
                             break;
-
+                        default:
+                            SetValueInteger($vid, $iv);
                     }
-                    SetValueInteger($vid, $iv);
+
                     break;
                 case 'ACounter':
                     $iv = (int)$s;
@@ -346,18 +348,28 @@ class EnergyDev extends T2DModule
                 case 'Charged'://Charged in Pct
                 case 'Nominal'://Nominal Power
                 case 'Watt'://Absolute Load
-                case 'OCounter':
-                case 'PCounter':
+                case 'OCounter': //old counter
+                case 'PCounter': //peack counter
+                case 'TS': //Timestamp 
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
-                //float types
+                //float types with factor
                 case 'AGas'://Actual 
-                case 'TGas'://Total 
-                case 'APower'://Actual 
+                case 'TGas'://Total
+                case 'PGas'://Peak
+                case 'APower'://Actual
+                case 'PPower'://Peak
                 case 'TPower'://Total 
                 case 'AWater'://Actual 
-                case 'TWater'://Total 
+                case 'TWater'://Total
+                case 'PWater'://Peak
+                    $fv = (float)$s;
+                    $factor=$this->GetCounterFactor();
+                    $val=$fv*$factor;
+                    SetValueFloat($vid, $val);
+                    break;
+                //float types
                 case 'Freq'://Frequency
                 case 'TimeLeft'://TimeLeft
                     $fv = (float)$s;
