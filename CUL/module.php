@@ -842,6 +842,7 @@ class CUL extends T2DModule
             case 6://Gas MG
             case 8://Gas CO
             case 14://FIT
+                $caps .= 'Alert;';
                 $data['Alert'] = ($stat > 0) ? 'YES' : 'NO';
                 $this->SendSwitchData($data, $caps);
                 $this->debug(__FUNCTION__, "HMS $dev ($typ) Alert:" . $data['Alert']." RSSI:$rssi");
