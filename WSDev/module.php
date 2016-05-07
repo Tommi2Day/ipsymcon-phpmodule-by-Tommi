@@ -41,10 +41,13 @@ class WSDEV extends T2DModule
         "WindDir" => array("ident" => 'WindDir', "type" => self::VT_Integer, "name" => 'Wind Direction', "profile" => 'WindDirection.Text', "pos" => 4),
         "Storm" => array("ident" => "Storm", "type" => self::VT_Boolean, "name" => 'Storm Indicator', "profile" => '', "pos" => 5), //reversed state
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
+        "RainHourly" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
         "RainDaily" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
         "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7,"hidden" => true),
         "IsRaining" => array("ident" => "IsRaining", "type" => self::VT_Boolean, "name" => 'Raining', "profile" => 'Raining', "pos" => 8),
+        "Light" =>array("ident" => 'Light', "type" => self::VT_Integer, "name" => 'Brightness', "profile" => 'Illumination', "pos" => 8),
         "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
+        "Level" => array("ident" => "Level", "type" => self::VT_Float, "name" => 'Level', "profile" => '', "pos" => 9),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
         "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => 'Signal', "pos" => 11,"hidden" => true),
         "UV" => array("ident" => "UV", "type" => self::VT_Integer, "name" => 'UV Index', "profile" => 'UVIndex', "pos" => 12),
@@ -158,13 +161,11 @@ class WSDEV extends T2DModule
                         $myID = $this->GetDeviceID();
                         $myType = $this->GetType();
                         $myClass = $this->GetClass();
-                        if (($myID == $Device) && ($myType == $typ) && ($myClass = $class)) {
+                        if (($myID == $Device) && ($myType == $typ) && ($myClass == $class)) {
                             $this->debug(__FUNCTION__, "$Device(Typ:$typ,Class:$class)");
                             $ws_data = $data['WSData'];
                             if (is_object($ws_data)) $ws_data = get_object_vars($ws_data);
                             $this->ParseData($ws_data);
-                        } else {
-                            $this->debug(__FUNCTION__, 'Wrong Target: ' . $Device . " (Typ:$typ,Class=$class)" . '-->' . $myID . " (Typ:$myType,Class=$myClass)");
                         }
 
                     } else {
@@ -247,6 +248,8 @@ class WSDEV extends T2DModule
                 case 'Press'://pressure
                 case 'Forecast'://willi
                 case 'UV'; //UVIndex
+                case 'Light': //Brightness
+                case 'Level': //level
                 case 'TS'; //TimeStamp
                 case 'Lost'://lost
                 case 'Signal':
@@ -259,7 +262,8 @@ class WSDEV extends T2DModule
                 case 'WindChill'://wind
                 case 'WindGust'://wind
                 case 'Rain'://rain
-                case 'RainDaily'://rain
+                case 'RainDaily'://rain 24h
+                case 'RainHourly'://rain 1h
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;
