@@ -268,7 +268,7 @@ TE923_Query($id);
 
 @par Hint:
 This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
-The following simple get_data.cgi script is sufficient
+The following simple get_data.cgi script to be placed in your webservers cgi-bin directory is sufficient
 
 @code
 #!/bin/bash
@@ -293,6 +293,59 @@ if [ -x $TE923 ]; then
   esac
 fi
 @endcode
+
+@subsection WS2500PC
+
+WS2500PC :Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary output
+
+@par "Supported Devices:" 8 external Temp/Hum Sensors(1-8), Rain, Wind, UV(not seen yet),Light(Brighness) 
+and the Indoor Sensor with Temp/Hum and Pressure 
+@par "Data Handling:" The Data will be presented as Weather Device instances
+@par Prefix: WS2500PC_
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%WS2500PC Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b URL: URL to query ws2500 cgi eg. http://raspberry/cgi-bin/get_ws2500_data.cgi
+- \b RainPerCount (Default 295): How much rain will be added for one count (mm/1000), Range: 200-500
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+- \b Debug: Flag to enable debug output via IPS_LogMessages
+@par "Public Functions:"
+- Query: manual data refresh
+@code
+WS2500PC_Query($id);
+@endcode
+
+@par Hint:
+This requires a running webservice providing output from <a href="http://userpages.uni-koblenz.de/~krienke/ftp/unix/ws2500/">ws2500</a> binary.
+The following simple get_ws2500_data.cgi script to be placed in your webservers cgi-bin directory  along ws2500 binary is sufficient
+
+@code
+#!/bin/bash
+WS2500=./ws2500
+#header content type end empty line
+echo "Content-type: text/plain"
+echo
+#end header
+
+#parameter
+PARAM="$QUERY_STRING" #oder $1
+#run
+if [ -x $WS2500 ]; then
+#binary must be placed into same dir
+#this runs only if apache user www-data is member of group plugdev
+#and udev rule is added
+case "$PARAM" in
+data) $WS2500 -n -t -C /tmp/lastValues.txt -p /dev/ttyS0 |tee -a ws2500.dat;; #this will read all new records 
+status)  $WS2500 -s -p /dev/ttyS0 ;;
+debug)  $WS2500 -g -D -C /tmp/lastValues.txt -p /dev/ttyS0 ;;
+version)  $WS2500 -v;;
+esac
+fi
+@endcode
+
+ @see http://userpages.uni-koblenz.de/~krienke/en/component/content/article?id=14:weather-en
 
 @subsection NUT
 

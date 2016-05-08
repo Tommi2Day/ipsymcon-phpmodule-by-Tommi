@@ -1,0 +1,20 @@
+{
+	"elements":
+	[
+		{ "name": "Active", "type": "CheckBox", "caption": "Activate Instance" },
+		{ "name": "URL", "type": "ValidationTextBox", "caption": "URL" },
+		{ "name": "Category", "type": "ValidationTextBox", "caption": "Category Name" },
+		{ "name": "ParentCategory", "type": "NumberSpinner", "caption": "Category Parent" },
+		{ "name": "RainPerCount", "type": "NumberSpinner", "caption": "mm per count(x1000)" },
+        { "name": "UpdateInterval", "type": "IntervalBox", "caption": "Read Interval in Sec" },
+		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
+		{ "type": "Label", "label": "--- optional settings ---------" },
+		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" },
+		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "LogFile (full qualified)" }
+	],
+	"actions":
+	[
+      { "type": "Label", "label": "Att: This will block your console for some seconds" },
+		{ "type": "Button", "label": "Update", "onClick": "WS2500PC_Query($id);" }
+	]
+}

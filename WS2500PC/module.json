@@ -1,0 +1,11 @@
+{
+	"id": "{90F68511-0628-4718-A7BF-EDBBC2BB55D4}",
+	"name": "WS2500PC",
+	"type": 2,
+	"vendor": "Tommi2Day",
+	"aliases": ["WS2500PC"],
+	"parentRequirements": [],
+	"childRequirements": ["{CD3D1E2D-83ED-4595-90CD-3444A22AAA66}"],
+	"implemented": ["{F7B329D4-6E4E-4D0C-B059-E1894B23D8CE}"],
+	"prefix": "WS2500PC"
+}
