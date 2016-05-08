@@ -8,6 +8,7 @@
 	],
 	"actions":
 	[
+		{ "type": "Label", "label": "Only for supported actors" },
 		{ "type": "Button", "label": "On", "onClick": "SWD_SetSwitchMode($id,'On');" },
 		{ "type": "Button", "label": "Off", "onClick": "SWD_SetSwitchMode($id,'Off');" }
 	]
