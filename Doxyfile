@@ -838,7 +838,8 @@ FILE_PATTERNS          = *.cxx \
                          *.for \
                          *.vhd \
                          *.vhdl \
-                         *.phps
+                         *.phps \
+                         *.pl
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -857,7 +858,9 @@ EXCLUDE                = old \
                          .git \
                          .idea \
                          README.md \
-                         FHZDummy
+                         FHZDummy \
+                         Api \
+                         doc
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
