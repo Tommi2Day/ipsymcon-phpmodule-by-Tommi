@@ -7,15 +7,15 @@
  * This wrapper helps you to execute Scripts written for IPSymcon also on other PHP boxes
  * using IPSymcon JSON API. It defines all of known functions and map this to a JSON call
  *
- * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well. 
+ * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well.
  * @copyright Thomas Dressler 2013-2016
- * @version 0.6 (gen_ips_wrapper.php)
+ * @version 0.7 (gen_ips_wrapper.php)
  * @version 4.00 (IPSymcon)
- * @date 2016-05-08 (generated)
+ * @date 2016-05-14 (generated)
  * @see http://www.tdressler.net/ipsymcon/funktionsliste.html
  * @see http://www.tdressler.net/ipsymcon/jsonapi.html
  * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
- * 
+ *
  */
 
 
@@ -48,7 +48,7 @@ $user="lizenz@email.ips";
  * ips password
  */
 $password="secret";
-//overwrite default configuration as above with your settings if needed 
+//overwrite default configuration as above with your settings if needed
 if (file_exists($config))  {
 	$config_data=file_get_contents($config);
 	$res=eval($config_data);
@@ -60,7 +60,9 @@ if (empty($user) || empty($password)) {
 $url="http://".$host.":".$port."/api/";
 
 /**
-* @var $rpc
+* IPS_JSON object
+*
+* @var IPS_JSON $rpc
 */
 $rpc = new IPS_JSON($url,$user,$password);
 
@@ -7853,20 +7855,6 @@ function WAC_Stop( $InstanceID ){
 function WDE1_ReInitEvent( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->WDE1_ReInitEvent( $InstanceID );
-	return $result;
-}
-
-/**
-* WDE1_ReadRecord
-* 
-* @returns variant
-* @param integer $InstanceID
-* @param variant $inbuf
-*/
-
-function WDE1_ReadRecord( $InstanceID,$inbuf ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->WDE1_ReadRecord( $InstanceID,$inbuf );
 	return $result;
 }
 

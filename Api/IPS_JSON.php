@@ -6,8 +6,8 @@
 * 
 *  @author Thomas Dressler
 *  @copyright Thomas Dressler 2013-2016
-*  @version 4.0
-*  @date 2016-04-30
+*  @version 4.1
+*  @date 2016-05-14
 */
 /** @class IPS_JSON
  * 
