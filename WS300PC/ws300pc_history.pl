@@ -17,15 +17,23 @@ use IPS_JSON;
 use Time::Piece;
 use File::Basename;
 
+#id ws300pc instance
 our $id_ws300=53828;
+#id lastdate variable
 our $id_last=31378;
+#csv filename
 our $log="ws300data.csv";
+#ips host
 our $host='localhost';
+#ips port
 our $port=3777;
-
+#license username
 our $user='lizenz@email.de';
+#remote access password
 our $password='secret';
+#http timeout
 our $timeout=5;
+#debug
 our $debug=$ENV{DEBUG};
 
 #take commandline argument(if any) as config filename
