@@ -14,8 +14,8 @@
  * IPSymcon JSON API wrapper class
  * @throws Exception (disabled by default)
  *
- *  @version 4.0
- *  @date 2016-04-30
+ *  @version 4.1
+ *  @date 2016-05-11
  *
  *  Descriptions :
  *  @see http://www.tdressler.net/ipsymcon/jsonapi.html
@@ -49,7 +49,7 @@ class IPS_JSON {
 	/**
 	 * last Error
 	 * 
-	 *	@var Array $error
+	 *	@var array
 	 *
 	 *	$error=array('message'=>$message,'code'=>$code)
 	 *	@param String $message
@@ -70,7 +70,7 @@ class IPS_JSON {
 	/**
 	 * IPS Variable Types
 	 *
-	 * @var Array $ips_vartypes
+	 * @var array
 	 *
 	 * matches IPS Variable API type return codes to API type field names ("ValueXYZ")
 	 */
@@ -83,7 +83,7 @@ class IPS_JSON {
     
 	/**
 	 * return $ips_vartypes
-	 * @return Array
+	 * @return array
 	 *
 	*/	   
 	public function get_ips_vartypes() {
@@ -104,7 +104,7 @@ class IPS_JSON {
 	if ( !function_exists('json_encode') || !function_exists('json_decode'))
 	{
 		$this->error=array('message' => "PHP Json functions not found", 'code' => '-1');
-		if ($this->exception_flag ) throw new Exception($error->message,$error->code);
+		if ($this->exception_flag ) throw new Exception($this->error['message'],$this->error['code']);
 		return null;
 	}
 	$this->url = $url;
@@ -119,17 +119,19 @@ class IPS_JSON {
 	if (is_array($this->error)) {
             return $this->error["message"];
         }
+		return '';
    }
    /**
     * retrieves last error code
     * @return integer
     */
-   public function getErrorCode() {
-        if (is_array($this->error)) {
-            return (integer)$this->error["code"];
-        }
+   public function getErrorCode()
+   {
+	   if (is_array($this->error)) {
+		   return (integer)$this->error["code"];
+	   }
+	   return null;
    }
-   
    /**
     * retrieves last called method
     * @return String
@@ -181,7 +183,7 @@ class IPS_JSON {
 	$obj=$this->IPS_GetObject($id);
 	//print_r($obj);
 	if (!$obj) {
-		$this->setError("IPS_GetObject Request failed:".$rpc->getErrorMessage());
+		$this->setError("IPS_GetObject Request failed:".$this->getErrorMessage());
 		return null;
 	}
 	#query object detail
@@ -195,13 +197,13 @@ class IPS_JSON {
 	$var=$this->IPS_GetVariable($id);
 	//print_r($var);
 	if (!$var) {
-		$this->setError("IPS_GetVariable Request failed:".$rpc->getErrorMessage());
+		$this->setError("IPS_GetVariable Request failed:".$this->getErrorMessage());
 		return null;
 	}
 	
 	//type aware value retrieving
 	$res=null;
-	$type=$val["VariableType"];
+	$type=$var["VariableType"];
 	$typname=$this->ips_vartypes[$type];
 	$res=$this->GetValue($id);
 	
@@ -247,7 +249,7 @@ class IPS_JSON {
 	#query object detail
 	$obj=$this->IPS_GetObject($id);
 	if (!$obj) {
-		$this->setError("IPS_GetObject Request failed:".$rpc->getErrorMessage());
+		$this->setError("IPS_GetObject Request failed:".$this->getErrorMessage());
 		return null;
 	}
 	$name=$obj["ObjectName"];
@@ -261,7 +263,7 @@ class IPS_JSON {
 	#query script details
 	$var=$this->IPS_GetScript($id);
 	if (!$var) {
-		$this->setError("IPS_GetScript Request failed:".$rpc->getErrorMessage());
+		$this->setError("IPS_GetScript Request failed:".$this->getErrorMessage());
 		return null;
 	}
 	#update time
@@ -279,7 +281,7 @@ class IPS_JSON {
     *
     * @param string $name method
     * @param variant $arguments
-    * @return variant result of called function
+    * @return  variant result of called function
     * @throws Exception
     */
    public function __call($name, $arguments) {
@@ -309,7 +311,7 @@ class IPS_JSON {
 	));
 	if (!$result) {
 	    $this->error=array('message' => "No data returned from ".$this->url, 'code' => '-1');
-		if ($this->exception_flag) throw new Exception($error->message,$error->code);
+		if ($this->exception_flag) throw new Exception($this->error['message'],$this->error['code']);
 	    return null;
 	}
 	//decoding needs assoc flag to be compatible with returned IPS arrays
@@ -320,9 +322,8 @@ class IPS_JSON {
 	});
 	
 	if(isset($result['error'])) {
-	    $error=$result['error'];
-	    $this->error=$error;
-	    if ($this->exception_flag) throw new Exception($error->message,$error->code);
+	    $this->error=$result['error'];
+	    if ($this->exception_flag) throw new Exception($this->error['message'],$this->error['code']);
 		return null;
 	}
 	return $result['result'];		
@@ -331,4 +332,3 @@ class IPS_JSON {
   
 }//class
 
-?>

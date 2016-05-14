@@ -1,49 +1,23 @@
 <?php
 
-/** @file ips_wrapper.php
+/**
+ * @file
+ * @brief generated ipsymcon functions wrapper using gen_ips_wrapper.php
  *
+ * This wrapper helps you to execute Scripts written for IPSymcon also on other PHP boxes
+ * using IPSymcon JSON API. It defines all of known functions and map this to a JSON call
  *
- * Wrapper for IP-Symcon function calls to be executed via JSON API.
- *
- * This wrapper helps you to execute scripts written for IPSymcon also on other PHP boxes
- * using IPSymcon JSON API. It defines all of known functions and map this to a JSON call.
- *
- * Usage:
- *@code {.php}
-//include wrapper only if not in native IPS
-if (!function_exists('IPS_GetKernelVersion')) {
-   //we are outside of IPS and need the JSON wrapper
-   include('ips_wrapper.php');
-}
-//now you can call ips functions as usual
-$version=IPS_GetKernelVersion();
-print $version;
-@endcode
- *
- * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well.
- *
- * @pre you may create an additional file IPS_JSON_config.cfg which will summarize your JSON API settings as below.
- * This will have precendence over the generated values.
- * @code {.php}
-$config='IPS_JSON_config.cfg';
-// IPsymcon API Definitions
-$host='localhost';
-$port='82';
-$user='lizenz benutzer name';
-$password='fernzugriff-kennword';
-@endcode
- *
- * This wrapper has been generated using gen_ips_wrapper.php
- *
- * @version 0.4 (gen_ips_wrapper.php)
- * @version 4.00 (IPSymcon)
- * @date 2016-05-01 (generated)
+ * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well. 
  * @copyright Thomas Dressler 2013-2016
- *
- * @see http://www.tdressler.net/ipsymcon/funktionsliste.html#wrapper
+ * @version 0.6 (gen_ips_wrapper.php)
+ * @version 4.00 (IPSymcon)
+ * @date 2016-05-08 (generated)
+ * @see http://www.tdressler.net/ipsymcon/funktionsliste.html
  * @see http://www.tdressler.net/ipsymcon/jsonapi.html
-
+ * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
+ * 
  */
+
 
 require ("IPS_JSON.php");
 if ( !class_exists("IPS_JSON"))
@@ -53,27 +27,28 @@ if ( !class_exists("IPS_JSON"))
 }
 
 //default configuration
+
 /*
  * name and path of config file
  */
-$config="IPS_JSON_config.cfg";
+$config=dirname(__FILE__)."/IPS_JSON_config.cfg";
 /*
  * host to connect
  */
-$host='localhost';
+$host="localhost";
 /*
  * API Port to connect (usually 3777 or 82)
  */
-$port='3777';
+$port="82";
 /*
  * License user name (eg. email)
  */
-$user='lizenz benutzer name';
+$user="lizenz@email.ips";
 /*
  * ips password
  */
-$password='fernzugriff-kennword';
-//overwrite default configuration as above with your settings if needed
+$password="secret";
+//overwrite default configuration as above with your settings if needed 
 if (file_exists($config))  {
 	$config_data=file_get_contents($config);
 	$res=eval($config_data);
@@ -85,7 +60,7 @@ if (empty($user) || empty($password)) {
 $url="http://".$host.":".$port."/api/";
 
 /**
-* @var IPS_JSON $rpc
+* @var $rpc
 */
 $rpc = new IPS_JSON($url,$user,$password);
 
@@ -93,10 +68,10 @@ $rpc = new IPS_JSON($url,$user,$password);
 /**
 * AC_ChangeVariableID
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $OldVariableID
-* @param Integer $NewVariableID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $OldVariableID
+* @param integer $NewVariableID
 */
 
 function AC_ChangeVariableID( $InstanceID,$OldVariableID,$NewVariableID ){
@@ -108,11 +83,11 @@ function AC_ChangeVariableID( $InstanceID,$OldVariableID,$NewVariableID ){
 /**
 * AC_DeleteVariableData
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
-* @param Integer $StartTime
-* @param Integer $EndTime
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
+* @param integer $StartTime
+* @param integer $EndTime
 */
 
 function AC_DeleteVariableData( $InstanceID,$VariableID,$StartTime,$EndTime ){
@@ -124,14 +99,14 @@ function AC_DeleteVariableData( $InstanceID,$VariableID,$StartTime,$EndTime ){
 /**
 * AC_GetAggregatedValues
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns array
+* @param integer $InstanceID
+* @param integer $VariableID
 * @param integer $AggregationSpan
 *   enum[0=agHour, 1=agDay, 2=agWeek, 3=agMonth, 4=agYear, 5=ag5Minutes, 6=ag1Minute, 7=agChanges]
-* @param Integer $StartTime
-* @param Integer $EndTime
-* @param Integer $Limit
+* @param integer $StartTime
+* @param integer $EndTime
+* @param integer $Limit
 */
 
 function AC_GetAggregatedValues( $InstanceID,$VariableID,$AggregationSpan,$StartTime,$EndTime,$Limit ){
@@ -143,9 +118,9 @@ function AC_GetAggregatedValues( $InstanceID,$VariableID,$AggregationSpan,$Start
 /**
 * AC_GetAggregationType
 * 
-* @returns Integer
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns integer
+* @param integer $InstanceID
+* @param integer $VariableID
 */
 
 function AC_GetAggregationType( $InstanceID,$VariableID ){
@@ -157,9 +132,9 @@ function AC_GetAggregationType( $InstanceID,$VariableID ){
 /**
 * AC_GetAggregationVariables
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Boolean $CalculateStatistics
+* @returns array
+* @param integer $InstanceID
+* @param boolean $CalculateStatistics
 */
 
 function AC_GetAggregationVariables( $InstanceID,$CalculateStatistics ){
@@ -171,9 +146,9 @@ function AC_GetAggregationVariables( $InstanceID,$CalculateStatistics ){
 /**
 * AC_GetGraphStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
 */
 
 function AC_GetGraphStatus( $InstanceID,$VariableID ){
@@ -185,12 +160,12 @@ function AC_GetGraphStatus( $InstanceID,$VariableID ){
 /**
 * AC_GetLoggedValues
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $VariableID
-* @param Integer $StartTime
-* @param Integer $EndTime
-* @param Integer $Limit
+* @returns array
+* @param integer $InstanceID
+* @param integer $VariableID
+* @param integer $StartTime
+* @param integer $EndTime
+* @param integer $Limit
 */
 
 function AC_GetLoggedValues( $InstanceID,$VariableID,$StartTime,$EndTime,$Limit ){
@@ -202,9 +177,9 @@ function AC_GetLoggedValues( $InstanceID,$VariableID,$StartTime,$EndTime,$Limit 
 /**
 * AC_GetLoggingStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
 */
 
 function AC_GetLoggingStatus( $InstanceID,$VariableID ){
@@ -216,9 +191,9 @@ function AC_GetLoggingStatus( $InstanceID,$VariableID ){
 /**
 * AC_ReAggregateVariable
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
 */
 
 function AC_ReAggregateVariable( $InstanceID,$VariableID ){
@@ -230,9 +205,9 @@ function AC_ReAggregateVariable( $InstanceID,$VariableID ){
 /**
 * AC_SetAggregationType
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
 * @param integer $AggregationType
 *   enum[0=asGauge, 1=asCounter]
 */
@@ -246,10 +221,10 @@ function AC_SetAggregationType( $InstanceID,$VariableID,$AggregationType ){
 /**
 * AC_SetGraphStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
-* @param Boolean $Active
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
+* @param boolean $Active
 */
 
 function AC_SetGraphStatus( $InstanceID,$VariableID,$Active ){
@@ -261,10 +236,10 @@ function AC_SetGraphStatus( $InstanceID,$VariableID,$Active ){
 /**
 * AC_SetLoggingStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $VariableID
-* @param Boolean $Active
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $VariableID
+* @param boolean $Active
 */
 
 function AC_SetLoggingStatus( $InstanceID,$VariableID,$Active ){
@@ -276,8 +251,8 @@ function AC_SetLoggingStatus( $InstanceID,$VariableID,$Active ){
 /**
 * AESGI_RequestCurrentLimit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestCurrentLimit( $InstanceID ){
@@ -289,8 +264,8 @@ function AESGI_RequestCurrentLimit( $InstanceID ){
 /**
 * AESGI_RequestErrors
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestErrors( $InstanceID ){
@@ -302,8 +277,8 @@ function AESGI_RequestErrors( $InstanceID ){
 /**
 * AESGI_RequestPowerReduction
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestPowerReduction( $InstanceID ){
@@ -315,8 +290,8 @@ function AESGI_RequestPowerReduction( $InstanceID ){
 /**
 * AESGI_RequestRunMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestRunMode( $InstanceID ){
@@ -328,8 +303,8 @@ function AESGI_RequestRunMode( $InstanceID ){
 /**
 * AESGI_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestStatus( $InstanceID ){
@@ -341,8 +316,8 @@ function AESGI_RequestStatus( $InstanceID ){
 /**
 * AESGI_RequestType
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function AESGI_RequestType( $InstanceID ){
@@ -354,9 +329,9 @@ function AESGI_RequestType( $InstanceID ){
 /**
 * AESGI_SetCurrentLimit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Limit
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Limit
 */
 
 function AESGI_SetCurrentLimit( $InstanceID,$Limit ){
@@ -368,9 +343,9 @@ function AESGI_SetCurrentLimit( $InstanceID,$Limit ){
 /**
 * AESGI_SetPowerReduction
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Percent
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Percent
 */
 
 function AESGI_SetPowerReduction( $InstanceID,$Percent ){
@@ -382,10 +357,10 @@ function AESGI_SetPowerReduction( $InstanceID,$Percent ){
 /**
 * AESGI_SetRunMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Mode
-* @param Float $PowerLimit
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Mode
+* @param float $PowerLimit
 */
 
 function AESGI_SetRunMode( $InstanceID,$Mode,$PowerLimit ){
@@ -397,8 +372,8 @@ function AESGI_SetRunMode( $InstanceID,$Mode,$PowerLimit ){
 /**
 * AHA_Query
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function AHA_Query( $InstanceID ){
@@ -410,10 +385,10 @@ function AHA_Query( $InstanceID ){
 /**
 * AHA_SwitchMode
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $ain
-* @param Array $val
+* @returns variant
+* @param integer $InstanceID
+* @param variant $ain
+* @param variant $val
 */
 
 function AHA_SwitchMode( $InstanceID,$ain,$val ){
@@ -425,8 +400,8 @@ function AHA_SwitchMode( $InstanceID,$ain,$val ){
 /**
 * AHA_UpdateEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function AHA_UpdateEvent( $InstanceID ){
@@ -438,8 +413,8 @@ function AHA_UpdateEvent( $InstanceID ){
 /**
 * ALL_ReadConfiguration
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ALL_ReadConfiguration( $InstanceID ){
@@ -451,10 +426,10 @@ function ALL_ReadConfiguration( $InstanceID ){
 /**
 * ALL_SwitchActor
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $ChannelID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ChannelID
+* @param boolean $DeviceOn
 */
 
 function ALL_SwitchActor( $InstanceID,$ChannelID,$DeviceOn ){
@@ -466,9 +441,9 @@ function ALL_SwitchActor( $InstanceID,$ChannelID,$DeviceOn ){
 /**
 * ALL_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function ALL_SwitchMode( $InstanceID,$DeviceOn ){
@@ -480,8 +455,8 @@ function ALL_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * ALL_UpdateValues
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ALL_UpdateValues( $InstanceID ){
@@ -493,8 +468,8 @@ function ALL_UpdateValues( $InstanceID ){
 /**
 * CC_GetURL
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function CC_GetURL( $InstanceID ){
@@ -506,9 +481,9 @@ function CC_GetURL( $InstanceID ){
 /**
 * CSCK_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function CSCK_SendText( $InstanceID,$Text ){
@@ -520,8 +495,8 @@ function CSCK_SendText( $InstanceID,$Text ){
 /**
 * CUL_ReInitEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function CUL_ReInitEvent( $InstanceID ){
@@ -533,8 +508,8 @@ function CUL_ReInitEvent( $InstanceID ){
 /**
 * Cutter_ClearBuffer
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function Cutter_ClearBuffer( $InstanceID ){
@@ -546,11 +521,11 @@ function Cutter_ClearBuffer( $InstanceID ){
 /**
 * DMX_FadeChannel
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
-* @param Float $FadingSeconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
+* @param float $FadingSeconds
 */
 
 function DMX_FadeChannel( $InstanceID,$Channel,$Value,$FadingSeconds ){
@@ -562,12 +537,12 @@ function DMX_FadeChannel( $InstanceID,$Channel,$Value,$FadingSeconds ){
 /**
 * DMX_FadeChannelDelayed
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
-* @param Float $FadingSeconds
-* @param Float $DelayedSeconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
+* @param float $FadingSeconds
+* @param float $DelayedSeconds
 */
 
 function DMX_FadeChannelDelayed( $InstanceID,$Channel,$Value,$FadingSeconds,$DelayedSeconds ){
@@ -579,12 +554,12 @@ function DMX_FadeChannelDelayed( $InstanceID,$Channel,$Value,$FadingSeconds,$Del
 /**
 * DMX_FadeRGB
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
-* @param Float $FadingSeconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
+* @param float $FadingSeconds
 */
 
 function DMX_FadeRGB( $InstanceID,$R,$G,$B,$FadingSeconds ){
@@ -596,13 +571,13 @@ function DMX_FadeRGB( $InstanceID,$R,$G,$B,$FadingSeconds ){
 /**
 * DMX_FadeRGBDelayed
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
-* @param Float $FadingSeconds
-* @param Float $DelayedSeconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
+* @param float $FadingSeconds
+* @param float $DelayedSeconds
 */
 
 function DMX_FadeRGBDelayed( $InstanceID,$R,$G,$B,$FadingSeconds,$DelayedSeconds ){
@@ -614,8 +589,8 @@ function DMX_FadeRGBDelayed( $InstanceID,$R,$G,$B,$FadingSeconds,$DelayedSeconds
 /**
 * DMX_RequestInfo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DMX_RequestInfo( $InstanceID ){
@@ -627,8 +602,8 @@ function DMX_RequestInfo( $InstanceID ){
 /**
 * DMX_ResetInterface
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DMX_ResetInterface( $InstanceID ){
@@ -640,9 +615,9 @@ function DMX_ResetInterface( $InstanceID ){
 /**
 * DMX_SetBlackOut
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $BlackoutOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $BlackoutOn
 */
 
 function DMX_SetBlackOut( $InstanceID,$BlackoutOn ){
@@ -654,10 +629,10 @@ function DMX_SetBlackOut( $InstanceID,$BlackoutOn ){
 /**
 * DMX_SetChannel
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
 */
 
 function DMX_SetChannel( $InstanceID,$Channel,$Value ){
@@ -669,11 +644,11 @@ function DMX_SetChannel( $InstanceID,$Channel,$Value ){
 /**
 * DMX_SetRGB
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
 */
 
 function DMX_SetRGB( $InstanceID,$R,$G,$B ){
@@ -685,9 +660,9 @@ function DMX_SetRGB( $InstanceID,$R,$G,$B ){
 /**
 * DS_CallScene
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $SceneID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $SceneID
 */
 
 function DS_CallScene( $InstanceID,$SceneID ){
@@ -699,9 +674,9 @@ function DS_CallScene( $InstanceID,$SceneID ){
 /**
 * DS_DimSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function DS_DimSet( $InstanceID,$Intensity ){
@@ -713,8 +688,8 @@ function DS_DimSet( $InstanceID,$Intensity ){
 /**
 * DS_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function DS_GetKnownDevices( $InstanceID ){
@@ -726,8 +701,8 @@ function DS_GetKnownDevices( $InstanceID ){
 /**
 * DS_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DS_RequestStatus( $InstanceID ){
@@ -739,10 +714,10 @@ function DS_RequestStatus( $InstanceID ){
 /**
 * DS_RequestToken
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Username
-* @param String $Password
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Username
+* @param string $Password
 */
 
 function DS_RequestToken( $InstanceID,$Username,$Password ){
@@ -754,9 +729,9 @@ function DS_RequestToken( $InstanceID,$Username,$Password ){
 /**
 * DS_SaveScene
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $SceneID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $SceneID
 */
 
 function DS_SaveScene( $InstanceID,$SceneID ){
@@ -768,9 +743,9 @@ function DS_SaveScene( $InstanceID,$SceneID ){
 /**
 * DS_ShutterMove
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function DS_ShutterMove( $InstanceID,$Position ){
@@ -782,8 +757,8 @@ function DS_ShutterMove( $InstanceID,$Position ){
 /**
 * DS_ShutterMoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DS_ShutterMoveDown( $InstanceID ){
@@ -795,8 +770,8 @@ function DS_ShutterMoveDown( $InstanceID ){
 /**
 * DS_ShutterMoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DS_ShutterMoveUp( $InstanceID ){
@@ -808,8 +783,8 @@ function DS_ShutterMoveUp( $InstanceID ){
 /**
 * DS_ShutterStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function DS_ShutterStop( $InstanceID ){
@@ -821,9 +796,9 @@ function DS_ShutterStop( $InstanceID ){
 /**
 * DS_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function DS_SwitchMode( $InstanceID,$DeviceOn ){
@@ -835,9 +810,9 @@ function DS_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * DS_UndoScene
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $SceneID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $SceneID
 */
 
 function DS_UndoScene( $InstanceID,$SceneID ){
@@ -849,9 +824,9 @@ function DS_UndoScene( $InstanceID,$SceneID ){
 /**
 * EIB_Char
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Value
 */
 
 function EIB_Char( $InstanceID,$Value ){
@@ -863,9 +838,9 @@ function EIB_Char( $InstanceID,$Value ){
 /**
 * EIB_Counter16bit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_Counter16bit( $InstanceID,$Value ){
@@ -877,9 +852,9 @@ function EIB_Counter16bit( $InstanceID,$Value ){
 /**
 * EIB_Counter32bit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_Counter32bit( $InstanceID,$Value ){
@@ -891,9 +866,9 @@ function EIB_Counter32bit( $InstanceID,$Value ){
 /**
 * EIB_Counter8bit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_Counter8bit( $InstanceID,$Value ){
@@ -905,9 +880,9 @@ function EIB_Counter8bit( $InstanceID,$Value ){
 /**
 * EIB_Date
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Value
 */
 
 function EIB_Date( $InstanceID,$Value ){
@@ -919,9 +894,9 @@ function EIB_Date( $InstanceID,$Value ){
 /**
 * EIB_DimControl
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_DimControl( $InstanceID,$Value ){
@@ -933,9 +908,9 @@ function EIB_DimControl( $InstanceID,$Value ){
 /**
 * EIB_DimValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_DimValue( $InstanceID,$Value ){
@@ -947,9 +922,9 @@ function EIB_DimValue( $InstanceID,$Value ){
 /**
 * EIB_DriveBladeValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_DriveBladeValue( $InstanceID,$Value ){
@@ -961,9 +936,9 @@ function EIB_DriveBladeValue( $InstanceID,$Value ){
 /**
 * EIB_DriveMove
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function EIB_DriveMove( $InstanceID,$Value ){
@@ -975,9 +950,9 @@ function EIB_DriveMove( $InstanceID,$Value ){
 /**
 * EIB_DriveShutterValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_DriveShutterValue( $InstanceID,$Value ){
@@ -989,9 +964,9 @@ function EIB_DriveShutterValue( $InstanceID,$Value ){
 /**
 * EIB_DriveStep
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function EIB_DriveStep( $InstanceID,$Value ){
@@ -1003,9 +978,9 @@ function EIB_DriveStep( $InstanceID,$Value ){
 /**
 * EIB_FloatValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function EIB_FloatValue( $InstanceID,$Value ){
@@ -1017,8 +992,8 @@ function EIB_FloatValue( $InstanceID,$Value ){
 /**
 * EIB_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function EIB_GetKnownDevices( $InstanceID ){
@@ -1030,8 +1005,8 @@ function EIB_GetKnownDevices( $InstanceID ){
 /**
 * EIB_Move
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Command
 *   enum[0=emcOpen, 1=emcStepOpen, 2=emcStop, 3=emcStepClose, 4=emcClose]
 */
@@ -1045,9 +1020,9 @@ function EIB_Move( $InstanceID,$Command ){
 /**
 * EIB_Position
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function EIB_Position( $InstanceID,$Position ){
@@ -1059,9 +1034,9 @@ function EIB_Position( $InstanceID,$Position ){
 /**
 * EIB_PriorityControl
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_PriorityControl( $InstanceID,$Value ){
@@ -1073,9 +1048,9 @@ function EIB_PriorityControl( $InstanceID,$Value ){
 /**
 * EIB_PriorityPosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function EIB_PriorityPosition( $InstanceID,$Value ){
@@ -1087,8 +1062,8 @@ function EIB_PriorityPosition( $InstanceID,$Value ){
 /**
 * EIB_RequestInfo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function EIB_RequestInfo( $InstanceID ){
@@ -1100,8 +1075,8 @@ function EIB_RequestInfo( $InstanceID ){
 /**
 * EIB_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function EIB_RequestStatus( $InstanceID ){
@@ -1113,9 +1088,9 @@ function EIB_RequestStatus( $InstanceID ){
 /**
 * EIB_Scale
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function EIB_Scale( $InstanceID,$Value ){
@@ -1127,8 +1102,8 @@ function EIB_Scale( $InstanceID,$Value ){
 /**
 * EIB_SearchDevices
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function EIB_SearchDevices( $InstanceID ){
@@ -1140,11 +1115,11 @@ function EIB_SearchDevices( $InstanceID ){
 /**
 * EIB_SetRGB
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
 */
 
 function EIB_SetRGB( $InstanceID,$R,$G,$B ){
@@ -1156,12 +1131,12 @@ function EIB_SetRGB( $InstanceID,$R,$G,$B ){
 /**
 * EIB_SetRGBW
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
-* @param Integer $W
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
+* @param integer $W
 */
 
 function EIB_SetRGBW( $InstanceID,$R,$G,$B,$W ){
@@ -1173,9 +1148,9 @@ function EIB_SetRGBW( $InstanceID,$R,$G,$B,$W ){
 /**
 * EIB_Str
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Value
 */
 
 function EIB_Str( $InstanceID,$Value ){
@@ -1187,9 +1162,9 @@ function EIB_Str( $InstanceID,$Value ){
 /**
 * EIB_Switch
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function EIB_Switch( $InstanceID,$Value ){
@@ -1201,9 +1176,9 @@ function EIB_Switch( $InstanceID,$Value ){
 /**
 * EIB_Time
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Value
 */
 
 function EIB_Time( $InstanceID,$Value ){
@@ -1215,9 +1190,9 @@ function EIB_Time( $InstanceID,$Value ){
 /**
 * EIB_UploadDataPointFile
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Content
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Content
 */
 
 function EIB_UploadDataPointFile( $InstanceID,$Content ){
@@ -1229,9 +1204,9 @@ function EIB_UploadDataPointFile( $InstanceID,$Content ){
 /**
 * EIB_Value
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function EIB_Value( $InstanceID,$Value ){
@@ -1243,9 +1218,9 @@ function EIB_Value( $InstanceID,$Value ){
 /**
 * END_SendDataToParent
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function END_SendDataToParent( $InstanceID,$Data ){
@@ -1257,9 +1232,9 @@ function END_SendDataToParent( $InstanceID,$Data ){
 /**
 * ENO_DimSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function ENO_DimSet( $InstanceID,$Intensity ){
@@ -1271,9 +1246,9 @@ function ENO_DimSet( $InstanceID,$Intensity ){
 /**
 * ENO_SendCST
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $value
 */
 
 function ENO_SendCST( $InstanceID,$value ){
@@ -1285,9 +1260,9 @@ function ENO_SendCST( $InstanceID,$value ){
 /**
 * ENO_SendCTM
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $value
 */
 
 function ENO_SendCTM( $InstanceID,$value ){
@@ -1299,9 +1274,9 @@ function ENO_SendCTM( $InstanceID,$value ){
 /**
 * ENO_SendCV
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $value
 */
 
 function ENO_SendCV( $InstanceID,$value ){
@@ -1313,9 +1288,9 @@ function ENO_SendCV( $InstanceID,$value ){
 /**
 * ENO_SendERH
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $value
 */
 
 function ENO_SendERH( $InstanceID,$value ){
@@ -1327,9 +1302,9 @@ function ENO_SendERH( $InstanceID,$value ){
 /**
 * ENO_SendFANOR
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $value
 */
 
 function ENO_SendFANOR( $InstanceID,$value ){
@@ -1341,9 +1316,9 @@ function ENO_SendFANOR( $InstanceID,$value ){
 /**
 * ENO_SendFANOR_2
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $value
 */
 
 function ENO_SendFANOR_2( $InstanceID,$value ){
@@ -1355,8 +1330,8 @@ function ENO_SendFANOR_2( $InstanceID,$value ){
 /**
 * ENO_SendLearn
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ENO_SendLearn( $InstanceID ){
@@ -1368,9 +1343,9 @@ function ENO_SendLearn( $InstanceID ){
 /**
 * ENO_SendRO
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $value
 */
 
 function ENO_SendRO( $InstanceID,$value ){
@@ -1382,9 +1357,9 @@ function ENO_SendRO( $InstanceID,$value ){
 /**
 * ENO_SendSPS
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $value
 */
 
 function ENO_SendSPS( $InstanceID,$value ){
@@ -1396,9 +1371,9 @@ function ENO_SendSPS( $InstanceID,$value ){
 /**
 * ENO_SetActiveMessage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Message
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Message
 */
 
 function ENO_SetActiveMessage( $InstanceID,$Message ){
@@ -1410,9 +1385,9 @@ function ENO_SetActiveMessage( $InstanceID,$Message ){
 /**
 * ENO_SetButtonLock
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Active
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Active
 */
 
 function ENO_SetButtonLock( $InstanceID,$Active ){
@@ -1424,9 +1399,9 @@ function ENO_SetButtonLock( $InstanceID,$Active ){
 /**
 * ENO_SetFanStage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $FanStage
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $FanStage
 */
 
 function ENO_SetFanStage( $InstanceID,$FanStage ){
@@ -1438,10 +1413,10 @@ function ENO_SetFanStage( $InstanceID,$FanStage ){
 /**
 * ENO_SetIntensity
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
+* @param integer $Intensity
 */
 
 function ENO_SetIntensity( $InstanceID,$DeviceOn,$Intensity ){
@@ -1453,9 +1428,9 @@ function ENO_SetIntensity( $InstanceID,$DeviceOn,$Intensity ){
 /**
 * ENO_SetLockFanStage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Locked
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Locked
 */
 
 function ENO_SetLockFanStage( $InstanceID,$Locked ){
@@ -1467,9 +1442,9 @@ function ENO_SetLockFanStage( $InstanceID,$Locked ){
 /**
 * ENO_SetLockRoomOccupancy
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Locked
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Locked
 */
 
 function ENO_SetLockRoomOccupancy( $InstanceID,$Locked ){
@@ -1481,9 +1456,9 @@ function ENO_SetLockRoomOccupancy( $InstanceID,$Locked ){
 /**
 * ENO_SetMeasureTemperature
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Active
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Active
 */
 
 function ENO_SetMeasureTemperature( $InstanceID,$Active ){
@@ -1495,9 +1470,9 @@ function ENO_SetMeasureTemperature( $InstanceID,$Active ){
 /**
 * ENO_SetMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Mode
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Mode
 */
 
 function ENO_SetMode( $InstanceID,$Mode ){
@@ -1509,9 +1484,9 @@ function ENO_SetMode( $InstanceID,$Mode ){
 /**
 * ENO_SetPosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function ENO_SetPosition( $InstanceID,$Position ){
@@ -1523,9 +1498,9 @@ function ENO_SetPosition( $InstanceID,$Position ){
 /**
 * ENO_SetRoomOccupancy
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Occupied
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Occupied
 */
 
 function ENO_SetRoomOccupancy( $InstanceID,$Occupied ){
@@ -1537,9 +1512,9 @@ function ENO_SetRoomOccupancy( $InstanceID,$Occupied ){
 /**
 * ENO_SetTemperature
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Temperature
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Temperature
 */
 
 function ENO_SetTemperature( $InstanceID,$Temperature ){
@@ -1551,9 +1526,9 @@ function ENO_SetTemperature( $InstanceID,$Temperature ){
 /**
 * ENO_SetTemperature1
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Temperature
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Temperature
 */
 
 function ENO_SetTemperature1( $InstanceID,$Temperature ){
@@ -1565,8 +1540,8 @@ function ENO_SetTemperature1( $InstanceID,$Temperature ){
 /**
 * ENO_ShutterMoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ENO_ShutterMoveDown( $InstanceID ){
@@ -1578,8 +1553,8 @@ function ENO_ShutterMoveDown( $InstanceID ){
 /**
 * ENO_ShutterMoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ENO_ShutterMoveUp( $InstanceID ){
@@ -1591,8 +1566,8 @@ function ENO_ShutterMoveUp( $InstanceID ){
 /**
 * ENO_ShutterStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ENO_ShutterStop( $InstanceID ){
@@ -1604,9 +1579,9 @@ function ENO_ShutterStop( $InstanceID ){
 /**
 * ENO_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function ENO_SwitchMode( $InstanceID,$DeviceOn ){
@@ -1618,9 +1593,9 @@ function ENO_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * ENO_SwitchModeEx
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 * @param integer $SendMode
 *   enum[0=smNMessage, 1=smUMessage, 2=smBoth]
 */
@@ -1634,8 +1609,8 @@ function ENO_SwitchModeEx( $InstanceID,$DeviceOn,$SendMode ){
 /**
 * FHT_RequestData
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function FHT_RequestData( $InstanceID ){
@@ -1647,9 +1622,9 @@ function FHT_RequestData( $InstanceID ){
 /**
 * FHT_SetDay
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function FHT_SetDay( $InstanceID,$Value ){
@@ -1661,9 +1636,9 @@ function FHT_SetDay( $InstanceID,$Value ){
 /**
 * FHT_SetHour
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function FHT_SetHour( $InstanceID,$Value ){
@@ -1675,9 +1650,9 @@ function FHT_SetHour( $InstanceID,$Value ){
 /**
 * FHT_SetMinute
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function FHT_SetMinute( $InstanceID,$Value ){
@@ -1689,9 +1664,9 @@ function FHT_SetMinute( $InstanceID,$Value ){
 /**
 * FHT_SetMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Mode
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Mode
 */
 
 function FHT_SetMode( $InstanceID,$Mode ){
@@ -1703,9 +1678,9 @@ function FHT_SetMode( $InstanceID,$Mode ){
 /**
 * FHT_SetMonth
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function FHT_SetMonth( $InstanceID,$Value ){
@@ -1717,9 +1692,9 @@ function FHT_SetMonth( $InstanceID,$Value ){
 /**
 * FHT_SetTemperature
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Temperature
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Temperature
 */
 
 function FHT_SetTemperature( $InstanceID,$Temperature ){
@@ -1731,9 +1706,9 @@ function FHT_SetTemperature( $InstanceID,$Temperature ){
 /**
 * FHT_SetYear
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function FHT_SetYear( $InstanceID,$Value ){
@@ -1745,8 +1720,8 @@ function FHT_SetYear( $InstanceID,$Value ){
 /**
 * FHZ_GetFHTQueue
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function FHZ_GetFHTQueue( $InstanceID ){
@@ -1758,8 +1733,8 @@ function FHZ_GetFHTQueue( $InstanceID ){
 /**
 * FHZ_GetFreeBuffer
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function FHZ_GetFreeBuffer( $InstanceID ){
@@ -1771,8 +1746,8 @@ function FHZ_GetFreeBuffer( $InstanceID ){
 /**
 * FS20_DimDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function FS20_DimDown( $InstanceID ){
@@ -1784,8 +1759,8 @@ function FS20_DimDown( $InstanceID ){
 /**
 * FS20_DimUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function FS20_DimUp( $InstanceID ){
@@ -1797,10 +1772,10 @@ function FS20_DimUp( $InstanceID ){
 /**
 * FS20_SetIntensity
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
-* @param Integer $Duration
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
+* @param integer $Duration
 */
 
 function FS20_SetIntensity( $InstanceID,$Intensity,$Duration ){
@@ -1812,10 +1787,10 @@ function FS20_SetIntensity( $InstanceID,$Intensity,$Duration ){
 /**
 * FS20_SwitchDuration
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
-* @param Integer $Duration
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
+* @param integer $Duration
 */
 
 function FS20_SwitchDuration( $InstanceID,$DeviceOn,$Duration ){
@@ -1827,9 +1802,9 @@ function FS20_SwitchDuration( $InstanceID,$DeviceOn,$Duration ){
 /**
 * FS20_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function FS20_SwitchMode( $InstanceID,$DeviceOn ){
@@ -1841,8 +1816,8 @@ function FS20_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * GetValue
 * 
-* @returns Array
-* @param Integer $VariableID
+* @returns variant
+* @param integer $VariableID
 */
 
 function GetValue( $VariableID ){
@@ -1854,8 +1829,8 @@ function GetValue( $VariableID ){
 /**
 * GetValueBoolean
 * 
-* @returns Boolean
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $VariableID
 */
 
 function GetValueBoolean( $VariableID ){
@@ -1867,8 +1842,8 @@ function GetValueBoolean( $VariableID ){
 /**
 * GetValueFloat
 * 
-* @returns Float
-* @param Integer $VariableID
+* @returns float
+* @param integer $VariableID
 */
 
 function GetValueFloat( $VariableID ){
@@ -1880,8 +1855,8 @@ function GetValueFloat( $VariableID ){
 /**
 * GetValueFormatted
 * 
-* @returns String
-* @param Integer $VariableID
+* @returns string
+* @param integer $VariableID
 */
 
 function GetValueFormatted( $VariableID ){
@@ -1893,8 +1868,8 @@ function GetValueFormatted( $VariableID ){
 /**
 * GetValueInteger
 * 
-* @returns Integer
-* @param Integer $VariableID
+* @returns integer
+* @param integer $VariableID
 */
 
 function GetValueInteger( $VariableID ){
@@ -1906,8 +1881,8 @@ function GetValueInteger( $VariableID ){
 /**
 * GetValueString
 * 
-* @returns String
-* @param Integer $VariableID
+* @returns string
+* @param integer $VariableID
 */
 
 function GetValueString( $VariableID ){
@@ -1919,9 +1894,9 @@ function GetValueString( $VariableID ){
 /**
 * HC_TargetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function HC_TargetValue( $InstanceID,$Value ){
@@ -1933,10 +1908,10 @@ function HC_TargetValue( $InstanceID,$Value ){
 /**
 * HID_SendEvent
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $ReportID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ReportID
+* @param string $Text
 */
 
 function HID_SendEvent( $InstanceID,$ReportID,$Text ){
@@ -1948,9 +1923,9 @@ function HID_SendEvent( $InstanceID,$ReportID,$Text ){
 /**
 * HMS_ReleaseFI
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Delay
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Delay
 */
 
 function HMS_ReleaseFI( $InstanceID,$Delay ){
@@ -1962,8 +1937,8 @@ function HMS_ReleaseFI( $InstanceID,$Delay ){
 /**
 * HM_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function HM_GetKnownDevices( $InstanceID ){
@@ -1975,8 +1950,8 @@ function HM_GetKnownDevices( $InstanceID ){
 /**
 * HM_LoadDevices
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Protocol
 *   enum[0=hmpRadio, 1=hmpWired]
 */
@@ -1990,8 +1965,8 @@ function HM_LoadDevices( $InstanceID,$Protocol ){
 /**
 * HM_ReadServiceMessages
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function HM_ReadServiceMessages( $InstanceID ){
@@ -2003,9 +1978,9 @@ function HM_ReadServiceMessages( $InstanceID ){
 /**
 * HM_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Parameter
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Parameter
 */
 
 function HM_RequestStatus( $InstanceID,$Parameter ){
@@ -2017,10 +1992,10 @@ function HM_RequestStatus( $InstanceID,$Parameter ){
 /**
 * HM_WriteValueBoolean
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Parameter
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Parameter
+* @param boolean $Value
 */
 
 function HM_WriteValueBoolean( $InstanceID,$Parameter,$Value ){
@@ -2032,10 +2007,10 @@ function HM_WriteValueBoolean( $InstanceID,$Parameter,$Value ){
 /**
 * HM_WriteValueFloat
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Parameter
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Parameter
+* @param float $Value
 */
 
 function HM_WriteValueFloat( $InstanceID,$Parameter,$Value ){
@@ -2047,10 +2022,10 @@ function HM_WriteValueFloat( $InstanceID,$Parameter,$Value ){
 /**
 * HM_WriteValueInteger
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Parameter
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Parameter
+* @param integer $Value
 */
 
 function HM_WriteValueInteger( $InstanceID,$Parameter,$Value ){
@@ -2062,10 +2037,10 @@ function HM_WriteValueInteger( $InstanceID,$Parameter,$Value ){
 /**
 * HM_WriteValueString
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Parameter
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Parameter
+* @param string $Value
 */
 
 function HM_WriteValueString( $InstanceID,$Parameter,$Value ){
@@ -2077,8 +2052,8 @@ function HM_WriteValueString( $InstanceID,$Parameter,$Value ){
 /**
 * IG_UpdateImage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IG_UpdateImage( $InstanceID ){
@@ -2090,8 +2065,8 @@ function IG_UpdateImage( $InstanceID ){
 /**
 * IMAP_GetCachedMails
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function IMAP_GetCachedMails( $InstanceID ){
@@ -2103,9 +2078,9 @@ function IMAP_GetCachedMails( $InstanceID ){
 /**
 * IMAP_GetMailEx
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $UID
+* @returns array
+* @param integer $InstanceID
+* @param string $UID
 */
 
 function IMAP_GetMailEx( $InstanceID,$UID ){
@@ -2117,8 +2092,8 @@ function IMAP_GetMailEx( $InstanceID,$UID ){
 /**
 * IMAP_UpdateCache
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IMAP_UpdateCache( $InstanceID ){
@@ -2130,8 +2105,8 @@ function IMAP_UpdateCache( $InstanceID ){
 /**
 * IPS_ApplyChanges
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_ApplyChanges( $InstanceID ){
@@ -2143,8 +2118,8 @@ function IPS_ApplyChanges( $InstanceID ){
 /**
 * IPS_CategoryExists
 * 
-* @returns Boolean
-* @param Integer $CategoryID
+* @returns boolean
+* @param integer $CategoryID
 */
 
 function IPS_CategoryExists( $CategoryID ){
@@ -2156,9 +2131,9 @@ function IPS_CategoryExists( $CategoryID ){
 /**
 * IPS_ConnectInstance
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $ParentID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ParentID
 */
 
 function IPS_ConnectInstance( $InstanceID,$ParentID ){
@@ -2170,7 +2145,7 @@ function IPS_ConnectInstance( $InstanceID,$ParentID ){
 /**
 * IPS_CreateCategory
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_CreateCategory(  ){
@@ -2182,7 +2157,7 @@ function IPS_CreateCategory(  ){
 /**
 * IPS_CreateEvent
 * 
-* @returns Integer
+* @returns integer
 * @param integer $EventType
 *   enum[0=etTrigger, 1=etCyclic, 2=etSchedule]
 */
@@ -2196,8 +2171,8 @@ function IPS_CreateEvent( $EventType ){
 /**
 * IPS_CreateInstance
 * 
-* @returns Integer
-* @param String $ModuleID
+* @returns integer
+* @param string $ModuleID
 */
 
 function IPS_CreateInstance( $ModuleID ){
@@ -2209,7 +2184,7 @@ function IPS_CreateInstance( $ModuleID ){
 /**
 * IPS_CreateLink
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_CreateLink(  ){
@@ -2221,7 +2196,7 @@ function IPS_CreateLink(  ){
 /**
 * IPS_CreateMedia
 * 
-* @returns Integer
+* @returns integer
 * @param integer $MediaType
 *   enum[0=mtForm, 1=mtImage, 2=mtSound, 3=mtStream, 4=mtChart]
 */
@@ -2235,7 +2210,7 @@ function IPS_CreateMedia( $MediaType ){
 /**
 * IPS_CreateScript
 * 
-* @returns Integer
+* @returns integer
 * @param integer $ScriptType
 *   enum[0=stPHPScript, 1=stMacroScript, 2=stBrickScript]
 */
@@ -2249,7 +2224,7 @@ function IPS_CreateScript( $ScriptType ){
 /**
 * IPS_CreateVariable
 * 
-* @returns Integer
+* @returns integer
 * @param integer $VariableType
 *   enum[0=vtBoolean, 1=vtInteger, 2=vtFloat, 3=vtString]
 */
@@ -2263,8 +2238,8 @@ function IPS_CreateVariable( $VariableType ){
 /**
 * IPS_CreateVariableProfile
 * 
-* @returns Boolean
-* @param String $ProfileName
+* @returns boolean
+* @param string $ProfileName
 * @param integer $ProfileType
 *   enum[0=vtBoolean, 1=vtInteger, 2=vtFloat, 3=vtString]
 */
@@ -2278,8 +2253,8 @@ function IPS_CreateVariableProfile( $ProfileName,$ProfileType ){
 /**
 * IPS_DeleteCategory
 * 
-* @returns Boolean
-* @param Integer $CategoryID
+* @returns boolean
+* @param integer $CategoryID
 */
 
 function IPS_DeleteCategory( $CategoryID ){
@@ -2291,8 +2266,8 @@ function IPS_DeleteCategory( $CategoryID ){
 /**
 * IPS_DeleteEvent
 * 
-* @returns Boolean
-* @param Integer $EventID
+* @returns boolean
+* @param integer $EventID
 */
 
 function IPS_DeleteEvent( $EventID ){
@@ -2304,8 +2279,8 @@ function IPS_DeleteEvent( $EventID ){
 /**
 * IPS_DeleteInstance
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_DeleteInstance( $InstanceID ){
@@ -2317,8 +2292,8 @@ function IPS_DeleteInstance( $InstanceID ){
 /**
 * IPS_DeleteLink
 * 
-* @returns Boolean
-* @param Integer $LinkID
+* @returns boolean
+* @param integer $LinkID
 */
 
 function IPS_DeleteLink( $LinkID ){
@@ -2330,9 +2305,9 @@ function IPS_DeleteLink( $LinkID ){
 /**
 * IPS_DeleteMedia
 * 
-* @returns Boolean
-* @param Integer $MediaID
-* @param Boolean $DeleteFile
+* @returns boolean
+* @param integer $MediaID
+* @param boolean $DeleteFile
 */
 
 function IPS_DeleteMedia( $MediaID,$DeleteFile ){
@@ -2344,9 +2319,9 @@ function IPS_DeleteMedia( $MediaID,$DeleteFile ){
 /**
 * IPS_DeleteScript
 * 
-* @returns Boolean
-* @param Integer $ScriptID
-* @param Boolean $DeleteFile
+* @returns boolean
+* @param integer $ScriptID
+* @param boolean $DeleteFile
 */
 
 function IPS_DeleteScript( $ScriptID,$DeleteFile ){
@@ -2358,8 +2333,8 @@ function IPS_DeleteScript( $ScriptID,$DeleteFile ){
 /**
 * IPS_DeleteVariable
 * 
-* @returns Boolean
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $VariableID
 */
 
 function IPS_DeleteVariable( $VariableID ){
@@ -2371,8 +2346,8 @@ function IPS_DeleteVariable( $VariableID ){
 /**
 * IPS_DeleteVariableProfile
 * 
-* @returns Boolean
-* @param String $ProfileName
+* @returns boolean
+* @param string $ProfileName
 */
 
 function IPS_DeleteVariableProfile( $ProfileName ){
@@ -2384,9 +2359,9 @@ function IPS_DeleteVariableProfile( $ProfileName ){
 /**
 * IPS_DisableAction
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $VariableIdent
+* @returns boolean
+* @param integer $InstanceID
+* @param string $VariableIdent
 */
 
 function IPS_DisableAction( $InstanceID,$VariableIdent ){
@@ -2398,8 +2373,8 @@ function IPS_DisableAction( $InstanceID,$VariableIdent ){
 /**
 * IPS_DisableDebug
 * 
-* @returns Boolean
-* @param Integer $ID
+* @returns boolean
+* @param integer $ID
 */
 
 function IPS_DisableDebug( $ID ){
@@ -2411,8 +2386,8 @@ function IPS_DisableDebug( $ID ){
 /**
 * IPS_DisconnectInstance
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_DisconnectInstance( $InstanceID ){
@@ -2424,9 +2399,9 @@ function IPS_DisconnectInstance( $InstanceID ){
 /**
 * IPS_EnableAction
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $VariableIdent
+* @returns boolean
+* @param integer $InstanceID
+* @param string $VariableIdent
 */
 
 function IPS_EnableAction( $InstanceID,$VariableIdent ){
@@ -2438,9 +2413,9 @@ function IPS_EnableAction( $InstanceID,$VariableIdent ){
 /**
 * IPS_EnableDebug
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Integer $Duration
+* @returns boolean
+* @param integer $ID
+* @param integer $Duration
 */
 
 function IPS_EnableDebug( $ID,$Duration ){
@@ -2452,8 +2427,8 @@ function IPS_EnableDebug( $ID,$Duration ){
 /**
 * IPS_EventExists
 * 
-* @returns Boolean
-* @param Integer $EventID
+* @returns boolean
+* @param integer $EventID
 */
 
 function IPS_EventExists( $EventID ){
@@ -2465,11 +2440,11 @@ function IPS_EventExists( $EventID ){
 /**
 * IPS_Execute
 * 
-* @returns String
-* @param String $Filename
-* @param String $Parameter
-* @param Boolean $ShowWindow
-* @param Boolean $WaitResult
+* @returns string
+* @param string $Filename
+* @param string $Parameter
+* @param boolean $ShowWindow
+* @param boolean $WaitResult
 */
 
 function IPS_Execute( $Filename,$Parameter,$ShowWindow,$WaitResult ){
@@ -2481,12 +2456,12 @@ function IPS_Execute( $Filename,$Parameter,$ShowWindow,$WaitResult ){
 /**
 * IPS_ExecuteEx
 * 
-* @returns String
-* @param String $Filename
-* @param String $Parameter
-* @param Boolean $ShowWindow
-* @param Boolean $WaitResult
-* @param Integer $SessionID
+* @returns string
+* @param string $Filename
+* @param string $Parameter
+* @param boolean $ShowWindow
+* @param boolean $WaitResult
+* @param integer $SessionID
 */
 
 function IPS_ExecuteEx( $Filename,$Parameter,$ShowWindow,$WaitResult,$SessionID ){
@@ -2498,8 +2473,8 @@ function IPS_ExecuteEx( $Filename,$Parameter,$ShowWindow,$WaitResult,$SessionID 
 /**
 * IPS_FunctionExists
 * 
-* @returns Boolean
-* @param String $FunctionName
+* @returns boolean
+* @param string $FunctionName
 */
 
 function IPS_FunctionExists( $FunctionName ){
@@ -2511,8 +2486,8 @@ function IPS_FunctionExists( $FunctionName ){
 /**
 * IPS_GetCategory
 * 
-* @returns Variant
-* @param Integer $CategoryID
+* @returns array
+* @param integer $CategoryID
 */
 
 function IPS_GetCategory( $CategoryID ){
@@ -2524,9 +2499,9 @@ function IPS_GetCategory( $CategoryID ){
 /**
 * IPS_GetCategoryIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetCategoryIDByName( $Name,$ParentID ){
@@ -2538,7 +2513,7 @@ function IPS_GetCategoryIDByName( $Name,$ParentID ){
 /**
 * IPS_GetCategoryList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetCategoryList(  ){
@@ -2550,8 +2525,8 @@ function IPS_GetCategoryList(  ){
 /**
 * IPS_GetChildrenIDs
 * 
-* @returns Variant
-* @param Integer $ID
+* @returns array
+* @param integer $ID
 */
 
 function IPS_GetChildrenIDs( $ID ){
@@ -2563,8 +2538,8 @@ function IPS_GetChildrenIDs( $ID ){
 /**
 * IPS_GetCompatibleInstances
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function IPS_GetCompatibleInstances( $InstanceID ){
@@ -2576,8 +2551,8 @@ function IPS_GetCompatibleInstances( $InstanceID ){
 /**
 * IPS_GetCompatibleModules
 * 
-* @returns Variant
-* @param String $ModuleID
+* @returns array
+* @param string $ModuleID
 */
 
 function IPS_GetCompatibleModules( $ModuleID ){
@@ -2589,8 +2564,8 @@ function IPS_GetCompatibleModules( $ModuleID ){
 /**
 * IPS_GetConfiguration
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function IPS_GetConfiguration( $InstanceID ){
@@ -2602,8 +2577,8 @@ function IPS_GetConfiguration( $InstanceID ){
 /**
 * IPS_GetConfigurationForParent
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function IPS_GetConfigurationForParent( $InstanceID ){
@@ -2615,8 +2590,8 @@ function IPS_GetConfigurationForParent( $InstanceID ){
 /**
 * IPS_GetConfigurationForm
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function IPS_GetConfigurationForm( $InstanceID ){
@@ -2628,7 +2603,7 @@ function IPS_GetConfigurationForm( $InstanceID ){
 /**
 * IPS_GetDemoExpiration
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetDemoExpiration(  ){
@@ -2640,8 +2615,8 @@ function IPS_GetDemoExpiration(  ){
 /**
 * IPS_GetEvent
 * 
-* @returns Variant
-* @param Integer $EventID
+* @returns array
+* @param integer $EventID
 */
 
 function IPS_GetEvent( $EventID ){
@@ -2653,9 +2628,9 @@ function IPS_GetEvent( $EventID ){
 /**
 * IPS_GetEventIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetEventIDByName( $Name,$ParentID ){
@@ -2667,7 +2642,7 @@ function IPS_GetEventIDByName( $Name,$ParentID ){
 /**
 * IPS_GetEventList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetEventList(  ){
@@ -2679,7 +2654,7 @@ function IPS_GetEventList(  ){
 /**
 * IPS_GetEventListByType
 * 
-* @returns Variant
+* @returns array
 * @param integer $EventType
 *   enum[0=etTrigger, 1=etCyclic, 2=etSchedule]
 */
@@ -2693,8 +2668,8 @@ function IPS_GetEventListByType( $EventType ){
 /**
 * IPS_GetFunction
 * 
-* @returns Variant
-* @param String $FunctionName
+* @returns array
+* @param string $FunctionName
 */
 
 function IPS_GetFunction( $FunctionName ){
@@ -2706,8 +2681,8 @@ function IPS_GetFunction( $FunctionName ){
 /**
 * IPS_GetFunctionList
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function IPS_GetFunctionList( $InstanceID ){
@@ -2719,8 +2694,8 @@ function IPS_GetFunctionList( $InstanceID ){
 /**
 * IPS_GetFunctionListByModuleID
 * 
-* @returns Variant
-* @param String $ModuleID
+* @returns array
+* @param string $ModuleID
 */
 
 function IPS_GetFunctionListByModuleID( $ModuleID ){
@@ -2732,8 +2707,8 @@ function IPS_GetFunctionListByModuleID( $ModuleID ){
 /**
 * IPS_GetFunctions
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetFunctions( $Parameter ){
@@ -2745,8 +2720,8 @@ function IPS_GetFunctions( $Parameter ){
 /**
 * IPS_GetFunctionsMap
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetFunctionsMap( $Parameter ){
@@ -2758,8 +2733,8 @@ function IPS_GetFunctionsMap( $Parameter ){
 /**
 * IPS_GetInstance
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function IPS_GetInstance( $InstanceID ){
@@ -2771,9 +2746,9 @@ function IPS_GetInstance( $InstanceID ){
 /**
 * IPS_GetInstanceIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetInstanceIDByName( $Name,$ParentID ){
@@ -2785,7 +2760,7 @@ function IPS_GetInstanceIDByName( $Name,$ParentID ){
 /**
 * IPS_GetInstanceList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetInstanceList(  ){
@@ -2797,8 +2772,8 @@ function IPS_GetInstanceList(  ){
 /**
 * IPS_GetInstanceListByModuleID
 * 
-* @returns Variant
-* @param String $ModuleID
+* @returns array
+* @param string $ModuleID
 */
 
 function IPS_GetInstanceListByModuleID( $ModuleID ){
@@ -2810,7 +2785,7 @@ function IPS_GetInstanceListByModuleID( $ModuleID ){
 /**
 * IPS_GetInstanceListByModuleType
 * 
-* @returns Variant
+* @returns array
 * @param integer $ModuleType
 *   enum[0=mtCore, 1=mtIO, 2=mtSplitter, 3=mtDevice, 4=mtConfigurator]
 */
@@ -2824,7 +2799,7 @@ function IPS_GetInstanceListByModuleType( $ModuleType ){
 /**
 * IPS_GetKernelDir
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetKernelDir(  ){
@@ -2836,7 +2811,7 @@ function IPS_GetKernelDir(  ){
 /**
 * IPS_GetKernelDirEx
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetKernelDirEx(  ){
@@ -2848,7 +2823,7 @@ function IPS_GetKernelDirEx(  ){
 /**
 * IPS_GetKernelRunlevel
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetKernelRunlevel(  ){
@@ -2860,7 +2835,7 @@ function IPS_GetKernelRunlevel(  ){
 /**
 * IPS_GetKernelStartTime
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetKernelStartTime(  ){
@@ -2872,7 +2847,7 @@ function IPS_GetKernelStartTime(  ){
 /**
 * IPS_GetKernelVersion
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetKernelVersion(  ){
@@ -2884,8 +2859,8 @@ function IPS_GetKernelVersion(  ){
 /**
 * IPS_GetLibraries
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetLibraries( $Parameter ){
@@ -2897,8 +2872,8 @@ function IPS_GetLibraries( $Parameter ){
 /**
 * IPS_GetLibrary
 * 
-* @returns Variant
-* @param String $LibraryID
+* @returns array
+* @param string $LibraryID
 */
 
 function IPS_GetLibrary( $LibraryID ){
@@ -2910,7 +2885,7 @@ function IPS_GetLibrary( $LibraryID ){
 /**
 * IPS_GetLibraryList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetLibraryList(  ){
@@ -2922,8 +2897,8 @@ function IPS_GetLibraryList(  ){
 /**
 * IPS_GetLibraryModules
 * 
-* @returns Variant
-* @param String $LibraryID
+* @returns array
+* @param string $LibraryID
 */
 
 function IPS_GetLibraryModules( $LibraryID ){
@@ -2935,7 +2910,7 @@ function IPS_GetLibraryModules( $LibraryID ){
 /**
 * IPS_GetLicensee
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLicensee(  ){
@@ -2947,7 +2922,7 @@ function IPS_GetLicensee(  ){
 /**
 * IPS_GetLimitDemo
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetLimitDemo(  ){
@@ -2959,7 +2934,7 @@ function IPS_GetLimitDemo(  ){
 /**
 * IPS_GetLimitServer
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLimitServer(  ){
@@ -2971,7 +2946,7 @@ function IPS_GetLimitServer(  ){
 /**
 * IPS_GetLimitVariables
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetLimitVariables(  ){
@@ -2983,7 +2958,7 @@ function IPS_GetLimitVariables(  ){
 /**
 * IPS_GetLimitWebFront
 * 
-* @returns Integer
+* @returns integer
 */
 
 function IPS_GetLimitWebFront(  ){
@@ -2995,8 +2970,8 @@ function IPS_GetLimitWebFront(  ){
 /**
 * IPS_GetLink
 * 
-* @returns Variant
-* @param Integer $LinkID
+* @returns array
+* @param integer $LinkID
 */
 
 function IPS_GetLink( $LinkID ){
@@ -3008,9 +2983,9 @@ function IPS_GetLink( $LinkID ){
 /**
 * IPS_GetLinkIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetLinkIDByName( $Name,$ParentID ){
@@ -3022,7 +2997,7 @@ function IPS_GetLinkIDByName( $Name,$ParentID ){
 /**
 * IPS_GetLinkList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetLinkList(  ){
@@ -3034,7 +3009,7 @@ function IPS_GetLinkList(  ){
 /**
 * IPS_GetLiveConsoleCRC
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLiveConsoleCRC(  ){
@@ -3046,7 +3021,7 @@ function IPS_GetLiveConsoleCRC(  ){
 /**
 * IPS_GetLiveConsoleFile
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLiveConsoleFile(  ){
@@ -3058,7 +3033,7 @@ function IPS_GetLiveConsoleFile(  ){
 /**
 * IPS_GetLiveUpdateVersion
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLiveUpdateVersion(  ){
@@ -3070,8 +3045,8 @@ function IPS_GetLiveUpdateVersion(  ){
 /**
 * IPS_GetLocation
 * 
-* @returns String
-* @param Integer $ID
+* @returns string
+* @param integer $ID
 */
 
 function IPS_GetLocation( $ID ){
@@ -3083,7 +3058,7 @@ function IPS_GetLocation( $ID ){
 /**
 * IPS_GetLogDir
 * 
-* @returns String
+* @returns string
 */
 
 function IPS_GetLogDir(  ){
@@ -3095,8 +3070,8 @@ function IPS_GetLogDir(  ){
 /**
 * IPS_GetMedia
 * 
-* @returns Variant
-* @param Integer $MediaID
+* @returns array
+* @param integer $MediaID
 */
 
 function IPS_GetMedia( $MediaID ){
@@ -3108,8 +3083,8 @@ function IPS_GetMedia( $MediaID ){
 /**
 * IPS_GetMediaContent
 * 
-* @returns String
-* @param Integer $MediaID
+* @returns string
+* @param integer $MediaID
 */
 
 function IPS_GetMediaContent( $MediaID ){
@@ -3121,8 +3096,8 @@ function IPS_GetMediaContent( $MediaID ){
 /**
 * IPS_GetMediaIDByFile
 * 
-* @returns Integer
-* @param String $FilePath
+* @returns integer
+* @param string $FilePath
 */
 
 function IPS_GetMediaIDByFile( $FilePath ){
@@ -3134,9 +3109,9 @@ function IPS_GetMediaIDByFile( $FilePath ){
 /**
 * IPS_GetMediaIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetMediaIDByName( $Name,$ParentID ){
@@ -3148,7 +3123,7 @@ function IPS_GetMediaIDByName( $Name,$ParentID ){
 /**
 * IPS_GetMediaList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetMediaList(  ){
@@ -3160,7 +3135,7 @@ function IPS_GetMediaList(  ){
 /**
 * IPS_GetMediaListByType
 * 
-* @returns Variant
+* @returns array
 * @param integer $MediaType
 *   enum[0=mtForm, 1=mtImage, 2=mtSound, 3=mtStream, 4=mtChart]
 */
@@ -3174,8 +3149,8 @@ function IPS_GetMediaListByType( $MediaType ){
 /**
 * IPS_GetModule
 * 
-* @returns Variant
-* @param String $ModuleID
+* @returns array
+* @param string $ModuleID
 */
 
 function IPS_GetModule( $ModuleID ){
@@ -3187,7 +3162,7 @@ function IPS_GetModule( $ModuleID ){
 /**
 * IPS_GetModuleList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetModuleList(  ){
@@ -3199,7 +3174,7 @@ function IPS_GetModuleList(  ){
 /**
 * IPS_GetModuleListByType
 * 
-* @returns Variant
+* @returns array
 * @param integer $ModuleType
 *   enum[0=mtCore, 1=mtIO, 2=mtSplitter, 3=mtDevice, 4=mtConfigurator]
 */
@@ -3213,8 +3188,8 @@ function IPS_GetModuleListByType( $ModuleType ){
 /**
 * IPS_GetModules
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetModules( $Parameter ){
@@ -3226,8 +3201,8 @@ function IPS_GetModules( $Parameter ){
 /**
 * IPS_GetName
 * 
-* @returns String
-* @param Integer $ID
+* @returns string
+* @param integer $ID
 */
 
 function IPS_GetName( $ID ){
@@ -3239,8 +3214,8 @@ function IPS_GetName( $ID ){
 /**
 * IPS_GetObject
 * 
-* @returns Variant
-* @param Integer $ID
+* @returns array
+* @param integer $ID
 */
 
 function IPS_GetObject( $ID ){
@@ -3252,9 +3227,9 @@ function IPS_GetObject( $ID ){
 /**
 * IPS_GetObjectIDByIdent
 * 
-* @returns Integer
-* @param String $Ident
-* @param Integer $ParentID
+* @returns integer
+* @param string $Ident
+* @param integer $ParentID
 */
 
 function IPS_GetObjectIDByIdent( $Ident,$ParentID ){
@@ -3266,9 +3241,9 @@ function IPS_GetObjectIDByIdent( $Ident,$ParentID ){
 /**
 * IPS_GetObjectIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetObjectIDByName( $Name,$ParentID ){
@@ -3280,7 +3255,7 @@ function IPS_GetObjectIDByName( $Name,$ParentID ){
 /**
 * IPS_GetObjectList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetObjectList(  ){
@@ -3292,8 +3267,8 @@ function IPS_GetObjectList(  ){
 /**
 * IPS_GetOption
 * 
-* @returns Integer
-* @param String $Option
+* @returns integer
+* @param string $Option
 */
 
 function IPS_GetOption( $Option ){
@@ -3305,8 +3280,8 @@ function IPS_GetOption( $Option ){
 /**
 * IPS_GetParent
 * 
-* @returns Integer
-* @param Integer $ID
+* @returns integer
+* @param integer $ID
 */
 
 function IPS_GetParent( $ID ){
@@ -3318,9 +3293,9 @@ function IPS_GetParent( $ID ){
 /**
 * IPS_GetProperty
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param String $Name
+* @returns variant
+* @param integer $InstanceID
+* @param string $Name
 */
 
 function IPS_GetProperty( $InstanceID,$Name ){
@@ -3332,8 +3307,8 @@ function IPS_GetProperty( $InstanceID,$Name ){
 /**
 * IPS_GetScript
 * 
-* @returns Variant
-* @param Integer $ScriptID
+* @returns array
+* @param integer $ScriptID
 */
 
 function IPS_GetScript( $ScriptID ){
@@ -3345,8 +3320,8 @@ function IPS_GetScript( $ScriptID ){
 /**
 * IPS_GetScriptContent
 * 
-* @returns String
-* @param Integer $ScriptID
+* @returns string
+* @param integer $ScriptID
 */
 
 function IPS_GetScriptContent( $ScriptID ){
@@ -3358,8 +3333,8 @@ function IPS_GetScriptContent( $ScriptID ){
 /**
 * IPS_GetScriptEventList
 * 
-* @returns Variant
-* @param Integer $ScriptID
+* @returns array
+* @param integer $ScriptID
 */
 
 function IPS_GetScriptEventList( $ScriptID ){
@@ -3371,8 +3346,8 @@ function IPS_GetScriptEventList( $ScriptID ){
 /**
 * IPS_GetScriptFile
 * 
-* @returns String
-* @param Integer $ScriptID
+* @returns string
+* @param integer $ScriptID
 */
 
 function IPS_GetScriptFile( $ScriptID ){
@@ -3384,8 +3359,8 @@ function IPS_GetScriptFile( $ScriptID ){
 /**
 * IPS_GetScriptIDByFile
 * 
-* @returns Integer
-* @param String $FilePath
+* @returns integer
+* @param string $FilePath
 */
 
 function IPS_GetScriptIDByFile( $FilePath ){
@@ -3397,9 +3372,9 @@ function IPS_GetScriptIDByFile( $FilePath ){
 /**
 * IPS_GetScriptIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetScriptIDByName( $Name,$ParentID ){
@@ -3411,7 +3386,7 @@ function IPS_GetScriptIDByName( $Name,$ParentID ){
 /**
 * IPS_GetScriptList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetScriptList(  ){
@@ -3423,8 +3398,8 @@ function IPS_GetScriptList(  ){
 /**
 * IPS_GetScriptThread
 * 
-* @returns Variant
-* @param Integer $ThreadID
+* @returns array
+* @param integer $ThreadID
 */
 
 function IPS_GetScriptThread( $ThreadID ){
@@ -3436,7 +3411,7 @@ function IPS_GetScriptThread( $ThreadID ){
 /**
 * IPS_GetScriptThreadList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetScriptThreadList(  ){
@@ -3448,8 +3423,8 @@ function IPS_GetScriptThreadList(  ){
 /**
 * IPS_GetScriptThreads
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetScriptThreads( $Parameter ){
@@ -3461,8 +3436,8 @@ function IPS_GetScriptThreads( $Parameter ){
 /**
 * IPS_GetScriptTimer
 * 
-* @returns Integer
-* @param Integer $ScriptID
+* @returns integer
+* @param integer $ScriptID
 */
 
 function IPS_GetScriptTimer( $ScriptID ){
@@ -3474,7 +3449,7 @@ function IPS_GetScriptTimer( $ScriptID ){
 /**
 * IPS_GetSnapshot
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetSnapshot(  ){
@@ -3486,8 +3461,8 @@ function IPS_GetSnapshot(  ){
 /**
 * IPS_GetSnapshotChanges
 * 
-* @returns Variant
-* @param Integer $LastTimestamp
+* @returns array
+* @param integer $LastTimestamp
 */
 
 function IPS_GetSnapshotChanges( $LastTimestamp ){
@@ -3499,8 +3474,8 @@ function IPS_GetSnapshotChanges( $LastTimestamp ){
 /**
 * IPS_GetTimer
 * 
-* @returns Variant
-* @param Integer $TimerID
+* @returns array
+* @param integer $TimerID
 */
 
 function IPS_GetTimer( $TimerID ){
@@ -3512,7 +3487,7 @@ function IPS_GetTimer( $TimerID ){
 /**
 * IPS_GetTimerList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetTimerList(  ){
@@ -3524,8 +3499,8 @@ function IPS_GetTimerList(  ){
 /**
 * IPS_GetTimers
 * 
-* @returns Variant
-* @param Variant $Parameter
+* @returns array
+* @param array $Parameter
 */
 
 function IPS_GetTimers( $Parameter ){
@@ -3537,8 +3512,8 @@ function IPS_GetTimers( $Parameter ){
 /**
 * IPS_GetVariable
 * 
-* @returns Variant
-* @param Integer $VariableID
+* @returns array
+* @param integer $VariableID
 */
 
 function IPS_GetVariable( $VariableID ){
@@ -3550,8 +3525,8 @@ function IPS_GetVariable( $VariableID ){
 /**
 * IPS_GetVariableEventList
 * 
-* @returns Variant
-* @param Integer $VariableID
+* @returns array
+* @param integer $VariableID
 */
 
 function IPS_GetVariableEventList( $VariableID ){
@@ -3563,9 +3538,9 @@ function IPS_GetVariableEventList( $VariableID ){
 /**
 * IPS_GetVariableIDByName
 * 
-* @returns Integer
-* @param String $Name
-* @param Integer $ParentID
+* @returns integer
+* @param string $Name
+* @param integer $ParentID
 */
 
 function IPS_GetVariableIDByName( $Name,$ParentID ){
@@ -3577,7 +3552,7 @@ function IPS_GetVariableIDByName( $Name,$ParentID ){
 /**
 * IPS_GetVariableList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetVariableList(  ){
@@ -3589,8 +3564,8 @@ function IPS_GetVariableList(  ){
 /**
 * IPS_GetVariableProfile
 * 
-* @returns Variant
-* @param String $ProfileName
+* @returns array
+* @param string $ProfileName
 */
 
 function IPS_GetVariableProfile( $ProfileName ){
@@ -3602,7 +3577,7 @@ function IPS_GetVariableProfile( $ProfileName ){
 /**
 * IPS_GetVariableProfileList
 * 
-* @returns Variant
+* @returns array
 */
 
 function IPS_GetVariableProfileList(  ){
@@ -3614,7 +3589,7 @@ function IPS_GetVariableProfileList(  ){
 /**
 * IPS_GetVariableProfileListByType
 * 
-* @returns Variant
+* @returns array
 * @param integer $ProfileType
 *   enum[0=vtBoolean, 1=vtInteger, 2=vtFloat, 3=vtString]
 */
@@ -3628,8 +3603,8 @@ function IPS_GetVariableProfileListByType( $ProfileType ){
 /**
 * IPS_HasChanges
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_HasChanges( $InstanceID ){
@@ -3641,8 +3616,8 @@ function IPS_HasChanges( $InstanceID ){
 /**
 * IPS_HasChildren
 * 
-* @returns Boolean
-* @param Integer $ID
+* @returns boolean
+* @param integer $ID
 */
 
 function IPS_HasChildren( $ID ){
@@ -3654,8 +3629,8 @@ function IPS_HasChildren( $ID ){
 /**
 * IPS_InstanceExists
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_InstanceExists( $InstanceID ){
@@ -3667,10 +3642,10 @@ function IPS_InstanceExists( $InstanceID ){
 /**
 * IPS_IsChild
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Integer $ParentID
-* @param Boolean $Recursive
+* @returns boolean
+* @param integer $ID
+* @param integer $ParentID
+* @param boolean $Recursive
 */
 
 function IPS_IsChild( $ID,$ParentID,$Recursive ){
@@ -3682,9 +3657,9 @@ function IPS_IsChild( $ID,$ParentID,$Recursive ){
 /**
 * IPS_IsInstanceCompatible
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $ParentInstanceID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ParentInstanceID
 */
 
 function IPS_IsInstanceCompatible( $InstanceID,$ParentInstanceID ){
@@ -3696,9 +3671,9 @@ function IPS_IsInstanceCompatible( $InstanceID,$ParentInstanceID ){
 /**
 * IPS_IsModuleCompatible
 * 
-* @returns Boolean
-* @param String $ModuleID
-* @param String $ParentModuleID
+* @returns boolean
+* @param string $ModuleID
+* @param string $ParentModuleID
 */
 
 function IPS_IsModuleCompatible( $ModuleID,$ParentModuleID ){
@@ -3710,8 +3685,8 @@ function IPS_IsModuleCompatible( $ModuleID,$ParentModuleID ){
 /**
 * IPS_IsSearching
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_IsSearching( $InstanceID ){
@@ -3723,8 +3698,8 @@ function IPS_IsSearching( $InstanceID ){
 /**
 * IPS_LibraryExists
 * 
-* @returns Boolean
-* @param String $LibraryID
+* @returns boolean
+* @param string $LibraryID
 */
 
 function IPS_LibraryExists( $LibraryID ){
@@ -3736,8 +3711,8 @@ function IPS_LibraryExists( $LibraryID ){
 /**
 * IPS_LinkExists
 * 
-* @returns Boolean
-* @param Integer $LinkID
+* @returns boolean
+* @param integer $LinkID
 */
 
 function IPS_LinkExists( $LinkID ){
@@ -3749,9 +3724,9 @@ function IPS_LinkExists( $LinkID ){
 /**
 * IPS_LogMessage
 * 
-* @returns Boolean
-* @param String $Sender
-* @param String $Message
+* @returns boolean
+* @param string $Sender
+* @param string $Message
 */
 
 function IPS_LogMessage( $Sender,$Message ){
@@ -3763,8 +3738,8 @@ function IPS_LogMessage( $Sender,$Message ){
 /**
 * IPS_MediaExists
 * 
-* @returns Boolean
-* @param Integer $MediaID
+* @returns boolean
+* @param integer $MediaID
 */
 
 function IPS_MediaExists( $MediaID ){
@@ -3776,8 +3751,8 @@ function IPS_MediaExists( $MediaID ){
 /**
 * IPS_ModuleExists
 * 
-* @returns Boolean
-* @param String $ModuleID
+* @returns boolean
+* @param string $ModuleID
 */
 
 function IPS_ModuleExists( $ModuleID ){
@@ -3789,8 +3764,8 @@ function IPS_ModuleExists( $ModuleID ){
 /**
 * IPS_ObjectExists
 * 
-* @returns Boolean
-* @param Integer $ID
+* @returns boolean
+* @param integer $ID
 */
 
 function IPS_ObjectExists( $ID ){
@@ -3802,10 +3777,10 @@ function IPS_ObjectExists( $ID ){
 /**
 * IPS_RegisterPropertyBoolean
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Name
-* @param Boolean $DefaultValue
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Name
+* @param boolean $DefaultValue
 */
 
 function IPS_RegisterPropertyBoolean( $InstanceID,$Name,$DefaultValue ){
@@ -3817,10 +3792,10 @@ function IPS_RegisterPropertyBoolean( $InstanceID,$Name,$DefaultValue ){
 /**
 * IPS_RegisterPropertyFloat
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Name
-* @param Float $DefaultValue
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Name
+* @param float $DefaultValue
 */
 
 function IPS_RegisterPropertyFloat( $InstanceID,$Name,$DefaultValue ){
@@ -3832,10 +3807,10 @@ function IPS_RegisterPropertyFloat( $InstanceID,$Name,$DefaultValue ){
 /**
 * IPS_RegisterPropertyInteger
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Name
-* @param Integer $DefaultValue
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Name
+* @param integer $DefaultValue
 */
 
 function IPS_RegisterPropertyInteger( $InstanceID,$Name,$DefaultValue ){
@@ -3847,10 +3822,10 @@ function IPS_RegisterPropertyInteger( $InstanceID,$Name,$DefaultValue ){
 /**
 * IPS_RegisterPropertyString
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Name
-* @param String $DefaultValue
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Name
+* @param string $DefaultValue
 */
 
 function IPS_RegisterPropertyString( $InstanceID,$Name,$DefaultValue ){
@@ -3862,10 +3837,10 @@ function IPS_RegisterPropertyString( $InstanceID,$Name,$DefaultValue ){
 /**
 * IPS_RequestAction
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $VariableIdent
-* @param Array $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $VariableIdent
+* @param variant $Value
 */
 
 function IPS_RequestAction( $InstanceID,$VariableIdent,$Value ){
@@ -3877,8 +3852,8 @@ function IPS_RequestAction( $InstanceID,$VariableIdent,$Value ){
 /**
 * IPS_ResetChanges
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_ResetChanges( $InstanceID ){
@@ -3890,8 +3865,8 @@ function IPS_ResetChanges( $InstanceID ){
 /**
 * IPS_RunScript
 * 
-* @returns Boolean
-* @param Integer $ScriptID
+* @returns boolean
+* @param integer $ScriptID
 */
 
 function IPS_RunScript( $ScriptID ){
@@ -3903,9 +3878,9 @@ function IPS_RunScript( $ScriptID ){
 /**
 * IPS_RunScriptEx
 * 
-* @returns Boolean
-* @param Integer $ScriptID
-* @param Variant $Parameters
+* @returns boolean
+* @param integer $ScriptID
+* @param array $Parameters
 */
 
 function IPS_RunScriptEx( $ScriptID,$Parameters ){
@@ -3917,8 +3892,8 @@ function IPS_RunScriptEx( $ScriptID,$Parameters ){
 /**
 * IPS_RunScriptText
 * 
-* @returns Boolean
-* @param String $ScriptText
+* @returns boolean
+* @param string $ScriptText
 */
 
 function IPS_RunScriptText( $ScriptText ){
@@ -3930,9 +3905,9 @@ function IPS_RunScriptText( $ScriptText ){
 /**
 * IPS_RunScriptTextEx
 * 
-* @returns Boolean
-* @param String $ScriptText
-* @param Variant $Parameters
+* @returns boolean
+* @param string $ScriptText
+* @param array $Parameters
 */
 
 function IPS_RunScriptTextEx( $ScriptText,$Parameters ){
@@ -3944,8 +3919,8 @@ function IPS_RunScriptTextEx( $ScriptText,$Parameters ){
 /**
 * IPS_RunScriptTextWait
 * 
-* @returns String
-* @param String $ScriptText
+* @returns string
+* @param string $ScriptText
 */
 
 function IPS_RunScriptTextWait( $ScriptText ){
@@ -3957,9 +3932,9 @@ function IPS_RunScriptTextWait( $ScriptText ){
 /**
 * IPS_RunScriptTextWaitEx
 * 
-* @returns String
-* @param String $ScriptText
-* @param Variant $Parameters
+* @returns string
+* @param string $ScriptText
+* @param array $Parameters
 */
 
 function IPS_RunScriptTextWaitEx( $ScriptText,$Parameters ){
@@ -3971,8 +3946,8 @@ function IPS_RunScriptTextWaitEx( $ScriptText,$Parameters ){
 /**
 * IPS_RunScriptWait
 * 
-* @returns String
-* @param Integer $ScriptID
+* @returns string
+* @param integer $ScriptID
 */
 
 function IPS_RunScriptWait( $ScriptID ){
@@ -3984,9 +3959,9 @@ function IPS_RunScriptWait( $ScriptID ){
 /**
 * IPS_RunScriptWaitEx
 * 
-* @returns String
-* @param Integer $ScriptID
-* @param Variant $Parameters
+* @returns string
+* @param integer $ScriptID
+* @param array $Parameters
 */
 
 function IPS_RunScriptWaitEx( $ScriptID,$Parameters ){
@@ -3998,8 +3973,8 @@ function IPS_RunScriptWaitEx( $ScriptID,$Parameters ){
 /**
 * IPS_ScriptExists
 * 
-* @returns Boolean
-* @param Integer $ScriptID
+* @returns boolean
+* @param integer $ScriptID
 */
 
 function IPS_ScriptExists( $ScriptID ){
@@ -4011,8 +3986,8 @@ function IPS_ScriptExists( $ScriptID ){
 /**
 * IPS_ScriptThreadExists
 * 
-* @returns Boolean
-* @param Integer $ThreadID
+* @returns boolean
+* @param integer $ThreadID
 */
 
 function IPS_ScriptThreadExists( $ThreadID ){
@@ -4024,9 +3999,9 @@ function IPS_ScriptThreadExists( $ThreadID ){
 /**
 * IPS_SemaphoreEnter
 * 
-* @returns Boolean
-* @param String $Name
-* @param Integer $Milliseconds
+* @returns boolean
+* @param string $Name
+* @param integer $Milliseconds
 */
 
 function IPS_SemaphoreEnter( $Name,$Milliseconds ){
@@ -4038,8 +4013,8 @@ function IPS_SemaphoreEnter( $Name,$Milliseconds ){
 /**
 * IPS_SemaphoreLeave
 * 
-* @returns Boolean
-* @param String $Name
+* @returns boolean
+* @param string $Name
 */
 
 function IPS_SemaphoreLeave( $Name ){
@@ -4051,9 +4026,9 @@ function IPS_SemaphoreLeave( $Name ){
 /**
 * IPS_SendDataToChildren
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $JSONData
+* @returns boolean
+* @param integer $InstanceID
+* @param string $JSONData
 */
 
 function IPS_SendDataToChildren( $InstanceID,$JSONData ){
@@ -4065,9 +4040,9 @@ function IPS_SendDataToChildren( $InstanceID,$JSONData ){
 /**
 * IPS_SendDataToParent
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $JSONData
+* @returns string
+* @param integer $InstanceID
+* @param string $JSONData
 */
 
 function IPS_SendDataToParent( $InstanceID,$JSONData ){
@@ -4079,10 +4054,10 @@ function IPS_SendDataToParent( $InstanceID,$JSONData ){
 /**
 * IPS_SendDebug
 * 
-* @returns Boolean
-* @param Integer $SenderID
-* @param String $Message
-* @param String $Data
+* @returns boolean
+* @param integer $SenderID
+* @param string $Message
+* @param string $Data
 * @param integer $Format
 *   enum[0=dfText, 1=dfBinary]
 */
@@ -4096,8 +4071,8 @@ function IPS_SendDebug( $SenderID,$Message,$Data,$Format ){
 /**
 * IPS_SendMediaEvent
 * 
-* @returns Boolean
-* @param Integer $MediaID
+* @returns boolean
+* @param integer $MediaID
 */
 
 function IPS_SendMediaEvent( $MediaID ){
@@ -4109,9 +4084,9 @@ function IPS_SendMediaEvent( $MediaID ){
 /**
 * IPS_SetConfiguration
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Configuration
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Configuration
 */
 
 function IPS_SetConfiguration( $InstanceID,$Configuration ){
@@ -4123,9 +4098,9 @@ function IPS_SetConfiguration( $InstanceID,$Configuration ){
 /**
 * IPS_SetDisabled
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Boolean $Disabled
+* @returns boolean
+* @param integer $ID
+* @param boolean $Disabled
 */
 
 function IPS_SetDisabled( $ID,$Disabled ){
@@ -4137,9 +4112,9 @@ function IPS_SetDisabled( $ID,$Disabled ){
 /**
 * IPS_SetEventActive
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Boolean $Active
+* @returns boolean
+* @param integer $EventID
+* @param boolean $Active
 */
 
 function IPS_SetEventActive( $EventID,$Active ){
@@ -4151,16 +4126,16 @@ function IPS_SetEventActive( $EventID,$Active ){
 /**
 * IPS_SetEventCyclic
 * 
-* @returns Boolean
-* @param Integer $EventID
+* @returns boolean
+* @param integer $EventID
 * @param integer $DateType
 *   enum[0=cdtNone, 1=cdtOnce, 2=cdtDay, 3=cdtWeek, 4=cdtMonth, 5=cdtYear]
-* @param Integer $DateValue
-* @param Integer $DateDay
-* @param Integer $DateDayValue
+* @param integer $DateValue
+* @param integer $DateDay
+* @param integer $DateDayValue
 * @param integer $TimeType
 *   enum[0=cttOnce, 1=cttSecond, 2=cttMinute, 3=cttHour]
-* @param Integer $TimeValue
+* @param integer $TimeValue
 */
 
 function IPS_SetEventCyclic( $EventID,$DateType,$DateValue,$DateDay,$DateDayValue,$TimeType,$TimeValue ){
@@ -4172,11 +4147,11 @@ function IPS_SetEventCyclic( $EventID,$DateType,$DateValue,$DateDay,$DateDayValu
 /**
 * IPS_SetEventCyclicDateFrom
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $Day
-* @param Integer $Month
-* @param Integer $Year
+* @returns boolean
+* @param integer $EventID
+* @param integer $Day
+* @param integer $Month
+* @param integer $Year
 */
 
 function IPS_SetEventCyclicDateFrom( $EventID,$Day,$Month,$Year ){
@@ -4188,11 +4163,11 @@ function IPS_SetEventCyclicDateFrom( $EventID,$Day,$Month,$Year ){
 /**
 * IPS_SetEventCyclicDateTo
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $Day
-* @param Integer $Month
-* @param Integer $Year
+* @returns boolean
+* @param integer $EventID
+* @param integer $Day
+* @param integer $Month
+* @param integer $Year
 */
 
 function IPS_SetEventCyclicDateTo( $EventID,$Day,$Month,$Year ){
@@ -4204,11 +4179,11 @@ function IPS_SetEventCyclicDateTo( $EventID,$Day,$Month,$Year ){
 /**
 * IPS_SetEventCyclicTimeFrom
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $Hour
-* @param Integer $Minute
-* @param Integer $Second
+* @returns boolean
+* @param integer $EventID
+* @param integer $Hour
+* @param integer $Minute
+* @param integer $Second
 */
 
 function IPS_SetEventCyclicTimeFrom( $EventID,$Hour,$Minute,$Second ){
@@ -4220,11 +4195,11 @@ function IPS_SetEventCyclicTimeFrom( $EventID,$Hour,$Minute,$Second ){
 /**
 * IPS_SetEventCyclicTimeTo
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $Hour
-* @param Integer $Minute
-* @param Integer $Second
+* @returns boolean
+* @param integer $EventID
+* @param integer $Hour
+* @param integer $Minute
+* @param integer $Second
 */
 
 function IPS_SetEventCyclicTimeTo( $EventID,$Hour,$Minute,$Second ){
@@ -4236,9 +4211,9 @@ function IPS_SetEventCyclicTimeTo( $EventID,$Hour,$Minute,$Second ){
 /**
 * IPS_SetEventLimit
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $Count
+* @returns boolean
+* @param integer $EventID
+* @param integer $Count
 */
 
 function IPS_SetEventLimit( $EventID,$Count ){
@@ -4250,12 +4225,12 @@ function IPS_SetEventLimit( $EventID,$Count ){
 /**
 * IPS_SetEventScheduleAction
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $ActionID
-* @param String $Name
-* @param Integer $Color
-* @param String $ScriptText
+* @returns boolean
+* @param integer $EventID
+* @param integer $ActionID
+* @param string $Name
+* @param integer $Color
+* @param string $ScriptText
 */
 
 function IPS_SetEventScheduleAction( $EventID,$ActionID,$Name,$Color,$ScriptText ){
@@ -4267,10 +4242,10 @@ function IPS_SetEventScheduleAction( $EventID,$ActionID,$Name,$Color,$ScriptText
 /**
 * IPS_SetEventScheduleGroup
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $GroupID
-* @param Integer $Days
+* @returns boolean
+* @param integer $EventID
+* @param integer $GroupID
+* @param integer $Days
 */
 
 function IPS_SetEventScheduleGroup( $EventID,$GroupID,$Days ){
@@ -4282,14 +4257,14 @@ function IPS_SetEventScheduleGroup( $EventID,$GroupID,$Days ){
 /**
 * IPS_SetEventScheduleGroupPoint
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Integer $GroupID
-* @param Integer $PointID
-* @param Integer $StartHour
-* @param Integer $StartMinute
-* @param Integer $StartSecond
-* @param Integer $ActionID
+* @returns boolean
+* @param integer $EventID
+* @param integer $GroupID
+* @param integer $PointID
+* @param integer $StartHour
+* @param integer $StartMinute
+* @param integer $StartSecond
+* @param integer $ActionID
 */
 
 function IPS_SetEventScheduleGroupPoint( $EventID,$GroupID,$PointID,$StartHour,$StartMinute,$StartSecond,$ActionID ){
@@ -4301,9 +4276,9 @@ function IPS_SetEventScheduleGroupPoint( $EventID,$GroupID,$PointID,$StartHour,$
 /**
 * IPS_SetEventScript
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param String $EventScript
+* @returns boolean
+* @param integer $EventID
+* @param string $EventScript
 */
 
 function IPS_SetEventScript( $EventID,$EventScript ){
@@ -4315,11 +4290,11 @@ function IPS_SetEventScript( $EventID,$EventScript ){
 /**
 * IPS_SetEventTrigger
 * 
-* @returns Boolean
-* @param Integer $EventID
+* @returns boolean
+* @param integer $EventID
 * @param integer $TriggerType
 *   enum[0=evtOnUpdate, 1=evtOnChange, 2=evtOnLimitExceed, 3=evtOnLimitDrop, 4=evtOnValue]
-* @param Integer $TriggerVariableID
+* @param integer $TriggerVariableID
 */
 
 function IPS_SetEventTrigger( $EventID,$TriggerType,$TriggerVariableID ){
@@ -4331,9 +4306,9 @@ function IPS_SetEventTrigger( $EventID,$TriggerType,$TriggerVariableID ){
 /**
 * IPS_SetEventTriggerSubsequentExecution
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Boolean $AllowSubsequentExecutions
+* @returns boolean
+* @param integer $EventID
+* @param boolean $AllowSubsequentExecutions
 */
 
 function IPS_SetEventTriggerSubsequentExecution( $EventID,$AllowSubsequentExecutions ){
@@ -4345,9 +4320,9 @@ function IPS_SetEventTriggerSubsequentExecution( $EventID,$AllowSubsequentExecut
 /**
 * IPS_SetEventTriggerValue
 * 
-* @returns Boolean
-* @param Integer $EventID
-* @param Array $TriggerValue
+* @returns boolean
+* @param integer $EventID
+* @param variant $TriggerValue
 */
 
 function IPS_SetEventTriggerValue( $EventID,$TriggerValue ){
@@ -4359,9 +4334,9 @@ function IPS_SetEventTriggerValue( $EventID,$TriggerValue ){
 /**
 * IPS_SetHidden
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Boolean $Hidden
+* @returns boolean
+* @param integer $ID
+* @param boolean $Hidden
 */
 
 function IPS_SetHidden( $ID,$Hidden ){
@@ -4373,9 +4348,9 @@ function IPS_SetHidden( $ID,$Hidden ){
 /**
 * IPS_SetIcon
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param String $Icon
+* @returns boolean
+* @param integer $ID
+* @param string $Icon
 */
 
 function IPS_SetIcon( $ID,$Icon ){
@@ -4387,9 +4362,9 @@ function IPS_SetIcon( $ID,$Icon ){
 /**
 * IPS_SetIdent
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param String $Ident
+* @returns boolean
+* @param integer $ID
+* @param string $Ident
 */
 
 function IPS_SetIdent( $ID,$Ident ){
@@ -4401,9 +4376,9 @@ function IPS_SetIdent( $ID,$Ident ){
 /**
 * IPS_SetInfo
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param String $Info
+* @returns boolean
+* @param integer $ID
+* @param string $Info
 */
 
 function IPS_SetInfo( $ID,$Info ){
@@ -4415,9 +4390,9 @@ function IPS_SetInfo( $ID,$Info ){
 /**
 * IPS_SetInstanceStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Status
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Status
 */
 
 function IPS_SetInstanceStatus( $InstanceID,$Status ){
@@ -4429,9 +4404,9 @@ function IPS_SetInstanceStatus( $InstanceID,$Status ){
 /**
 * IPS_SetLicense
 * 
-* @returns Boolean
-* @param String $Licensee
-* @param String $LicenseContent
+* @returns boolean
+* @param string $Licensee
+* @param string $LicenseContent
 */
 
 function IPS_SetLicense( $Licensee,$LicenseContent ){
@@ -4443,9 +4418,9 @@ function IPS_SetLicense( $Licensee,$LicenseContent ){
 /**
 * IPS_SetLinkTargetID
 * 
-* @returns Boolean
-* @param Integer $LinkID
-* @param Integer $ChildID
+* @returns boolean
+* @param integer $LinkID
+* @param integer $ChildID
 */
 
 function IPS_SetLinkTargetID( $LinkID,$ChildID ){
@@ -4457,9 +4432,9 @@ function IPS_SetLinkTargetID( $LinkID,$ChildID ){
 /**
 * IPS_SetMediaCached
 * 
-* @returns Boolean
-* @param Integer $MediaID
-* @param Boolean $Cached
+* @returns boolean
+* @param integer $MediaID
+* @param boolean $Cached
 */
 
 function IPS_SetMediaCached( $MediaID,$Cached ){
@@ -4471,9 +4446,9 @@ function IPS_SetMediaCached( $MediaID,$Cached ){
 /**
 * IPS_SetMediaContent
 * 
-* @returns Boolean
-* @param Integer $MediaID
-* @param String $Content
+* @returns boolean
+* @param integer $MediaID
+* @param string $Content
 */
 
 function IPS_SetMediaContent( $MediaID,$Content ){
@@ -4485,10 +4460,10 @@ function IPS_SetMediaContent( $MediaID,$Content ){
 /**
 * IPS_SetMediaFile
 * 
-* @returns Boolean
-* @param Integer $MediaID
-* @param String $FilePath
-* @param Boolean $FileMustExists
+* @returns boolean
+* @param integer $MediaID
+* @param string $FilePath
+* @param boolean $FileMustExists
 */
 
 function IPS_SetMediaFile( $MediaID,$FilePath,$FileMustExists ){
@@ -4500,9 +4475,9 @@ function IPS_SetMediaFile( $MediaID,$FilePath,$FileMustExists ){
 /**
 * IPS_SetName
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param String $Name
+* @returns boolean
+* @param integer $ID
+* @param string $Name
 */
 
 function IPS_SetName( $ID,$Name ){
@@ -4514,9 +4489,9 @@ function IPS_SetName( $ID,$Name ){
 /**
 * IPS_SetOption
 * 
-* @returns Boolean
-* @param String $Option
-* @param Integer $Value
+* @returns boolean
+* @param string $Option
+* @param integer $Value
 */
 
 function IPS_SetOption( $Option,$Value ){
@@ -4528,9 +4503,9 @@ function IPS_SetOption( $Option,$Value ){
 /**
 * IPS_SetParent
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Integer $ParentID
+* @returns boolean
+* @param integer $ID
+* @param integer $ParentID
 */
 
 function IPS_SetParent( $ID,$ParentID ){
@@ -4542,9 +4517,9 @@ function IPS_SetParent( $ID,$ParentID ){
 /**
 * IPS_SetPosition
 * 
-* @returns Boolean
-* @param Integer $ID
-* @param Integer $Position
+* @returns boolean
+* @param integer $ID
+* @param integer $Position
 */
 
 function IPS_SetPosition( $ID,$Position ){
@@ -4556,10 +4531,10 @@ function IPS_SetPosition( $ID,$Position ){
 /**
 * IPS_SetProperty
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Name
-* @param Array $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Name
+* @param variant $Value
 */
 
 function IPS_SetProperty( $InstanceID,$Name,$Value ){
@@ -4571,9 +4546,9 @@ function IPS_SetProperty( $InstanceID,$Name,$Value ){
 /**
 * IPS_SetScriptContent
 * 
-* @returns Boolean
-* @param Integer $ScriptID
-* @param String $Content
+* @returns boolean
+* @param integer $ScriptID
+* @param string $Content
 */
 
 function IPS_SetScriptContent( $ScriptID,$Content ){
@@ -4585,9 +4560,9 @@ function IPS_SetScriptContent( $ScriptID,$Content ){
 /**
 * IPS_SetScriptFile
 * 
-* @returns Boolean
-* @param Integer $ScriptID
-* @param String $FilePath
+* @returns boolean
+* @param integer $ScriptID
+* @param string $FilePath
 */
 
 function IPS_SetScriptFile( $ScriptID,$FilePath ){
@@ -4599,9 +4574,9 @@ function IPS_SetScriptFile( $ScriptID,$FilePath ){
 /**
 * IPS_SetScriptTimer
 * 
-* @returns Boolean
-* @param Integer $ScriptID
-* @param Integer $Interval
+* @returns boolean
+* @param integer $ScriptID
+* @param integer $Interval
 */
 
 function IPS_SetScriptTimer( $ScriptID,$Interval ){
@@ -4613,9 +4588,9 @@ function IPS_SetScriptTimer( $ScriptID,$Interval ){
 /**
 * IPS_SetVariableCustomAction
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param Integer $ScriptID
+* @returns boolean
+* @param integer $VariableID
+* @param integer $ScriptID
 */
 
 function IPS_SetVariableCustomAction( $VariableID,$ScriptID ){
@@ -4627,9 +4602,9 @@ function IPS_SetVariableCustomAction( $VariableID,$ScriptID ){
 /**
 * IPS_SetVariableCustomProfile
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param String $ProfileName
+* @returns boolean
+* @param integer $VariableID
+* @param string $ProfileName
 */
 
 function IPS_SetVariableCustomProfile( $VariableID,$ProfileName ){
@@ -4641,12 +4616,12 @@ function IPS_SetVariableCustomProfile( $VariableID,$ProfileName ){
 /**
 * IPS_SetVariableProfileAssociation
 * 
-* @returns Boolean
-* @param String $ProfileName
-* @param Float $AssociationValue
-* @param String $AssociationName
-* @param String $AssociationIcon
-* @param Integer $AssociationColor
+* @returns boolean
+* @param string $ProfileName
+* @param float $AssociationValue
+* @param string $AssociationName
+* @param string $AssociationIcon
+* @param integer $AssociationColor
 */
 
 function IPS_SetVariableProfileAssociation( $ProfileName,$AssociationValue,$AssociationName,$AssociationIcon,$AssociationColor ){
@@ -4658,9 +4633,9 @@ function IPS_SetVariableProfileAssociation( $ProfileName,$AssociationValue,$Asso
 /**
 * IPS_SetVariableProfileDigits
 * 
-* @returns Boolean
-* @param String $ProfileName
-* @param Integer $Digits
+* @returns boolean
+* @param string $ProfileName
+* @param integer $Digits
 */
 
 function IPS_SetVariableProfileDigits( $ProfileName,$Digits ){
@@ -4672,9 +4647,9 @@ function IPS_SetVariableProfileDigits( $ProfileName,$Digits ){
 /**
 * IPS_SetVariableProfileIcon
 * 
-* @returns Boolean
-* @param String $ProfileName
-* @param String $Icon
+* @returns boolean
+* @param string $ProfileName
+* @param string $Icon
 */
 
 function IPS_SetVariableProfileIcon( $ProfileName,$Icon ){
@@ -4686,10 +4661,10 @@ function IPS_SetVariableProfileIcon( $ProfileName,$Icon ){
 /**
 * IPS_SetVariableProfileText
 * 
-* @returns Boolean
-* @param String $ProfileName
-* @param String $Prefix
-* @param String $Suffix
+* @returns boolean
+* @param string $ProfileName
+* @param string $Prefix
+* @param string $Suffix
 */
 
 function IPS_SetVariableProfileText( $ProfileName,$Prefix,$Suffix ){
@@ -4701,11 +4676,11 @@ function IPS_SetVariableProfileText( $ProfileName,$Prefix,$Suffix ){
 /**
 * IPS_SetVariableProfileValues
 * 
-* @returns Boolean
-* @param String $ProfileName
-* @param Float $MinValue
-* @param Float $MaxValue
-* @param Float $StepSize
+* @returns boolean
+* @param string $ProfileName
+* @param float $MinValue
+* @param float $MaxValue
+* @param float $StepSize
 */
 
 function IPS_SetVariableProfileValues( $ProfileName,$MinValue,$MaxValue,$StepSize ){
@@ -4717,8 +4692,8 @@ function IPS_SetVariableProfileValues( $ProfileName,$MinValue,$MaxValue,$StepSiz
 /**
 * IPS_Sleep
 * 
-* @returns Integer
-* @param Integer $Milliseconds
+* @returns integer
+* @param integer $Milliseconds
 */
 
 function IPS_Sleep( $Milliseconds ){
@@ -4730,8 +4705,8 @@ function IPS_Sleep( $Milliseconds ){
 /**
 * IPS_StartSearch
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_StartSearch( $InstanceID ){
@@ -4743,8 +4718,8 @@ function IPS_StartSearch( $InstanceID ){
 /**
 * IPS_StopSearch
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_StopSearch( $InstanceID ){
@@ -4756,8 +4731,8 @@ function IPS_StopSearch( $InstanceID ){
 /**
 * IPS_SupportsSearching
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function IPS_SupportsSearching( $InstanceID ){
@@ -4769,8 +4744,8 @@ function IPS_SupportsSearching( $InstanceID ){
 /**
 * IPS_TimerExists
 * 
-* @returns Boolean
-* @param Integer $TimerID
+* @returns boolean
+* @param integer $TimerID
 */
 
 function IPS_TimerExists( $TimerID ){
@@ -4782,8 +4757,8 @@ function IPS_TimerExists( $TimerID ){
 /**
 * IPS_VariableExists
 * 
-* @returns Boolean
-* @param Integer $VariableID
+* @returns boolean
+* @param integer $VariableID
 */
 
 function IPS_VariableExists( $VariableID ){
@@ -4795,8 +4770,8 @@ function IPS_VariableExists( $VariableID ){
 /**
 * IPS_VariableProfileExists
 * 
-* @returns Boolean
-* @param String $ProfileName
+* @returns boolean
+* @param string $ProfileName
 */
 
 function IPS_VariableProfileExists( $ProfileName ){
@@ -4808,9 +4783,9 @@ function IPS_VariableProfileExists( $ProfileName ){
 /**
 * IRT_ListButtons
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $Remote
+* @returns array
+* @param integer $InstanceID
+* @param string $Remote
 */
 
 function IRT_ListButtons( $InstanceID,$Remote ){
@@ -4822,8 +4797,8 @@ function IRT_ListButtons( $InstanceID,$Remote ){
 /**
 * IRT_ListRemotes
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function IRT_ListRemotes( $InstanceID ){
@@ -4835,10 +4810,10 @@ function IRT_ListRemotes( $InstanceID ){
 /**
 * IRT_SendOnce
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Remote
-* @param String $Button
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Remote
+* @param string $Button
 */
 
 function IRT_SendOnce( $InstanceID,$Remote,$Button ){
@@ -4850,9 +4825,9 @@ function IRT_SendOnce( $InstanceID,$Remote,$Button ){
 /**
 * LCN_AddGroup
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Group
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Group
 */
 
 function LCN_AddGroup( $InstanceID,$Group ){
@@ -4864,9 +4839,9 @@ function LCN_AddGroup( $InstanceID,$Group ){
 /**
 * LCN_AddIntensity
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function LCN_AddIntensity( $InstanceID,$Intensity ){
@@ -4878,10 +4853,10 @@ function LCN_AddIntensity( $InstanceID,$Intensity ){
 /**
 * LCN_Beep
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $SpecialTone
-* @param Integer $Count
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $SpecialTone
+* @param integer $Count
 */
 
 function LCN_Beep( $InstanceID,$SpecialTone,$Count ){
@@ -4893,9 +4868,9 @@ function LCN_Beep( $InstanceID,$SpecialTone,$Count ){
 /**
 * LCN_DeductIntensity
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function LCN_DeductIntensity( $InstanceID,$Intensity ){
@@ -4907,10 +4882,10 @@ function LCN_DeductIntensity( $InstanceID,$Intensity ){
 /**
 * LCN_Fadeout
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
-* @param Integer $Ramp
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
+* @param integer $Ramp
 */
 
 function LCN_Fadeout( $InstanceID,$Intensity,$Ramp ){
@@ -4922,8 +4897,8 @@ function LCN_Fadeout( $InstanceID,$Intensity,$Ramp ){
 /**
 * LCN_FlipRelay
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_FlipRelay( $InstanceID ){
@@ -4935,8 +4910,8 @@ function LCN_FlipRelay( $InstanceID ){
 /**
 * LCN_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function LCN_GetKnownDevices( $InstanceID ){
@@ -4948,11 +4923,11 @@ function LCN_GetKnownDevices( $InstanceID ){
 /**
 * LCN_LimitOutput
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
-* @param Integer $Time
-* @param String $TimeType
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
+* @param integer $Time
+* @param string $TimeType
 */
 
 function LCN_LimitOutput( $InstanceID,$Value,$Time,$TimeType ){
@@ -4964,9 +4939,9 @@ function LCN_LimitOutput( $InstanceID,$Value,$Time,$TimeType ){
 /**
 * LCN_LoadScene
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Scene
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Scene
 */
 
 function LCN_LoadScene( $InstanceID,$Scene ){
@@ -4978,8 +4953,8 @@ function LCN_LoadScene( $InstanceID,$Scene ){
 /**
 * LCN_LockTargetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Target
 *   enum[0=ltR1, 1=ltR2, 2=ltS1, 3=ltS2]
 */
@@ -4993,8 +4968,8 @@ function LCN_LockTargetValue( $InstanceID,$Target ){
 /**
 * LCN_RampStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_RampStop( $InstanceID ){
@@ -5006,8 +4981,8 @@ function LCN_RampStop( $InstanceID ){
 /**
 * LCN_ReleaseTargetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Target
 *   enum[0=ltR1, 1=ltR2, 2=ltS1, 3=ltS2]
 */
@@ -5021,9 +4996,9 @@ function LCN_ReleaseTargetValue( $InstanceID,$Target ){
 /**
 * LCN_RemoveGroup
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Group
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Group
 */
 
 function LCN_RemoveGroup( $InstanceID,$Group ){
@@ -5035,8 +5010,8 @@ function LCN_RemoveGroup( $InstanceID,$Group ){
 /**
 * LCN_RequestLights
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_RequestLights( $InstanceID ){
@@ -5048,8 +5023,8 @@ function LCN_RequestLights( $InstanceID ){
 /**
 * LCN_RequestRead
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_RequestRead( $InstanceID ){
@@ -5061,8 +5036,8 @@ function LCN_RequestRead( $InstanceID ){
 /**
 * LCN_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_RequestStatus( $InstanceID ){
@@ -5074,8 +5049,8 @@ function LCN_RequestStatus( $InstanceID ){
 /**
 * LCN_RequestThresholds
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_RequestThresholds( $InstanceID ){
@@ -5087,9 +5062,9 @@ function LCN_RequestThresholds( $InstanceID ){
 /**
 * LCN_SaveScene
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Scene
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Scene
 */
 
 function LCN_SaveScene( $InstanceID,$Scene ){
@@ -5101,9 +5076,9 @@ function LCN_SaveScene( $InstanceID,$Scene ){
 /**
 * LCN_SearchDevices
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Segment
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Segment
 */
 
 function LCN_SearchDevices( $InstanceID,$Segment ){
@@ -5115,9 +5090,9 @@ function LCN_SearchDevices( $InstanceID,$Segment ){
 /**
 * LCN_SelectSceneRegister
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Register
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Register
 */
 
 function LCN_SelectSceneRegister( $InstanceID,$Register ){
@@ -5129,10 +5104,10 @@ function LCN_SelectSceneRegister( $InstanceID,$Register ){
 /**
 * LCN_SendCommand
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Function
-* @param String $Data
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Function
+* @param string $Data
 */
 
 function LCN_SendCommand( $InstanceID,$Function,$Data ){
@@ -5144,10 +5119,10 @@ function LCN_SendCommand( $InstanceID,$Function,$Data ){
 /**
 * LCN_SetIntensity
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
-* @param Integer $Ramp
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
+* @param integer $Ramp
 */
 
 function LCN_SetIntensity( $InstanceID,$Intensity,$Ramp ){
@@ -5159,10 +5134,10 @@ function LCN_SetIntensity( $InstanceID,$Intensity,$Ramp ){
 /**
 * LCN_SetLamp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Lamp
-* @param String $Action
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Lamp
+* @param string $Action
 */
 
 function LCN_SetLamp( $InstanceID,$Lamp,$Action ){
@@ -5174,9 +5149,9 @@ function LCN_SetLamp( $InstanceID,$Lamp,$Action ){
 /**
 * LCN_SetRelay
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Value
 */
 
 function LCN_SetRelay( $InstanceID,$Value ){
@@ -5188,11 +5163,11 @@ function LCN_SetRelay( $InstanceID,$Value ){
 /**
 * LCN_SetTargetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Target
 *   enum[0=ltR1, 1=ltR2, 2=ltS1, 3=ltS2]
-* @param Float $Value
+* @param float $Value
 */
 
 function LCN_SetTargetValue( $InstanceID,$Target,$Value ){
@@ -5204,11 +5179,11 @@ function LCN_SetTargetValue( $InstanceID,$Target,$Value ){
 /**
 * LCN_ShiftTargetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Target
 *   enum[0=ltR1, 1=ltR2, 2=ltS1, 3=ltS2]
-* @param Float $RelativeValue
+* @param float $RelativeValue
 */
 
 function LCN_ShiftTargetValue( $InstanceID,$Target,$RelativeValue ){
@@ -5220,8 +5195,8 @@ function LCN_ShiftTargetValue( $InstanceID,$Target,$RelativeValue ){
 /**
 * LCN_ShutterMoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_ShutterMoveDown( $InstanceID ){
@@ -5233,8 +5208,8 @@ function LCN_ShutterMoveDown( $InstanceID ){
 /**
 * LCN_ShutterMoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_ShutterMoveUp( $InstanceID ){
@@ -5246,8 +5221,8 @@ function LCN_ShutterMoveUp( $InstanceID ){
 /**
 * LCN_ShutterStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_ShutterStop( $InstanceID ){
@@ -5259,11 +5234,11 @@ function LCN_ShutterStop( $InstanceID ){
 /**
 * LCN_StartFlicker
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Depth
-* @param String $Speed
-* @param Integer $Count
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Depth
+* @param string $Speed
+* @param integer $Count
 */
 
 function LCN_StartFlicker( $InstanceID,$Depth,$Speed,$Count ){
@@ -5275,8 +5250,8 @@ function LCN_StartFlicker( $InstanceID,$Depth,$Speed,$Count ){
 /**
 * LCN_StopFlicker
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function LCN_StopFlicker( $InstanceID ){
@@ -5288,11 +5263,11 @@ function LCN_StopFlicker( $InstanceID ){
 /**
 * LCN_SwitchDurationMin
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Minutes
-* @param String $Fadeout
-* @param Boolean $Retentive
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Minutes
+* @param string $Fadeout
+* @param boolean $Retentive
 */
 
 function LCN_SwitchDurationMin( $InstanceID,$Minutes,$Fadeout,$Retentive ){
@@ -5304,11 +5279,11 @@ function LCN_SwitchDurationMin( $InstanceID,$Minutes,$Fadeout,$Retentive ){
 /**
 * LCN_SwitchDurationSec
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Seconds
-* @param String $Fadeout
-* @param Boolean $Retentive
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Seconds
+* @param string $Fadeout
+* @param boolean $Retentive
 */
 
 function LCN_SwitchDurationSec( $InstanceID,$Seconds,$Fadeout,$Retentive ){
@@ -5320,9 +5295,9 @@ function LCN_SwitchDurationSec( $InstanceID,$Seconds,$Fadeout,$Retentive ){
 /**
 * LCN_SwitchMemory
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Ramp
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Ramp
 */
 
 function LCN_SwitchMemory( $InstanceID,$Ramp ){
@@ -5334,9 +5309,9 @@ function LCN_SwitchMemory( $InstanceID,$Ramp ){
 /**
 * LCN_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Ramp
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Ramp
 */
 
 function LCN_SwitchMode( $InstanceID,$Ramp ){
@@ -5348,9 +5323,9 @@ function LCN_SwitchMode( $InstanceID,$Ramp ){
 /**
 * LCN_SwitchRelay
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $SwitchOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $SwitchOn
 */
 
 function LCN_SwitchRelay( $InstanceID,$SwitchOn ){
@@ -5362,8 +5337,8 @@ function LCN_SwitchRelay( $InstanceID,$SwitchOn ){
 /**
 * MBUS_UpdateValues
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MBUS_UpdateValues( $InstanceID ){
@@ -5375,9 +5350,9 @@ function MBUS_UpdateValues( $InstanceID ){
 /**
 * MC_CreateModule
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ModuleURL
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ModuleURL
 */
 
 function MC_CreateModule( $InstanceID,$ModuleURL ){
@@ -5389,9 +5364,9 @@ function MC_CreateModule( $InstanceID,$ModuleURL ){
 /**
 * MC_DeleteModule
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Module
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
 */
 
 function MC_DeleteModule( $InstanceID,$Module ){
@@ -5403,8 +5378,8 @@ function MC_DeleteModule( $InstanceID,$Module ){
 /**
 * MC_GetModuleList
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function MC_GetModuleList( $InstanceID ){
@@ -5416,9 +5391,9 @@ function MC_GetModuleList( $InstanceID ){
 /**
 * MC_GetModuleRepositoryInfo
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $Module
+* @returns array
+* @param integer $InstanceID
+* @param string $Module
 */
 
 function MC_GetModuleRepositoryInfo( $InstanceID,$Module ){
@@ -5430,9 +5405,9 @@ function MC_GetModuleRepositoryInfo( $InstanceID,$Module ){
 /**
 * MC_UpdateModule
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Module
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
 */
 
 function MC_UpdateModule( $InstanceID,$Module ){
@@ -5444,8 +5419,8 @@ function MC_UpdateModule( $InstanceID,$Module ){
 /**
 * MXC_DimBrighter
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_DimBrighter( $InstanceID ){
@@ -5457,8 +5432,8 @@ function MXC_DimBrighter( $InstanceID ){
 /**
 * MXC_DimDarker
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_DimDarker( $InstanceID ){
@@ -5470,9 +5445,9 @@ function MXC_DimDarker( $InstanceID ){
 /**
 * MXC_DimSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function MXC_DimSet( $InstanceID,$Intensity ){
@@ -5484,8 +5459,8 @@ function MXC_DimSet( $InstanceID,$Intensity ){
 /**
 * MXC_DimStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_DimStop( $InstanceID ){
@@ -5497,8 +5472,8 @@ function MXC_DimStop( $InstanceID ){
 /**
 * MXC_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function MXC_GetKnownDevices( $InstanceID ){
@@ -5510,8 +5485,8 @@ function MXC_GetKnownDevices( $InstanceID ){
 /**
 * MXC_RequestInfo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_RequestInfo( $InstanceID ){
@@ -5523,8 +5498,8 @@ function MXC_RequestInfo( $InstanceID ){
 /**
 * MXC_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_RequestStatus( $InstanceID ){
@@ -5536,8 +5511,8 @@ function MXC_RequestStatus( $InstanceID ){
 /**
 * MXC_SearchDevices
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_SearchDevices( $InstanceID ){
@@ -5549,9 +5524,9 @@ function MXC_SearchDevices( $InstanceID ){
 /**
 * MXC_SendBoolean
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function MXC_SendBoolean( $InstanceID,$Value ){
@@ -5563,9 +5538,9 @@ function MXC_SendBoolean( $InstanceID,$Value ){
 /**
 * MXC_SendFloat
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function MXC_SendFloat( $InstanceID,$Value ){
@@ -5577,9 +5552,9 @@ function MXC_SendFloat( $InstanceID,$Value ){
 /**
 * MXC_SendInteger
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function MXC_SendInteger( $InstanceID,$Value ){
@@ -5591,9 +5566,9 @@ function MXC_SendInteger( $InstanceID,$Value ){
 /**
 * MXC_SetTemperature
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Temperature
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Temperature
 */
 
 function MXC_SetTemperature( $InstanceID,$Temperature ){
@@ -5605,8 +5580,8 @@ function MXC_SetTemperature( $InstanceID,$Temperature ){
 /**
 * MXC_ShutterMoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_ShutterMoveDown( $InstanceID ){
@@ -5618,8 +5593,8 @@ function MXC_ShutterMoveDown( $InstanceID ){
 /**
 * MXC_ShutterMoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_ShutterMoveUp( $InstanceID ){
@@ -5631,8 +5606,8 @@ function MXC_ShutterMoveUp( $InstanceID ){
 /**
 * MXC_ShutterStepDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_ShutterStepDown( $InstanceID ){
@@ -5644,8 +5619,8 @@ function MXC_ShutterStepDown( $InstanceID ){
 /**
 * MXC_ShutterStepUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_ShutterStepUp( $InstanceID ){
@@ -5657,8 +5632,8 @@ function MXC_ShutterStepUp( $InstanceID ){
 /**
 * MXC_ShutterStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function MXC_ShutterStop( $InstanceID ){
@@ -5670,9 +5645,9 @@ function MXC_ShutterStop( $InstanceID ){
 /**
 * MXC_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function MXC_SwitchMode( $InstanceID,$DeviceOn ){
@@ -5684,9 +5659,9 @@ function MXC_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * MXC_UploadDataPointFile
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Content
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Content
 */
 
 function MXC_UploadDataPointFile( $InstanceID,$Content ){
@@ -5698,8 +5673,8 @@ function MXC_UploadDataPointFile( $InstanceID,$Content ){
 /**
 * ModBus_RequestRead
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ModBus_RequestRead( $InstanceID ){
@@ -5711,9 +5686,9 @@ function ModBus_RequestRead( $InstanceID ){
 /**
 * ModBus_WriteCoil
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function ModBus_WriteCoil( $InstanceID,$Value ){
@@ -5725,9 +5700,9 @@ function ModBus_WriteCoil( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegister
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function ModBus_WriteRegister( $InstanceID,$Value ){
@@ -5739,9 +5714,9 @@ function ModBus_WriteRegister( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterByte
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterByte( $InstanceID,$Value ){
@@ -5753,9 +5728,9 @@ function ModBus_WriteRegisterByte( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterDWord
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterDWord( $InstanceID,$Value ){
@@ -5767,9 +5742,9 @@ function ModBus_WriteRegisterDWord( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterInt64
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function ModBus_WriteRegisterInt64( $InstanceID,$Value ){
@@ -5781,9 +5756,9 @@ function ModBus_WriteRegisterInt64( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterInteger
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterInteger( $InstanceID,$Value ){
@@ -5795,9 +5770,9 @@ function ModBus_WriteRegisterInteger( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterReal
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function ModBus_WriteRegisterReal( $InstanceID,$Value ){
@@ -5809,9 +5784,9 @@ function ModBus_WriteRegisterReal( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterReal64
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function ModBus_WriteRegisterReal64( $InstanceID,$Value ){
@@ -5823,9 +5798,9 @@ function ModBus_WriteRegisterReal64( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterShortInt
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterShortInt( $InstanceID,$Value ){
@@ -5837,9 +5812,9 @@ function ModBus_WriteRegisterShortInt( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterSmallInt
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterSmallInt( $InstanceID,$Value ){
@@ -5851,9 +5826,9 @@ function ModBus_WriteRegisterSmallInt( $InstanceID,$Value ){
 /**
 * ModBus_WriteRegisterWord
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ModBus_WriteRegisterWord( $InstanceID,$Value ){
@@ -5865,8 +5840,8 @@ function ModBus_WriteRegisterWord( $InstanceID,$Value ){
 /**
 * NC_ActivateServer
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function NC_ActivateServer( $InstanceID ){
@@ -5878,13 +5853,13 @@ function NC_ActivateServer( $InstanceID ){
 /**
 * NC_AddDevice
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $Token
-* @param String $Provider
-* @param String $DeviceID
-* @param String $Name
-* @param Integer $WebFrontConfiguratorID
+* @returns string
+* @param integer $InstanceID
+* @param string $Token
+* @param string $Provider
+* @param string $DeviceID
+* @param string $Name
+* @param integer $WebFrontConfiguratorID
 */
 
 function NC_AddDevice( $InstanceID,$Token,$Provider,$DeviceID,$Name,$WebFrontConfiguratorID ){
@@ -5896,8 +5871,8 @@ function NC_AddDevice( $InstanceID,$Token,$Provider,$DeviceID,$Name,$WebFrontCon
 /**
 * NC_GetDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function NC_GetDevices( $InstanceID ){
@@ -5909,9 +5884,9 @@ function NC_GetDevices( $InstanceID ){
 /**
 * NC_RemoveDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DeviceID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DeviceID
 */
 
 function NC_RemoveDevice( $InstanceID,$DeviceID ){
@@ -5923,10 +5898,10 @@ function NC_RemoveDevice( $InstanceID,$DeviceID ){
 /**
 * NC_RemoveDeviceConfigurator
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DeviceID
-* @param Integer $WebFrontConfiguratorID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DeviceID
+* @param integer $WebFrontConfiguratorID
 */
 
 function NC_RemoveDeviceConfigurator( $InstanceID,$DeviceID,$WebFrontConfiguratorID ){
@@ -5938,11 +5913,11 @@ function NC_RemoveDeviceConfigurator( $InstanceID,$DeviceID,$WebFrontConfigurato
 /**
 * NC_SetDeviceConfigurator
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DeviceID
-* @param Integer $WebFrontConfiguratorID
-* @param Boolean $Enabled
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DeviceID
+* @param integer $WebFrontConfiguratorID
+* @param boolean $Enabled
 */
 
 function NC_SetDeviceConfigurator( $InstanceID,$DeviceID,$WebFrontConfiguratorID,$Enabled ){
@@ -5954,10 +5929,10 @@ function NC_SetDeviceConfigurator( $InstanceID,$DeviceID,$WebFrontConfiguratorID
 /**
 * NC_SetDeviceName
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DeviceID
-* @param String $Name
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DeviceID
+* @param string $Name
 */
 
 function NC_SetDeviceName( $InstanceID,$DeviceID,$Name ){
@@ -5969,9 +5944,9 @@ function NC_SetDeviceName( $InstanceID,$DeviceID,$Name ){
 /**
 * NC_TestDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DeviceID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DeviceID
 */
 
 function NC_TestDevice( $InstanceID,$DeviceID ){
@@ -5983,8 +5958,8 @@ function NC_TestDevice( $InstanceID,$DeviceID ){
 /**
 * NUT_Query
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function NUT_Query( $InstanceID ){
@@ -5996,9 +5971,9 @@ function NUT_Query( $InstanceID ){
 /**
 * NUT_SendDataToChildren
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function NUT_SendDataToChildren( $InstanceID,$Data ){
@@ -6010,8 +5985,8 @@ function NUT_SendDataToChildren( $InstanceID,$Data ){
 /**
 * NUT_UpdateEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function NUT_UpdateEvent( $InstanceID ){
@@ -6021,10 +5996,50 @@ function NUT_UpdateEvent( $InstanceID ){
 }
 
 /**
+* OWN_Query
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function OWN_Query( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->OWN_Query( $InstanceID );
+	return $result;
+}
+
+/**
+* OWN_SendDataToChildren
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
+*/
+
+function OWN_SendDataToChildren( $InstanceID,$Data ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->OWN_SendDataToChildren( $InstanceID,$Data );
+	return $result;
+}
+
+/**
+* OWN_UpdateEvent
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function OWN_UpdateEvent( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->OWN_UpdateEvent( $InstanceID );
+	return $result;
+}
+
+/**
 * OW_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function OW_GetKnownDevices( $InstanceID ){
@@ -6036,8 +6051,8 @@ function OW_GetKnownDevices( $InstanceID ){
 /**
 * OW_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function OW_RequestStatus( $InstanceID ){
@@ -6049,10 +6064,10 @@ function OW_RequestStatus( $InstanceID ){
 /**
 * OW_SetPin
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Pin
-* @param Boolean $SwitchOn
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Pin
+* @param boolean $SwitchOn
 */
 
 function OW_SetPin( $InstanceID,$Pin,$SwitchOn ){
@@ -6064,9 +6079,9 @@ function OW_SetPin( $InstanceID,$Pin,$SwitchOn ){
 /**
 * OW_SetPort
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function OW_SetPort( $InstanceID,$Value ){
@@ -6078,9 +6093,9 @@ function OW_SetPort( $InstanceID,$Value ){
 /**
 * OW_SetPosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function OW_SetPosition( $InstanceID,$Value ){
@@ -6092,9 +6107,9 @@ function OW_SetPosition( $InstanceID,$Value ){
 /**
 * OW_SetStrobe
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Status
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Status
 */
 
 function OW_SetStrobe( $InstanceID,$Status ){
@@ -6106,9 +6121,9 @@ function OW_SetStrobe( $InstanceID,$Status ){
 /**
 * OW_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $SwitchOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $SwitchOn
 */
 
 function OW_SwitchMode( $InstanceID,$SwitchOn ){
@@ -6120,8 +6135,8 @@ function OW_SwitchMode( $InstanceID,$SwitchOn ){
 /**
 * OW_ToggleMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function OW_ToggleMode( $InstanceID ){
@@ -6133,9 +6148,9 @@ function OW_ToggleMode( $InstanceID ){
 /**
 * OW_WriteBytes
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Data
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Data
 */
 
 function OW_WriteBytes( $InstanceID,$Data ){
@@ -6147,10 +6162,10 @@ function OW_WriteBytes( $InstanceID,$Data ){
 /**
 * OW_WriteBytesMasked
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Data
-* @param Integer $Mask
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Data
+* @param integer $Mask
 */
 
 function OW_WriteBytesMasked( $InstanceID,$Data,$Mask ){
@@ -6162,8 +6177,8 @@ function OW_WriteBytesMasked( $InstanceID,$Data,$Mask ){
 /**
 * OZW_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function OZW_GetKnownDevices( $InstanceID ){
@@ -6175,9 +6190,9 @@ function OZW_GetKnownDevices( $InstanceID ){
 /**
 * OZW_GetKnownItems
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $RootID
+* @returns array
+* @param integer $InstanceID
+* @param integer $RootID
 */
 
 function OZW_GetKnownItems( $InstanceID,$RootID ){
@@ -6189,8 +6204,8 @@ function OZW_GetKnownItems( $InstanceID,$RootID ){
 /**
 * OZW_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function OZW_RequestStatus( $InstanceID ){
@@ -6202,9 +6217,9 @@ function OZW_RequestStatus( $InstanceID ){
 /**
 * OZW_WriteDataPoint
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Array $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param variant $Value
 */
 
 function OZW_WriteDataPoint( $InstanceID,$Value ){
@@ -6216,9 +6231,9 @@ function OZW_WriteDataPoint( $InstanceID,$Value ){
 /**
 * PJ_Backlight
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Status
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Status
 */
 
 function PJ_Backlight( $InstanceID,$Status ){
@@ -6230,9 +6245,9 @@ function PJ_Backlight( $InstanceID,$Status ){
 /**
 * PJ_Beep
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $TenthOfASecond
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $TenthOfASecond
 */
 
 function PJ_Beep( $InstanceID,$TenthOfASecond ){
@@ -6244,16 +6259,16 @@ function PJ_Beep( $InstanceID,$TenthOfASecond ){
 /**
 * PJ_DimRGBW
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $RTime
-* @param Integer $G
-* @param Integer $GTime
-* @param Integer $B
-* @param Integer $BTime
-* @param Integer $W
-* @param Integer $WTime
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $RTime
+* @param integer $G
+* @param integer $GTime
+* @param integer $B
+* @param integer $BTime
+* @param integer $W
+* @param integer $WTime
 */
 
 function PJ_DimRGBW( $InstanceID,$R,$RTime,$G,$GTime,$B,$BTime,$W,$WTime ){
@@ -6265,11 +6280,11 @@ function PJ_DimRGBW( $InstanceID,$R,$RTime,$G,$GTime,$B,$BTime,$W,$WTime ){
 /**
 * PJ_DimServo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
-* @param Integer $Steps
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
+* @param integer $Steps
 */
 
 function PJ_DimServo( $InstanceID,$Channel,$Value,$Steps ){
@@ -6281,10 +6296,10 @@ function PJ_DimServo( $InstanceID,$Channel,$Value,$Steps ){
 /**
 * PJ_LCDText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Line
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Line
+* @param string $Text
 */
 
 function PJ_LCDText( $InstanceID,$Line,$Text ){
@@ -6296,8 +6311,8 @@ function PJ_LCDText( $InstanceID,$Line,$Text ){
 /**
 * PJ_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function PJ_RequestStatus( $InstanceID ){
@@ -6309,9 +6324,9 @@ function PJ_RequestStatus( $InstanceID ){
 /**
 * PJ_RunProgram
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Type
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Type
 */
 
 function PJ_RunProgram( $InstanceID,$Type ){
@@ -6323,11 +6338,11 @@ function PJ_RunProgram( $InstanceID,$Type ){
 /**
 * PJ_SetLEDs
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Green
-* @param Boolean $Yellow
-* @param Boolean $Red
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Green
+* @param boolean $Yellow
+* @param boolean $Red
 */
 
 function PJ_SetLEDs( $InstanceID,$Green,$Yellow,$Red ){
@@ -6339,12 +6354,12 @@ function PJ_SetLEDs( $InstanceID,$Green,$Yellow,$Red ){
 /**
 * PJ_SetRGBW
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $R
-* @param Integer $G
-* @param Integer $B
-* @param Integer $W
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $R
+* @param integer $G
+* @param integer $B
+* @param integer $W
 */
 
 function PJ_SetRGBW( $InstanceID,$R,$G,$B,$W ){
@@ -6356,10 +6371,10 @@ function PJ_SetRGBW( $InstanceID,$R,$G,$B,$W ){
 /**
 * PJ_SetServo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
 */
 
 function PJ_SetServo( $InstanceID,$Channel,$Value ){
@@ -6371,10 +6386,10 @@ function PJ_SetServo( $InstanceID,$Channel,$Value ){
 /**
 * PJ_SwitchDuration
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
-* @param Integer $Duration
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
+* @param integer $Duration
 */
 
 function PJ_SwitchDuration( $InstanceID,$DeviceOn,$Duration ){
@@ -6386,10 +6401,10 @@ function PJ_SwitchDuration( $InstanceID,$DeviceOn,$Duration ){
 /**
 * PJ_SwitchLED
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $LED
-* @param Boolean $Status
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $LED
+* @param boolean $Status
 */
 
 function PJ_SwitchLED( $InstanceID,$LED,$Status ){
@@ -6401,9 +6416,9 @@ function PJ_SwitchLED( $InstanceID,$LED,$Status ){
 /**
 * PJ_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function PJ_SwitchMode( $InstanceID,$DeviceOn ){
@@ -6415,8 +6430,8 @@ function PJ_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * POP3_GetCachedMails
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function POP3_GetCachedMails( $InstanceID ){
@@ -6428,9 +6443,9 @@ function POP3_GetCachedMails( $InstanceID ){
 /**
 * POP3_GetMailEx
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $UID
+* @returns array
+* @param integer $InstanceID
+* @param string $UID
 */
 
 function POP3_GetMailEx( $InstanceID,$UID ){
@@ -6442,8 +6457,8 @@ function POP3_GetMailEx( $InstanceID,$UID ){
 /**
 * POP3_UpdateCache
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function POP3_UpdateCache( $InstanceID ){
@@ -6455,8 +6470,8 @@ function POP3_UpdateCache( $InstanceID ){
 /**
 * RegVar_GetBuffer
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function RegVar_GetBuffer( $InstanceID ){
@@ -6468,9 +6483,9 @@ function RegVar_GetBuffer( $InstanceID ){
 /**
 * RegVar_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function RegVar_SendText( $InstanceID,$Text ){
@@ -6482,9 +6497,9 @@ function RegVar_SendText( $InstanceID,$Text ){
 /**
 * RegVar_SetBuffer
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function RegVar_SetBuffer( $InstanceID,$Text ){
@@ -6496,8 +6511,8 @@ function RegVar_SetBuffer( $InstanceID,$Text ){
 /**
 * S7_RequestRead
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function S7_RequestRead( $InstanceID ){
@@ -6509,9 +6524,9 @@ function S7_RequestRead( $InstanceID ){
 /**
 * S7_Write
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function S7_Write( $InstanceID,$Value ){
@@ -6523,9 +6538,9 @@ function S7_Write( $InstanceID,$Value ){
 /**
 * S7_WriteBit
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Value
 */
 
 function S7_WriteBit( $InstanceID,$Value ){
@@ -6537,9 +6552,9 @@ function S7_WriteBit( $InstanceID,$Value ){
 /**
 * S7_WriteByte
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteByte( $InstanceID,$Value ){
@@ -6551,9 +6566,9 @@ function S7_WriteByte( $InstanceID,$Value ){
 /**
 * S7_WriteDWord
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteDWord( $InstanceID,$Value ){
@@ -6565,9 +6580,9 @@ function S7_WriteDWord( $InstanceID,$Value ){
 /**
 * S7_WriteInteger
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteInteger( $InstanceID,$Value ){
@@ -6579,9 +6594,9 @@ function S7_WriteInteger( $InstanceID,$Value ){
 /**
 * S7_WriteReal
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Float $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Value
 */
 
 function S7_WriteReal( $InstanceID,$Value ){
@@ -6593,9 +6608,9 @@ function S7_WriteReal( $InstanceID,$Value ){
 /**
 * S7_WriteShortInt
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteShortInt( $InstanceID,$Value ){
@@ -6607,9 +6622,9 @@ function S7_WriteShortInt( $InstanceID,$Value ){
 /**
 * S7_WriteSmallInt
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteSmallInt( $InstanceID,$Value ){
@@ -6621,9 +6636,9 @@ function S7_WriteSmallInt( $InstanceID,$Value ){
 /**
 * S7_WriteWord
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function S7_WriteWord( $InstanceID,$Value ){
@@ -6635,9 +6650,9 @@ function S7_WriteWord( $InstanceID,$Value ){
 /**
 * SC_CreateSkin
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $SkinURL
+* @returns boolean
+* @param integer $InstanceID
+* @param string $SkinURL
 */
 
 function SC_CreateSkin( $InstanceID,$SkinURL ){
@@ -6649,9 +6664,9 @@ function SC_CreateSkin( $InstanceID,$SkinURL ){
 /**
 * SC_DeleteSkin
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Skin
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Skin
 */
 
 function SC_DeleteSkin( $InstanceID,$Skin ){
@@ -6663,9 +6678,9 @@ function SC_DeleteSkin( $InstanceID,$Skin ){
 /**
 * SC_GetSkin
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $Skin
+* @returns array
+* @param integer $InstanceID
+* @param string $Skin
 */
 
 function SC_GetSkin( $InstanceID,$Skin ){
@@ -6677,10 +6692,10 @@ function SC_GetSkin( $InstanceID,$Skin ){
 /**
 * SC_GetSkinIconContent
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $Skin
-* @param String $Icon
+* @returns string
+* @param integer $InstanceID
+* @param string $Skin
+* @param string $Icon
 */
 
 function SC_GetSkinIconContent( $InstanceID,$Skin,$Icon ){
@@ -6692,8 +6707,8 @@ function SC_GetSkinIconContent( $InstanceID,$Skin,$Icon ){
 /**
 * SC_GetSkinList
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function SC_GetSkinList( $InstanceID ){
@@ -6705,9 +6720,9 @@ function SC_GetSkinList( $InstanceID ){
 /**
 * SC_GetSkinRepositoryInfo
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param String $Skin
+* @returns array
+* @param integer $InstanceID
+* @param string $Skin
 */
 
 function SC_GetSkinRepositoryInfo( $InstanceID,$Skin ){
@@ -6719,9 +6734,9 @@ function SC_GetSkinRepositoryInfo( $InstanceID,$Skin ){
 /**
 * SC_Move
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function SC_Move( $InstanceID,$Position ){
@@ -6733,9 +6748,9 @@ function SC_Move( $InstanceID,$Position ){
 /**
 * SC_MoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Duration
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Duration
 */
 
 function SC_MoveDown( $InstanceID,$Duration ){
@@ -6747,9 +6762,9 @@ function SC_MoveDown( $InstanceID,$Duration ){
 /**
 * SC_MoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Duration
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Duration
 */
 
 function SC_MoveUp( $InstanceID,$Duration ){
@@ -6761,8 +6776,8 @@ function SC_MoveUp( $InstanceID,$Duration ){
 /**
 * SC_Stop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function SC_Stop( $InstanceID ){
@@ -6774,9 +6789,9 @@ function SC_Stop( $InstanceID ){
 /**
 * SC_UpdateSkin
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Skin
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Skin
 */
 
 function SC_UpdateSkin( $InstanceID,$Skin ){
@@ -6788,8 +6803,8 @@ function SC_UpdateSkin( $InstanceID,$Skin ){
 /**
 * SMS_RequestBalance
 * 
-* @returns Float
-* @param Integer $InstanceID
+* @returns float
+* @param integer $InstanceID
 */
 
 function SMS_RequestBalance( $InstanceID ){
@@ -6801,9 +6816,9 @@ function SMS_RequestBalance( $InstanceID ){
 /**
 * SMS_RequestStatus
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $MsgID
+* @returns string
+* @param integer $InstanceID
+* @param string $MsgID
 */
 
 function SMS_RequestStatus( $InstanceID,$MsgID ){
@@ -6815,10 +6830,10 @@ function SMS_RequestStatus( $InstanceID,$MsgID ){
 /**
 * SMS_Send
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $Number
-* @param String $Text
+* @returns string
+* @param integer $InstanceID
+* @param string $Number
+* @param string $Text
 */
 
 function SMS_Send( $InstanceID,$Number,$Text ){
@@ -6830,10 +6845,10 @@ function SMS_Send( $InstanceID,$Number,$Text ){
 /**
 * SMTP_SendMail
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Subject
-* @param String $Textg
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Subject
+* @param string $Textg
 */
 
 function SMTP_SendMail( $InstanceID,$Subject,$Textg ){
@@ -6845,11 +6860,11 @@ function SMTP_SendMail( $InstanceID,$Subject,$Textg ){
 /**
 * SMTP_SendMailAttachment
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Subject
-* @param String $Text
-* @param String $Filename
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Subject
+* @param string $Text
+* @param string $Filename
 */
 
 function SMTP_SendMailAttachment( $InstanceID,$Subject,$Text,$Filename ){
@@ -6861,12 +6876,12 @@ function SMTP_SendMailAttachment( $InstanceID,$Subject,$Text,$Filename ){
 /**
 * SMTP_SendMailAttachmentEx
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Address
-* @param String $Subject
-* @param String $Text
-* @param String $Filename
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Address
+* @param string $Subject
+* @param string $Text
+* @param string $Filename
 */
 
 function SMTP_SendMailAttachmentEx( $InstanceID,$Address,$Subject,$Text,$Filename ){
@@ -6878,11 +6893,11 @@ function SMTP_SendMailAttachmentEx( $InstanceID,$Address,$Subject,$Text,$Filenam
 /**
 * SMTP_SendMailEx
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Address
-* @param String $Subject
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Address
+* @param string $Subject
+* @param string $Text
 */
 
 function SMTP_SendMailEx( $InstanceID,$Address,$Subject,$Text ){
@@ -6894,11 +6909,11 @@ function SMTP_SendMailEx( $InstanceID,$Address,$Subject,$Text ){
 /**
 * SMTP_SendMailMedia
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Subject
-* @param String $Text
-* @param Integer $MediaID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Subject
+* @param string $Text
+* @param integer $MediaID
 */
 
 function SMTP_SendMailMedia( $InstanceID,$Subject,$Text,$MediaID ){
@@ -6910,12 +6925,12 @@ function SMTP_SendMailMedia( $InstanceID,$Subject,$Text,$MediaID ){
 /**
 * SMTP_SendMailMediaEx
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Address
-* @param String $Subject
-* @param String $Text
-* @param Integer $MediaID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Address
+* @param string $Subject
+* @param string $Text
+* @param integer $MediaID
 */
 
 function SMTP_SendMailMediaEx( $InstanceID,$Address,$Subject,$Text,$MediaID ){
@@ -6927,9 +6942,9 @@ function SMTP_SendMailMediaEx( $InstanceID,$Address,$Subject,$Text,$MediaID ){
 /**
 * SPRT_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function SPRT_SendText( $InstanceID,$Text ){
@@ -6941,9 +6956,9 @@ function SPRT_SendText( $InstanceID,$Text ){
 /**
 * SPRT_SetBreak
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $OnOff
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $OnOff
 */
 
 function SPRT_SetBreak( $InstanceID,$OnOff ){
@@ -6955,9 +6970,9 @@ function SPRT_SetBreak( $InstanceID,$OnOff ){
 /**
 * SPRT_SetDTR
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $OnOff
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $OnOff
 */
 
 function SPRT_SetDTR( $InstanceID,$OnOff ){
@@ -6969,9 +6984,9 @@ function SPRT_SetDTR( $InstanceID,$OnOff ){
 /**
 * SPRT_SetRTS
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $OnOff
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $OnOff
 */
 
 function SPRT_SetRTS( $InstanceID,$OnOff ){
@@ -6983,9 +6998,9 @@ function SPRT_SetRTS( $InstanceID,$OnOff ){
 /**
 * SSCK_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function SSCK_SendText( $InstanceID,$Text ){
@@ -6997,8 +7012,8 @@ function SSCK_SendText( $InstanceID,$Text ){
 /**
 * SWD_DimDown
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function SWD_DimDown( $InstanceID ){
@@ -7010,8 +7025,8 @@ function SWD_DimDown( $InstanceID ){
 /**
 * SWD_DimUp
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function SWD_DimUp( $InstanceID ){
@@ -7023,9 +7038,9 @@ function SWD_DimUp( $InstanceID ){
 /**
 * SWD_SendDataToParent
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function SWD_SendDataToParent( $InstanceID,$Data ){
@@ -7037,9 +7052,9 @@ function SWD_SendDataToParent( $InstanceID,$Data ){
 /**
 * SWD_SetDuration
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $duration
+* @returns variant
+* @param integer $InstanceID
+* @param variant $duration
 */
 
 function SWD_SetDuration( $InstanceID,$duration ){
@@ -7051,9 +7066,9 @@ function SWD_SetDuration( $InstanceID,$duration ){
 /**
 * SWD_SetIntensity
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $percent
+* @returns variant
+* @param integer $InstanceID
+* @param variant $percent
 */
 
 function SWD_SetIntensity( $InstanceID,$percent ){
@@ -7065,9 +7080,9 @@ function SWD_SetIntensity( $InstanceID,$percent ){
 /**
 * SWD_SetSwitchMode
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $val
+* @returns variant
+* @param integer $InstanceID
+* @param variant $val
 */
 
 function SWD_SetSwitchMode( $InstanceID,$val ){
@@ -7079,8 +7094,8 @@ function SWD_SetSwitchMode( $InstanceID,$val ){
 /**
 * SWD_TimerEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function SWD_TimerEvent( $InstanceID ){
@@ -7092,9 +7107,9 @@ function SWD_TimerEvent( $InstanceID ){
 /**
 * SetValue
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param Array $Value
+* @returns boolean
+* @param integer $VariableID
+* @param variant $Value
 */
 
 function SetValue( $VariableID,$Value ){
@@ -7106,9 +7121,9 @@ function SetValue( $VariableID,$Value ){
 /**
 * SetValueBoolean
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param Boolean $Value
+* @returns boolean
+* @param integer $VariableID
+* @param boolean $Value
 */
 
 function SetValueBoolean( $VariableID,$Value ){
@@ -7120,9 +7135,9 @@ function SetValueBoolean( $VariableID,$Value ){
 /**
 * SetValueFloat
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param Float $Value
+* @returns boolean
+* @param integer $VariableID
+* @param float $Value
 */
 
 function SetValueFloat( $VariableID,$Value ){
@@ -7134,9 +7149,9 @@ function SetValueFloat( $VariableID,$Value ){
 /**
 * SetValueInteger
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param Integer $Value
+* @returns boolean
+* @param integer $VariableID
+* @param integer $Value
 */
 
 function SetValueInteger( $VariableID,$Value ){
@@ -7148,9 +7163,9 @@ function SetValueInteger( $VariableID,$Value ){
 /**
 * SetValueString
 * 
-* @returns Boolean
-* @param Integer $VariableID
-* @param String $Value
+* @returns boolean
+* @param integer $VariableID
+* @param string $Value
 */
 
 function SetValueString( $VariableID,$Value ){
@@ -7162,7 +7177,7 @@ function SetValueString( $VariableID,$Value ){
 /**
 * Sys_GetBattery
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetBattery(  ){
@@ -7174,7 +7189,7 @@ function Sys_GetBattery(  ){
 /**
 * Sys_GetCPUInfo
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetCPUInfo(  ){
@@ -7186,7 +7201,7 @@ function Sys_GetCPUInfo(  ){
 /**
 * Sys_GetHardDiskInfo
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetHardDiskInfo(  ){
@@ -7198,7 +7213,7 @@ function Sys_GetHardDiskInfo(  ){
 /**
 * Sys_GetMemoryInfo
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetMemoryInfo(  ){
@@ -7210,7 +7225,7 @@ function Sys_GetMemoryInfo(  ){
 /**
 * Sys_GetNetworkInfo
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetNetworkInfo(  ){
@@ -7222,7 +7237,7 @@ function Sys_GetNetworkInfo(  ){
 /**
 * Sys_GetProcessInfo
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetProcessInfo(  ){
@@ -7234,7 +7249,7 @@ function Sys_GetProcessInfo(  ){
 /**
 * Sys_GetSpooler
 * 
-* @returns Variant
+* @returns array
 */
 
 function Sys_GetSpooler(  ){
@@ -7246,8 +7261,8 @@ function Sys_GetSpooler(  ){
 /**
 * Sys_GetURLContent
 * 
-* @returns String
-* @param String $URL
+* @returns string
+* @param string $URL
 */
 
 function Sys_GetURLContent( $URL ){
@@ -7259,9 +7274,9 @@ function Sys_GetURLContent( $URL ){
 /**
 * Sys_GetURLContentEx
 * 
-* @returns String
-* @param String $URL
-* @param Variant $Options
+* @returns string
+* @param string $URL
+* @param array $Options
 */
 
 function Sys_GetURLContentEx( $URL,$Options ){
@@ -7273,9 +7288,9 @@ function Sys_GetURLContentEx( $URL,$Options ){
 /**
 * Sys_Ping
 * 
-* @returns Boolean
-* @param String $Host
-* @param Integer $Timeout
+* @returns boolean
+* @param string $Host
+* @param integer $Timeout
 */
 
 function Sys_Ping( $Host,$Timeout ){
@@ -7287,8 +7302,8 @@ function Sys_Ping( $Host,$Timeout ){
 /**
 * TE923_Query
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function TE923_Query( $InstanceID ){
@@ -7300,9 +7315,9 @@ function TE923_Query( $InstanceID ){
 /**
 * TE923_SendDataToChildren
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function TE923_SendDataToChildren( $InstanceID,$Data ){
@@ -7314,8 +7329,8 @@ function TE923_SendDataToChildren( $InstanceID,$Data ){
 /**
 * TE923_UpdateEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function TE923_UpdateEvent( $InstanceID ){
@@ -7327,11 +7342,11 @@ function TE923_UpdateEvent( $InstanceID ){
 /**
 * TTS_GenerateFile
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
-* @param String $Filename
-* @param Integer $Format
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
+* @param string $Filename
+* @param integer $Format
 */
 
 function TTS_GenerateFile( $InstanceID,$Text,$Filename,$Format ){
@@ -7343,10 +7358,10 @@ function TTS_GenerateFile( $InstanceID,$Text,$Filename,$Format ){
 /**
 * TTS_Speak
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
-* @param Boolean $Wait
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
+* @param boolean $Wait
 */
 
 function TTS_Speak( $InstanceID,$Text,$Wait ){
@@ -7358,10 +7373,10 @@ function TTS_Speak( $InstanceID,$Text,$Wait ){
 /**
 * UC_FindInFiles
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Variant $Files
-* @param String $SearchStr
+* @returns array
+* @param integer $InstanceID
+* @param array $Files
+* @param string $SearchStr
 */
 
 function UC_FindInFiles( $InstanceID,$Files,$SearchStr ){
@@ -7373,10 +7388,10 @@ function UC_FindInFiles( $InstanceID,$Files,$SearchStr ){
 /**
 * UC_RenameScript
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $ScriptID
-* @param String $Filename
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ScriptID
+* @param string $Filename
 */
 
 function UC_RenameScript( $InstanceID,$ScriptID,$Filename ){
@@ -7388,11 +7403,11 @@ function UC_RenameScript( $InstanceID,$ScriptID,$Filename ){
 /**
 * UC_ReplaceInFiles
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Variant $Files
-* @param String $SearchStr
-* @param String $ReplaceStr
+* @returns array
+* @param integer $InstanceID
+* @param array $Files
+* @param string $SearchStr
+* @param string $ReplaceStr
 */
 
 function UC_ReplaceInFiles( $InstanceID,$Files,$SearchStr,$ReplaceStr ){
@@ -7404,9 +7419,9 @@ function UC_ReplaceInFiles( $InstanceID,$Files,$SearchStr,$ReplaceStr ){
 /**
 * USCK_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function USCK_SendText( $InstanceID,$Text ){
@@ -7418,8 +7433,8 @@ function USCK_SendText( $InstanceID,$Text ){
 /**
 * UVR_UpdateValues
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function UVR_UpdateValues( $InstanceID ){
@@ -7431,9 +7446,9 @@ function UVR_UpdateValues( $InstanceID ){
 /**
 * VELLEUSB_ReadAnalogChannel
 * 
-* @returns Integer
-* @param Integer $InstanceID
-* @param Integer $Channel
+* @returns integer
+* @param integer $InstanceID
+* @param integer $Channel
 */
 
 function VELLEUSB_ReadAnalogChannel( $InstanceID,$Channel ){
@@ -7445,9 +7460,9 @@ function VELLEUSB_ReadAnalogChannel( $InstanceID,$Channel ){
 /**
 * VELLEUSB_ReadCounter
 * 
-* @returns Integer
-* @param Integer $InstanceID
-* @param Integer $Counter
+* @returns integer
+* @param integer $InstanceID
+* @param integer $Counter
 */
 
 function VELLEUSB_ReadCounter( $InstanceID,$Counter ){
@@ -7459,8 +7474,8 @@ function VELLEUSB_ReadCounter( $InstanceID,$Counter ){
 /**
 * VELLEUSB_ReadDigital
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function VELLEUSB_ReadDigital( $InstanceID ){
@@ -7472,9 +7487,9 @@ function VELLEUSB_ReadDigital( $InstanceID ){
 /**
 * VELLEUSB_ReadDigitalChannel
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
 */
 
 function VELLEUSB_ReadDigitalChannel( $InstanceID,$Channel ){
@@ -7486,9 +7501,9 @@ function VELLEUSB_ReadDigitalChannel( $InstanceID,$Channel ){
 /**
 * VELLEUSB_ResetCounter
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Counter
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Counter
 */
 
 function VELLEUSB_ResetCounter( $InstanceID,$Counter ){
@@ -7500,10 +7515,10 @@ function VELLEUSB_ResetCounter( $InstanceID,$Counter ){
 /**
 * VELLEUSB_SetCounterDebounceTime
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Counter
-* @param Integer $Time
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Counter
+* @param integer $Time
 */
 
 function VELLEUSB_SetCounterDebounceTime( $InstanceID,$Counter,$Time ){
@@ -7515,10 +7530,10 @@ function VELLEUSB_SetCounterDebounceTime( $InstanceID,$Counter,$Time ){
 /**
 * VELLEUSB_WriteAnalogChannel
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param integer $Value
 */
 
 function VELLEUSB_WriteAnalogChannel( $InstanceID,$Channel,$Value ){
@@ -7530,9 +7545,9 @@ function VELLEUSB_WriteAnalogChannel( $InstanceID,$Channel,$Value ){
 /**
 * VELLEUSB_WriteDigital
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function VELLEUSB_WriteDigital( $InstanceID,$Value ){
@@ -7544,10 +7559,10 @@ function VELLEUSB_WriteDigital( $InstanceID,$Value ){
 /**
 * VELLEUSB_WriteDigitalChannel
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Channel
-* @param Boolean $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Channel
+* @param boolean $Value
 */
 
 function VELLEUSB_WriteDigitalChannel( $InstanceID,$Channel,$Value ){
@@ -7559,9 +7574,9 @@ function VELLEUSB_WriteDigitalChannel( $InstanceID,$Channel,$Value ){
 /**
 * VIO_PushText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function VIO_PushText( $InstanceID,$Text ){
@@ -7573,9 +7588,9 @@ function VIO_PushText( $InstanceID,$Text ){
 /**
 * VIO_PushTextHEX
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function VIO_PushTextHEX( $InstanceID,$Text ){
@@ -7587,9 +7602,9 @@ function VIO_PushTextHEX( $InstanceID,$Text ){
 /**
 * VIO_SendText
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
 */
 
 function VIO_SendText( $InstanceID,$Text ){
@@ -7601,9 +7616,9 @@ function VIO_SendText( $InstanceID,$Text ){
 /**
 * WAC_AddFile
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Filename
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Filename
 */
 
 function WAC_AddFile( $InstanceID,$Filename ){
@@ -7615,8 +7630,8 @@ function WAC_AddFile( $InstanceID,$Filename ){
 /**
 * WAC_ClearPlaylist
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_ClearPlaylist( $InstanceID ){
@@ -7628,9 +7643,9 @@ function WAC_ClearPlaylist( $InstanceID ){
 /**
 * WAC_GetPlaylistFile
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns string
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function WAC_GetPlaylistFile( $InstanceID,$Position ){
@@ -7642,8 +7657,8 @@ function WAC_GetPlaylistFile( $InstanceID,$Position ){
 /**
 * WAC_GetPlaylistLength
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function WAC_GetPlaylistLength( $InstanceID ){
@@ -7655,8 +7670,8 @@ function WAC_GetPlaylistLength( $InstanceID ){
 /**
 * WAC_GetPlaylistPosition
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function WAC_GetPlaylistPosition( $InstanceID ){
@@ -7668,9 +7683,9 @@ function WAC_GetPlaylistPosition( $InstanceID ){
 /**
 * WAC_GetPlaylistTitle
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns string
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function WAC_GetPlaylistTitle( $InstanceID,$Position ){
@@ -7682,8 +7697,8 @@ function WAC_GetPlaylistTitle( $InstanceID,$Position ){
 /**
 * WAC_Next
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_Next( $InstanceID ){
@@ -7695,8 +7710,8 @@ function WAC_Next( $InstanceID ){
 /**
 * WAC_Pause
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_Pause( $InstanceID ){
@@ -7708,8 +7723,8 @@ function WAC_Pause( $InstanceID ){
 /**
 * WAC_Play
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_Play( $InstanceID ){
@@ -7721,9 +7736,9 @@ function WAC_Play( $InstanceID ){
 /**
 * WAC_PlayFile
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Filename
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Filename
 */
 
 function WAC_PlayFile( $InstanceID,$Filename ){
@@ -7735,8 +7750,8 @@ function WAC_PlayFile( $InstanceID,$Filename ){
 /**
 * WAC_Prev
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_Prev( $InstanceID ){
@@ -7748,9 +7763,9 @@ function WAC_Prev( $InstanceID ){
 /**
 * WAC_SetPlaylistPosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
 */
 
 function WAC_SetPlaylistPosition( $InstanceID,$Position ){
@@ -7762,9 +7777,9 @@ function WAC_SetPlaylistPosition( $InstanceID,$Position ){
 /**
 * WAC_SetPosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Seconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Seconds
 */
 
 function WAC_SetPosition( $InstanceID,$Seconds ){
@@ -7776,9 +7791,9 @@ function WAC_SetPosition( $InstanceID,$Seconds ){
 /**
 * WAC_SetRepeat
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DoRepeat
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DoRepeat
 */
 
 function WAC_SetRepeat( $InstanceID,$DoRepeat ){
@@ -7790,9 +7805,9 @@ function WAC_SetRepeat( $InstanceID,$DoRepeat ){
 /**
 * WAC_SetShuffle
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DoShuffle
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DoShuffle
 */
 
 function WAC_SetShuffle( $InstanceID,$DoShuffle ){
@@ -7804,9 +7819,9 @@ function WAC_SetShuffle( $InstanceID,$DoShuffle ){
 /**
 * WAC_SetVolume
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Volume
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Volume
 */
 
 function WAC_SetVolume( $InstanceID,$Volume ){
@@ -7818,8 +7833,8 @@ function WAC_SetVolume( $InstanceID,$Volume ){
 /**
 * WAC_Stop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WAC_Stop( $InstanceID ){
@@ -7831,8 +7846,8 @@ function WAC_Stop( $InstanceID ){
 /**
 * WDE1_ReInitEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WDE1_ReInitEvent( $InstanceID ){
@@ -7842,11 +7857,25 @@ function WDE1_ReInitEvent( $InstanceID ){
 }
 
 /**
+* WDE1_ReadRecord
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param variant $inbuf
+*/
+
+function WDE1_ReadRecord( $InstanceID,$inbuf ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WDE1_ReadRecord( $InstanceID,$inbuf );
+	return $result;
+}
+
+/**
 * WDE1_SendDataToChildren
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function WDE1_SendDataToChildren( $InstanceID,$Data ){
@@ -7858,9 +7887,9 @@ function WDE1_SendDataToChildren( $InstanceID,$Data ){
 /**
 * WDE1_SendDataToParent
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function WDE1_SendDataToParent( $InstanceID,$Data ){
@@ -7872,9 +7901,9 @@ function WDE1_SendDataToParent( $InstanceID,$Data ){
 /**
 * WDE1_SetRainPerCount
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $rainpercount
+* @returns variant
+* @param integer $InstanceID
+* @param variant $rainpercount
 */
 
 function WDE1_SetRainPerCount( $InstanceID,$rainpercount ){
@@ -7886,12 +7915,12 @@ function WDE1_SetRainPerCount( $InstanceID,$rainpercount ){
 /**
 * WFC_AddItem
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
-* @param String $ClassName
-* @param String $Configuration
-* @param String $ParentID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
+* @param string $ClassName
+* @param string $Configuration
+* @param string $ParentID
 */
 
 function WFC_AddItem( $InstanceID,$ID,$ClassName,$Configuration,$ParentID ){
@@ -7903,10 +7932,10 @@ function WFC_AddItem( $InstanceID,$ID,$ClassName,$Configuration,$ParentID ){
 /**
 * WFC_AudioNotification
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Title
-* @param Integer $MediaID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Title
+* @param integer $MediaID
 */
 
 function WFC_AudioNotification( $InstanceID,$Title,$MediaID ){
@@ -7918,9 +7947,9 @@ function WFC_AudioNotification( $InstanceID,$Title,$MediaID ){
 /**
 * WFC_DeleteItem
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
 */
 
 function WFC_DeleteItem( $InstanceID,$ID ){
@@ -7932,11 +7961,11 @@ function WFC_DeleteItem( $InstanceID,$ID ){
 /**
 * WFC_Execute
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $ActionID
-* @param Integer $TargetID
-* @param Array $Value
+* @returns string
+* @param integer $InstanceID
+* @param integer $ActionID
+* @param integer $TargetID
+* @param variant $Value
 */
 
 function WFC_Execute( $InstanceID,$ActionID,$TargetID,$Value ){
@@ -7948,14 +7977,14 @@ function WFC_Execute( $InstanceID,$ActionID,$TargetID,$Value ){
 /**
 * WFC_GetAggregatedValues
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $VariableID
+* @returns array
+* @param integer $InstanceID
+* @param integer $VariableID
 * @param integer $AggregationSpan
 *   enum[0=agHour, 1=agDay, 2=agWeek, 3=agMonth, 4=agYear, 5=ag5Minutes, 6=ag1Minute, 7=agChanges]
-* @param Integer $StartTime
-* @param Integer $EndTime
-* @param Integer $Limit
+* @param integer $StartTime
+* @param integer $EndTime
+* @param integer $Limit
 */
 
 function WFC_GetAggregatedValues( $InstanceID,$VariableID,$AggregationSpan,$StartTime,$EndTime,$Limit ){
@@ -7967,8 +7996,8 @@ function WFC_GetAggregatedValues( $InstanceID,$VariableID,$AggregationSpan,$Star
 /**
 * WFC_GetItems
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function WFC_GetItems( $InstanceID ){
@@ -7980,12 +8009,12 @@ function WFC_GetItems( $InstanceID ){
 /**
 * WFC_GetLoggedValues
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $VariableID
-* @param Integer $StartTime
-* @param Integer $EndTime
-* @param Integer $Limit
+* @returns array
+* @param integer $InstanceID
+* @param integer $VariableID
+* @param integer $StartTime
+* @param integer $EndTime
+* @param integer $Limit
 */
 
 function WFC_GetLoggedValues( $InstanceID,$VariableID,$StartTime,$EndTime,$Limit ){
@@ -7997,8 +8026,8 @@ function WFC_GetLoggedValues( $InstanceID,$VariableID,$StartTime,$EndTime,$Limit
 /**
 * WFC_GetSnapshot
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function WFC_GetSnapshot( $InstanceID ){
@@ -8010,9 +8039,9 @@ function WFC_GetSnapshot( $InstanceID ){
 /**
 * WFC_GetSnapshotChanges
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $LastTimeStamp
+* @returns string
+* @param integer $InstanceID
+* @param integer $LastTimeStamp
 */
 
 function WFC_GetSnapshotChanges( $InstanceID,$LastTimeStamp ){
@@ -8024,10 +8053,10 @@ function WFC_GetSnapshotChanges( $InstanceID,$LastTimeStamp ){
 /**
 * WFC_GetSnapshotChangesEx
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $CategoryID
-* @param Integer $LastTimeStamp
+* @returns string
+* @param integer $InstanceID
+* @param integer $CategoryID
+* @param integer $LastTimeStamp
 */
 
 function WFC_GetSnapshotChangesEx( $InstanceID,$CategoryID,$LastTimeStamp ){
@@ -8039,9 +8068,9 @@ function WFC_GetSnapshotChangesEx( $InstanceID,$CategoryID,$LastTimeStamp ){
 /**
 * WFC_GetSnapshotEx
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $CategoryID
+* @returns string
+* @param integer $InstanceID
+* @param integer $CategoryID
 */
 
 function WFC_GetSnapshotEx( $InstanceID,$CategoryID ){
@@ -8053,12 +8082,12 @@ function WFC_GetSnapshotEx( $InstanceID,$CategoryID ){
 /**
 * WFC_PushNotification
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Title
-* @param String $Text
-* @param String $Sound
-* @param Integer $TargetID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Title
+* @param string $Text
+* @param string $Sound
+* @param integer $TargetID
 */
 
 function WFC_PushNotification( $InstanceID,$Title,$Text,$Sound,$TargetID ){
@@ -8070,12 +8099,12 @@ function WFC_PushNotification( $InstanceID,$Title,$Text,$Sound,$TargetID ){
 /**
 * WFC_RegisterPNS
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $Token
-* @param String $Provider
-* @param String $DeviceID
-* @param String $DeviceName
+* @returns string
+* @param integer $InstanceID
+* @param string $Token
+* @param string $Provider
+* @param string $DeviceID
+* @param string $DeviceName
 */
 
 function WFC_RegisterPNS( $InstanceID,$Token,$Provider,$DeviceID,$DeviceName ){
@@ -8087,8 +8116,8 @@ function WFC_RegisterPNS( $InstanceID,$Token,$Provider,$DeviceID,$DeviceName ){
 /**
 * WFC_Reload
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WFC_Reload( $InstanceID ){
@@ -8100,17 +8129,17 @@ function WFC_Reload( $InstanceID ){
 /**
 * WFC_RenderChart
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param Integer $ObjectID
-* @param Integer $StartTime
+* @returns string
+* @param integer $InstanceID
+* @param integer $ObjectID
+* @param integer $StartTime
 * @param integer $TimeSpan
 *   enum[0=tsHour, 1=tsDay, 2=tsWeek, 3=tsMonth, 4=tsYear, 5=tsDecade]
-* @param Boolean $IsHD
-* @param Boolean $IsExtrema
-* @param Boolean $IsDyn
-* @param Integer $Width
-* @param Integer $Height
+* @param boolean $IsHD
+* @param boolean $IsExtrema
+* @param boolean $IsDyn
+* @param integer $Width
+* @param integer $Height
 */
 
 function WFC_RenderChart( $InstanceID,$ObjectID,$StartTime,$TimeSpan,$IsHD,$IsExtrema,$IsDyn,$Width,$Height ){
@@ -8122,12 +8151,12 @@ function WFC_RenderChart( $InstanceID,$ObjectID,$StartTime,$TimeSpan,$IsHD,$IsEx
 /**
 * WFC_SendNotification
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Title
-* @param String $Text
-* @param String $Icon
-* @param Integer $Timeout
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Title
+* @param string $Text
+* @param string $Icon
+* @param integer $Timeout
 */
 
 function WFC_SendNotification( $InstanceID,$Title,$Text,$Icon,$Timeout ){
@@ -8139,10 +8168,10 @@ function WFC_SendNotification( $InstanceID,$Title,$Text,$Icon,$Timeout ){
 /**
 * WFC_SendPopup
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Title
-* @param String $Text
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Title
+* @param string $Text
 */
 
 function WFC_SendPopup( $InstanceID,$Title,$Text ){
@@ -8154,9 +8183,9 @@ function WFC_SendPopup( $InstanceID,$Title,$Text ){
 /**
 * WFC_SetItems
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Items
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Items
 */
 
 function WFC_SetItems( $InstanceID,$Items ){
@@ -8168,9 +8197,9 @@ function WFC_SetItems( $InstanceID,$Items ){
 /**
 * WFC_SwitchPage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $PageName
+* @returns boolean
+* @param integer $InstanceID
+* @param string $PageName
 */
 
 function WFC_SwitchPage( $InstanceID,$PageName ){
@@ -8182,10 +8211,10 @@ function WFC_SwitchPage( $InstanceID,$PageName ){
 /**
 * WFC_UpdateConfiguration
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
-* @param String $Configuration
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
+* @param string $Configuration
 */
 
 function WFC_UpdateConfiguration( $InstanceID,$ID,$Configuration ){
@@ -8197,10 +8226,10 @@ function WFC_UpdateConfiguration( $InstanceID,$ID,$Configuration ){
 /**
 * WFC_UpdateParentID
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
-* @param String $ParentID
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
+* @param string $ParentID
 */
 
 function WFC_UpdateParentID( $InstanceID,$ID,$ParentID ){
@@ -8212,10 +8241,10 @@ function WFC_UpdateParentID( $InstanceID,$ID,$ParentID ){
 /**
 * WFC_UpdatePosition
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
-* @param Integer $Position
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
+* @param integer $Position
 */
 
 function WFC_UpdatePosition( $InstanceID,$ID,$Position ){
@@ -8227,10 +8256,10 @@ function WFC_UpdatePosition( $InstanceID,$ID,$Position ){
 /**
 * WFC_UpdateVisibility
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $ID
-* @param Boolean $Visible
+* @returns boolean
+* @param integer $InstanceID
+* @param string $ID
+* @param boolean $Visible
 */
 
 function WFC_UpdateVisibility( $InstanceID,$ID,$Visible ){
@@ -8240,10 +8269,50 @@ function WFC_UpdateVisibility( $InstanceID,$ID,$Visible ){
 }
 
 /**
+* WS2500PC_Query
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function WS2500PC_Query( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WS2500PC_Query( $InstanceID );
+	return $result;
+}
+
+/**
+* WS2500PC_SendDataToChildren
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
+*/
+
+function WS2500PC_SendDataToChildren( $InstanceID,$Data ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WS2500PC_SendDataToChildren( $InstanceID,$Data );
+	return $result;
+}
+
+/**
+* WS2500PC_UpdateEvent
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function WS2500PC_UpdateEvent( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WS2500PC_UpdateEvent( $InstanceID );
+	return $result;
+}
+
+/**
 * WS300PC_GetHistoryCount
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_GetHistoryCount( $InstanceID ){
@@ -8255,8 +8324,8 @@ function WS300PC_GetHistoryCount( $InstanceID ){
 /**
 * WS300PC_GetVersion
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_GetVersion( $InstanceID ){
@@ -8268,8 +8337,8 @@ function WS300PC_GetVersion( $InstanceID ){
 /**
 * WS300PC_ReInitEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_ReInitEvent( $InstanceID ){
@@ -8281,8 +8350,8 @@ function WS300PC_ReInitEvent( $InstanceID ){
 /**
 * WS300PC_ReadCurrentRecord
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_ReadCurrentRecord( $InstanceID ){
@@ -8294,8 +8363,8 @@ function WS300PC_ReadCurrentRecord( $InstanceID ){
 /**
 * WS300PC_ReadNextRecord
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_ReadNextRecord( $InstanceID ){
@@ -8307,9 +8376,9 @@ function WS300PC_ReadNextRecord( $InstanceID ){
 /**
 * WS300PC_SendDataToChildren
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function WS300PC_SendDataToChildren( $InstanceID,$Data ){
@@ -8321,9 +8390,9 @@ function WS300PC_SendDataToChildren( $InstanceID,$Data ){
 /**
 * WS300PC_SendDataToParent
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function WS300PC_SendDataToParent( $InstanceID,$Data ){
@@ -8335,9 +8404,9 @@ function WS300PC_SendDataToParent( $InstanceID,$Data ){
 /**
 * WS300PC_SetHistoryCount
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $val
+* @returns variant
+* @param integer $InstanceID
+* @param variant $val
 */
 
 function WS300PC_SetHistoryCount( $InstanceID,$val ){
@@ -8349,8 +8418,8 @@ function WS300PC_SetHistoryCount( $InstanceID,$val ){
 /**
 * WS300PC_UpdateEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_UpdateEvent( $InstanceID ){
@@ -8362,8 +8431,8 @@ function WS300PC_UpdateEvent( $InstanceID ){
 /**
 * WS300PC_WriteConfig
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WS300PC_WriteConfig( $InstanceID ){
@@ -8375,8 +8444,8 @@ function WS300PC_WriteConfig( $InstanceID ){
 /**
 * WUE_ReInitEvent
 * 
-* @returns Array
-* @param Integer $InstanceID
+* @returns variant
+* @param integer $InstanceID
 */
 
 function WUE_ReInitEvent( $InstanceID ){
@@ -8388,9 +8457,9 @@ function WUE_ReInitEvent( $InstanceID ){
 /**
 * WUE_SendDataToParent
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $Data
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
 */
 
 function WUE_SendDataToParent( $InstanceID,$Data ){
@@ -8402,9 +8471,9 @@ function WUE_SendDataToParent( $InstanceID,$Data ){
 /**
 * WUE_SetRainPerCount
 * 
-* @returns Array
-* @param Integer $InstanceID
-* @param Array $rainpercount
+* @returns variant
+* @param integer $InstanceID
+* @param variant $rainpercount
 */
 
 function WUE_SetRainPerCount( $InstanceID,$rainpercount ){
@@ -8416,8 +8485,8 @@ function WUE_SetRainPerCount( $InstanceID,$rainpercount ){
 /**
 * WWW_UpdatePage
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WWW_UpdatePage( $InstanceID ){
@@ -8429,10 +8498,10 @@ function WWW_UpdatePage( $InstanceID ){
 /**
 * WinLIRC_SendOnce
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param String $Remote
-* @param String $Button
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Remote
+* @param string $Button
 */
 
 function WinLIRC_SendOnce( $InstanceID,$Remote,$Button ){
@@ -8444,9 +8513,9 @@ function WinLIRC_SendOnce( $InstanceID,$Remote,$Button ){
 /**
 * WuT_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function WuT_SwitchMode( $InstanceID,$DeviceOn ){
@@ -8458,8 +8527,8 @@ function WuT_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * WuT_UpdateValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WuT_UpdateValue( $InstanceID ){
@@ -8471,8 +8540,8 @@ function WuT_UpdateValue( $InstanceID ){
 /**
 * WuT_UpdateValues
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function WuT_UpdateValues( $InstanceID ){
@@ -8484,10 +8553,10 @@ function WuT_UpdateValues( $InstanceID ){
 /**
 * XBee_SendBuffer
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $DestinationDevice
-* @param String $Buffer
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $DestinationDevice
+* @param string $Buffer
 */
 
 function XBee_SendBuffer( $InstanceID,$DestinationDevice,$Buffer ){
@@ -8499,9 +8568,9 @@ function XBee_SendBuffer( $InstanceID,$DestinationDevice,$Buffer ){
 /**
 * XBee_SendCommand
 * 
-* @returns String
-* @param Integer $InstanceID
-* @param String $Command
+* @returns string
+* @param integer $InstanceID
+* @param string $Command
 */
 
 function XBee_SendCommand( $InstanceID,$Command ){
@@ -8511,12 +8580,40 @@ function XBee_SendCommand( $InstanceID,$Command ){
 }
 
 /**
+* XS1_SwitchMode
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param variant $dev
+* @param variant $val
+*/
+
+function XS1_SwitchMode( $InstanceID,$dev,$val ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->XS1_SwitchMode( $InstanceID,$dev,$val );
+	return $result;
+}
+
+/**
+* XS1_UpdateEvent
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function XS1_UpdateEvent( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->XS1_UpdateEvent( $InstanceID );
+	return $result;
+}
+
+/**
 * ZW_AssociationAddToGroup
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Group
-* @param Integer $Node
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Group
+* @param integer $Node
 */
 
 function ZW_AssociationAddToGroup( $InstanceID,$Group,$Node ){
@@ -8528,10 +8625,10 @@ function ZW_AssociationAddToGroup( $InstanceID,$Group,$Node ){
 /**
 * ZW_AssociationRemoveFromGroup
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Group
-* @param Integer $Node
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Group
+* @param integer $Node
 */
 
 function ZW_AssociationRemoveFromGroup( $InstanceID,$Group,$Node ){
@@ -8543,9 +8640,9 @@ function ZW_AssociationRemoveFromGroup( $InstanceID,$Group,$Node ){
 /**
 * ZW_Basic
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Value
 */
 
 function ZW_Basic( $InstanceID,$Value ){
@@ -8557,8 +8654,8 @@ function ZW_Basic( $InstanceID,$Value ){
 /**
 * ZW_CheckCapability
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Cap
 *   enum[0=zcPrimaryController, 1=zcSecondaryController, 2=zcIsSUC, 3=zcHasSIS]
 */
@@ -8572,9 +8669,9 @@ function ZW_CheckCapability( $InstanceID,$Cap ){
 /**
 * ZW_ConfigurationGetValue
 * 
-* @returns Integer
-* @param Integer $InstanceID
-* @param Integer $Parameter
+* @returns integer
+* @param integer $InstanceID
+* @param integer $Parameter
 */
 
 function ZW_ConfigurationGetValue( $InstanceID,$Parameter ){
@@ -8586,9 +8683,9 @@ function ZW_ConfigurationGetValue( $InstanceID,$Parameter ){
 /**
 * ZW_ConfigurationResetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Parameter
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Parameter
 */
 
 function ZW_ConfigurationResetValue( $InstanceID,$Parameter ){
@@ -8600,10 +8697,10 @@ function ZW_ConfigurationResetValue( $InstanceID,$Parameter ){
 /**
 * ZW_ConfigurationSetValue
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Parameter
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Parameter
+* @param integer $Value
 */
 
 function ZW_ConfigurationSetValue( $InstanceID,$Parameter,$Value ){
@@ -8615,11 +8712,11 @@ function ZW_ConfigurationSetValue( $InstanceID,$Parameter,$Value ){
 /**
 * ZW_ConfigurationSetValueEx
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Parameter
-* @param Integer $Size
-* @param Integer $Value
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Parameter
+* @param integer $Size
+* @param integer $Value
 */
 
 function ZW_ConfigurationSetValueEx( $InstanceID,$Parameter,$Size,$Value ){
@@ -8631,9 +8728,9 @@ function ZW_ConfigurationSetValueEx( $InstanceID,$Parameter,$Size,$Value ){
 /**
 * ZW_DeleteFailedDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $NodeID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $NodeID
 */
 
 function ZW_DeleteFailedDevice( $InstanceID,$NodeID ){
@@ -8645,9 +8742,9 @@ function ZW_DeleteFailedDevice( $InstanceID,$NodeID ){
 /**
 * ZW_DimSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Intensity
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Intensity
 */
 
 function ZW_DimSet( $InstanceID,$Intensity ){
@@ -8659,8 +8756,8 @@ function ZW_DimSet( $InstanceID,$Intensity ){
 /**
 * ZW_DimStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_DimStop( $InstanceID ){
@@ -8672,8 +8769,8 @@ function ZW_DimStop( $InstanceID ){
 /**
 * ZW_GetCapabilities
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_GetCapabilities( $InstanceID ){
@@ -8685,8 +8782,8 @@ function ZW_GetCapabilities( $InstanceID ){
 /**
 * ZW_GetDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_GetDevices( $InstanceID ){
@@ -8698,8 +8795,8 @@ function ZW_GetDevices( $InstanceID ){
 /**
 * ZW_GetHomeID
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function ZW_GetHomeID( $InstanceID ){
@@ -8711,8 +8808,8 @@ function ZW_GetHomeID( $InstanceID ){
 /**
 * ZW_GetKnownDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_GetKnownDevices( $InstanceID ){
@@ -8724,8 +8821,8 @@ function ZW_GetKnownDevices( $InstanceID ){
 /**
 * ZW_GetNodeID
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function ZW_GetNodeID( $InstanceID ){
@@ -8737,8 +8834,8 @@ function ZW_GetNodeID( $InstanceID ){
 /**
 * ZW_GetSUCID
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function ZW_GetSUCID( $InstanceID ){
@@ -8750,8 +8847,8 @@ function ZW_GetSUCID( $InstanceID ){
 /**
 * ZW_GetType
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function ZW_GetType( $InstanceID ){
@@ -8763,8 +8860,8 @@ function ZW_GetType( $InstanceID ){
 /**
 * ZW_GetVersion
 * 
-* @returns String
-* @param Integer $InstanceID
+* @returns string
+* @param integer $InstanceID
 */
 
 function ZW_GetVersion( $InstanceID ){
@@ -8776,9 +8873,9 @@ function ZW_GetVersion( $InstanceID ){
 /**
 * ZW_LockMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $Locked
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Locked
 */
 
 function ZW_LockMode( $InstanceID,$Locked ){
@@ -8790,8 +8887,8 @@ function ZW_LockMode( $InstanceID,$Locked ){
 /**
 * ZW_MeterReset
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_MeterReset( $InstanceID ){
@@ -8803,8 +8900,8 @@ function ZW_MeterReset( $InstanceID ){
 /**
 * ZW_ProtectionSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Mode
 *   enum[0=pOff, 1=pLimited, 2=pOn]
 */
@@ -8818,8 +8915,8 @@ function ZW_ProtectionSet( $InstanceID,$Mode ){
 /**
 * ZW_PulseThermostatFanModeSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $FanMode
 *   enum[0=ptfmAuto, 1=ptfmLow, 2=ptfmMedium, 3=ptfmHigh, 4=ptfmOff]
 */
@@ -8833,8 +8930,8 @@ function ZW_PulseThermostatFanModeSet( $InstanceID,$FanMode ){
 /**
 * ZW_PulseThermostatModeSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Mode
 *   enum[0=ptmHeat, 1=ptmCool, 2=ptmAutoChangeover]
 */
@@ -8848,8 +8945,8 @@ function ZW_PulseThermostatModeSet( $InstanceID,$Mode ){
 /**
 * ZW_PulseThermostatPowerModeSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $PowerMode
 *   enum[0=ptpmOff, 1=ptpmNormal, 2=ptpmEconomy]
 */
@@ -8863,11 +8960,11 @@ function ZW_PulseThermostatPowerModeSet( $InstanceID,$PowerMode ){
 /**
 * ZW_PulseThermostatSetPointSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $SetPoint
 *   enum[0=ptspNormalHeat, 1=ptspNormalCool, 2=ptspNormalAuto, 3=ptspEconomyHeat, 4=ptspEconomyCool, 5=ptspEconomyAutoHeat, 6=ptspEconomyAutoCool]
-* @param Float $Value
+* @param float $Value
 */
 
 function ZW_PulseThermostatSetPointSet( $InstanceID,$SetPoint,$Value ){
@@ -8879,8 +8976,8 @@ function ZW_PulseThermostatSetPointSet( $InstanceID,$SetPoint,$Value ){
 /**
 * ZW_RequestAssociations
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_RequestAssociations( $InstanceID ){
@@ -8892,8 +8989,8 @@ function ZW_RequestAssociations( $InstanceID ){
 /**
 * ZW_RequestInfo
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_RequestInfo( $InstanceID ){
@@ -8905,8 +9002,8 @@ function ZW_RequestInfo( $InstanceID ){
 /**
 * ZW_RequestStatus
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_RequestStatus( $InstanceID ){
@@ -8918,8 +9015,8 @@ function ZW_RequestStatus( $InstanceID ){
 /**
 * ZW_RequestVersion
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_RequestVersion( $InstanceID ){
@@ -8931,8 +9028,8 @@ function ZW_RequestVersion( $InstanceID ){
 /**
 * ZW_RequestWakeUpInterval
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_RequestWakeUpInterval( $InstanceID ){
@@ -8944,8 +9041,8 @@ function ZW_RequestWakeUpInterval( $InstanceID ){
 /**
 * ZW_ResetToDefault
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_ResetToDefault( $InstanceID ){
@@ -8957,9 +9054,9 @@ function ZW_ResetToDefault( $InstanceID ){
 /**
 * ZW_RoutingAssignReturnRoute
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $NodeID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $NodeID
 */
 
 function ZW_RoutingAssignReturnRoute( $InstanceID,$NodeID ){
@@ -8971,9 +9068,9 @@ function ZW_RoutingAssignReturnRoute( $InstanceID,$NodeID ){
 /**
 * ZW_RoutingGetNodes
 * 
-* @returns Variant
-* @param Integer $InstanceID
-* @param Integer $NodeID
+* @returns array
+* @param integer $InstanceID
+* @param integer $NodeID
 */
 
 function ZW_RoutingGetNodes( $InstanceID,$NodeID ){
@@ -8985,8 +9082,8 @@ function ZW_RoutingGetNodes( $InstanceID,$NodeID ){
 /**
 * ZW_RoutingOptimize
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_RoutingOptimize( $InstanceID ){
@@ -8998,9 +9095,9 @@ function ZW_RoutingOptimize( $InstanceID ){
 /**
 * ZW_RoutingOptimizeNode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $NodeID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $NodeID
 */
 
 function ZW_RoutingOptimizeNode( $InstanceID,$NodeID ){
@@ -9012,9 +9109,9 @@ function ZW_RoutingOptimizeNode( $InstanceID,$NodeID ){
 /**
 * ZW_RoutingTestNode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $NodeID
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $NodeID
 */
 
 function ZW_RoutingTestNode( $InstanceID,$NodeID ){
@@ -9026,8 +9123,8 @@ function ZW_RoutingTestNode( $InstanceID,$NodeID ){
 /**
 * ZW_SearchDevices
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_SearchDevices( $InstanceID ){
@@ -9039,8 +9136,8 @@ function ZW_SearchDevices( $InstanceID ){
 /**
 * ZW_SearchMainDevice
 * 
-* @returns Integer
-* @param Integer $InstanceID
+* @returns integer
+* @param integer $InstanceID
 */
 
 function ZW_SearchMainDevice( $InstanceID ){
@@ -9052,8 +9149,8 @@ function ZW_SearchMainDevice( $InstanceID ){
 /**
 * ZW_SearchSubDevices
 * 
-* @returns Variant
-* @param Integer $InstanceID
+* @returns array
+* @param integer $InstanceID
 */
 
 function ZW_SearchSubDevices( $InstanceID ){
@@ -9065,8 +9162,8 @@ function ZW_SearchSubDevices( $InstanceID ){
 /**
 * ZW_ShutterMoveDown
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_ShutterMoveDown( $InstanceID ){
@@ -9078,8 +9175,8 @@ function ZW_ShutterMoveDown( $InstanceID ){
 /**
 * ZW_ShutterMoveUp
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_ShutterMoveUp( $InstanceID ){
@@ -9091,8 +9188,8 @@ function ZW_ShutterMoveUp( $InstanceID ){
 /**
 * ZW_ShutterStop
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_ShutterStop( $InstanceID ){
@@ -9104,8 +9201,8 @@ function ZW_ShutterStop( $InstanceID ){
 /**
 * ZW_StartAddDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StartAddDevice( $InstanceID ){
@@ -9117,8 +9214,8 @@ function ZW_StartAddDevice( $InstanceID ){
 /**
 * ZW_StartAddNewPrimaryController
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StartAddNewPrimaryController( $InstanceID ){
@@ -9130,8 +9227,8 @@ function ZW_StartAddNewPrimaryController( $InstanceID ){
 /**
 * ZW_StartRemoveDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StartRemoveDevice( $InstanceID ){
@@ -9143,8 +9240,8 @@ function ZW_StartRemoveDevice( $InstanceID ){
 /**
 * ZW_StopAddDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StopAddDevice( $InstanceID ){
@@ -9156,8 +9253,8 @@ function ZW_StopAddDevice( $InstanceID ){
 /**
 * ZW_StopAddNewPrimaryController
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StopAddNewPrimaryController( $InstanceID ){
@@ -9169,8 +9266,8 @@ function ZW_StopAddNewPrimaryController( $InstanceID ){
 /**
 * ZW_StopRemoveDevice
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_StopRemoveDevice( $InstanceID ){
@@ -9182,9 +9279,9 @@ function ZW_StopRemoveDevice( $InstanceID ){
 /**
 * ZW_SwitchMode
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $DeviceOn
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $DeviceOn
 */
 
 function ZW_SwitchMode( $InstanceID,$DeviceOn ){
@@ -9196,8 +9293,8 @@ function ZW_SwitchMode( $InstanceID,$DeviceOn ){
 /**
 * ZW_ThermostatFanModeSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $FanMode
 *   enum[0=tfmAutoLow, 1=tfmOnLow, 2=tfmAutoHigh, 3=tfmOnHigh]
 */
@@ -9211,8 +9308,8 @@ function ZW_ThermostatFanModeSet( $InstanceID,$FanMode ){
 /**
 * ZW_ThermostatModeSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $Mode
 *   enum[0=tmOff, 1=tmHeat, 2=tmCool, 3=tmAuto, 4=tmAuxiliary, 5=tmResume, 6=tmFanOnly, 7=tmFurnace, 8=tmDryAir, 9=tmMoistAir, 10=tmAutoChangeover]
 */
@@ -9226,11 +9323,11 @@ function ZW_ThermostatModeSet( $InstanceID,$Mode ){
 /**
 * ZW_ThermostatSetPointSet
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 * @param integer $SetPoint
 *   enum[0=tspInvalid, 1=tspHeating, 2=tspCooling, 3=tspFurnace, 4=tspDryAir, 5=tspMoistAir, 6=tspAutoChangeover]
-* @param Float $Value
+* @param float $Value
 */
 
 function ZW_ThermostatSetPointSet( $InstanceID,$SetPoint,$Value ){
@@ -9242,8 +9339,8 @@ function ZW_ThermostatSetPointSet( $InstanceID,$SetPoint,$Value ){
 /**
 * ZW_WakeUpComplete
 * 
-* @returns Boolean
-* @param Integer $InstanceID
+* @returns boolean
+* @param integer $InstanceID
 */
 
 function ZW_WakeUpComplete( $InstanceID ){
@@ -9255,9 +9352,9 @@ function ZW_WakeUpComplete( $InstanceID ){
 /**
 * ZW_WakeUpKeepAlive
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Boolean $KeepAlive
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $KeepAlive
 */
 
 function ZW_WakeUpKeepAlive( $InstanceID,$KeepAlive ){
@@ -9269,9 +9366,9 @@ function ZW_WakeUpKeepAlive( $InstanceID,$KeepAlive ){
 /**
 * ZW_WakeUpSetInterval
 * 
-* @returns Boolean
-* @param Integer $InstanceID
-* @param Integer $Seconds
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Seconds
 */
 
 function ZW_WakeUpSetInterval( $InstanceID,$Seconds ){
