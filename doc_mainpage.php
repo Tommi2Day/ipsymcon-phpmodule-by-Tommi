@@ -150,7 +150,8 @@ WS300PC_ReadCurrentRecord($id);
 WS300PC_ReadNextRecord($id);
 @endcode
 
-Reading all historic records at once will take a lot of time and exeeds usually max_execution_time
+Reading all historic records at once will take a lot of time and exeeds usually max_execution_time. 
+But you can execute it from outside of symcon using JSON API. see ws300pc_history.pl for an example.
 
 - \b WriteConfig: Writes a new configuration record
 (contains RainPerCount, Altitude and ReadIntervall to WS300PC. This will trigger a device reset and a 10min sync period)

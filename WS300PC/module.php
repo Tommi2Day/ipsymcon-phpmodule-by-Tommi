@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.8
- * @date 2016-05-01
+ * @version 1.9
+ * @date 2016-05-14
  */
 
 /**
@@ -919,7 +919,7 @@ class WS300PC extends T2DModule
                 $this->debug(__FUNCTION__, 'History Rec TimeDiff:' . $val);
                 $timediff = hexdec($val);
                 $zeit = $zeit - ($timediff * 60);
-                $val = date('c', $zeit); //with timezone to compare
+                $val = date(DATE_ISO8601, $zeit); //with timezone to compare
                 $this->debug(__FUNCTION__, 'history Record:-' . $timediff . ' min ' . $val);
                 SetValueString($this->GetIDForIdent('Last'), $val);
                 break; //if 31
