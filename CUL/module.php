@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1
- * @date 2016-04-10
+ * @version 4.2
+ * @date 2016-05-14
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -265,7 +265,7 @@ class CUL extends T2DModule
         SetValueString($lmid, "");
         
         //eble 1wire on capable devices if enabled
-        if (($ow_use_hms) && (preg_match('/CSM|CUNO|COC/', $version))) {
+        if (($ow_use_hms) && ($version)) {
             $this->init_onewire();
         }
         $this->debug(__FUNCTION__, "Version:$version, Modus: $modus");
@@ -494,7 +494,7 @@ class CUL extends T2DModule
                 if ($versid) SetValueString($versid,$vers);
                 $this->debug(__FUNCTION__, 'Version:' . $vers);
             } elseif (preg_match("/^[0-9]{2}\s+[0-9]{3}/", $line)) {
-                $modus = substr($line, 2);
+                $modus = substr($line, 0,2);
                 $mid = $this->GetIDForIdent('Modus');
                 if ($mid) SetValueString($mid,$modus);
                 $this->debug(__FUNCTION__, 'Modus:' . $modus);
@@ -1085,7 +1085,6 @@ class CUL extends T2DModule
                 $iid = (String)IPS_GetProperty($instID, 'DeviceID');
                 $ityp = (String)IPS_GetProperty($instID, 'Typ');
                 $iclass = (String)IPS_GetProperty($instID, 'Class');
-                $this->debug(__FUNCTION__, "Check my Device '$id'' with Instance $instID($iid)");
                 if (($iid == $id) && ($iclass == $class) && ($ityp == $typ)) {
                     $this->debug(__FUNCTION__, 'Use existing ID:' . $instID);
                     $found = true;
@@ -1207,7 +1206,6 @@ class CUL extends T2DModule
             $iid = (String)IPS_GetProperty($instID, 'DeviceID');
             $ityp = (String)IPS_GetProperty($instID, 'Typ');
             $iclass = (String)IPS_GetProperty($instID, 'Class');
-            $this->debug(__FUNCTION__, "Check my Device '$id' with Instance $instID($iid)");
             if ($I['ConnectionID'] == $this->InstanceID) { //my child
                 if (($iid == $id) && ($iclass == $class) && ($ityp == $typ)) {
                     $this->debug(__FUNCTION__, 'Use existing ID:' . $instID);
@@ -1333,7 +1331,6 @@ class CUL extends T2DModule
             $iid = (String)IPS_GetProperty($instID, 'DeviceID');
             $ityp = (String)IPS_GetProperty($instID, 'Typ');
             $iclass = (String)IPS_GetProperty($instID, 'Class');
-            $this->debug(__FUNCTION__, "Check my Device '$id' with Instance $instID($iid)");
             if ($I['ConnectionID'] == $this->InstanceID) { //my child
                 if (($iid == $id) && ($iclass == $class) && ($ityp == $typ)) {
                     $this->debug(__FUNCTION__, 'Use existing ID:' . $instID);
