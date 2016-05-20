@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.2
- * @date 2016-05-14
+ * @version 4.3
+ * @date 2016-05-20
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -861,19 +861,21 @@ class CUL extends T2DModule
      *
      * @code
      * # For KS300:
-       # KFFTTTHWHWWRRFRSS
+       # KFFTTHTWHWWRRFRSS
+     * # K1775910400E96AF4 :T: 17.5  H: 49  W: 0.0  R: 2793.0  IR: no  Wi: 0  RSSI: -86
      * # For S300TH:
      * # KAATTHTHHSS
      * # K11245265
      * # K41815177F4
      * # 0123456789012345
      * @endcode
-     * -AA Address
+     * -AA Address,Type 1,2
      * -T Temp Byteorder MSB 6,3,4
      * -H Hum Byteorder MSB 7,8(,5)
      * -W Wind Byteorder 9,10,7
      * -R Raincounter Byteorder 14,11,12
-     * -S Signal
+     * -F Flags 1,2,13
+     * -S Signal 15,16
      *
      * Data must be read backwards
      * @param $line
@@ -905,17 +907,8 @@ class CUL extends T2DModule
         $data['Id'] = $dev;
         $data['Class'] = __CLASS__."-WS300";
 
-
-        //signal
-        if (strlen($line) > 13) {
-            $rssi = $this->GetSignal(substr($line, 13, 2));
-            $data['Signal'] = $rssi;
-            $caps .= 'Signal;';
-        }
-
-
         if (($firstbyte & 7) == 7) {
-            if ($typebyte == 0 && $len > 6) {           # temp
+            if (($typebyte == 0) && ($len > 6)) {           # temp
                 $sgn = ($firstbyte & 8) ? -1 : 1;
                 $tmp = $sgn * ($a[6] . $a[3] . "." . $a[4]);
                 $val = "T: $tmp";
@@ -924,10 +917,9 @@ class CUL extends T2DModule
                 $data['Typ'] = 'PS50';
             }
 
-            if ($typebyte == 1 && $len > 8) {           # temp/hum
+            if (($typebyte == 1) && ($len > 8)) {           # temp/hum
                 $sgn = ($firstbyte & 8) ? -1 : 1;
                 $tmp = $sgn * ($a[6] . $a[3] . "." . $a[4]);
-                //$hum = ($a[7].$a[8].".".$a[5]) ;
                 $hum = ($a[7] . $a[8]);
                 $val = "T: $tmp  H: $hum";
                 $caps .= 'Temp;Hum;';
@@ -938,23 +930,23 @@ class CUL extends T2DModule
             }
             //signal
             if ($len > 9) {
-                $rssi = $this->GetSignal(substr($line, 19, 2));
+                $rssi = $this->GetSignal(substr($line, 9, 2));
                 $data['Signal'] = $rssi;
                 $caps .= 'Signal;';
 
             }
 
         } else {
+
             if ($len < 12) {                 #  S300TH
                 $sgn = ($firstbyte & 8) ? -1 : 1;
                 $tmp = $sgn * ($a[6] . $a[3] . "." . $a[4]);
-                //$hum = ($a[7].$a[8].".".$a[5]);
                 $hum = ($a[7] . $a[8]);
                 $val = "T: $tmp  H: $hum";
                 $caps .= 'Temp;Hum;';
                 $data['Temp'] = $tmp;
                 $data['Hum'] = $hum;
-                $data['Typ'] = "S300TH";
+                $data['Typ'] = "WS300 T/F";
 
                 //signal
                 if ($len == 10) {
@@ -965,13 +957,12 @@ class CUL extends T2DModule
                 }
             } elseif ($len > 13) {          # KS300/2
 
-
-                $rainc = hexdec($a[14] . $a[11] . $a[12]);
-                $wnd = hexdec($a[9] . $a[10] . $a[7]) / 10;
-                $hum = hexdec($a[8] . $a[5]);
-                $tmp = hexdec($a[6] . $a[3] . $a[4]) / 10;
+                $rainc = $a[14] . $a[11] . $a[12];
+                $wnd = intval($a[9] . $a[10] . $a[7]) / 10;
+                $hum = intval($a[8] . $a[5]);
+                $tmp = intval($a[6] . $a[3] . $a[4]) / 10;
                 if ($a[1] & 0xC) $tmp = $tmp * -1;
-                $ir = ((hexdec($a[1]) & 2)) ? "YES" : "NO";
+                $ir = ((intval($a[1]) & 2)) ? "YES" : "NO";
                 $caps .= 'Temp;Hum;Wind;RainCounter;IsRaining;';
                 $data['Temp'] = $tmp;
                 $data['Hum'] = $hum;
@@ -980,17 +971,20 @@ class CUL extends T2DModule
                 $data['IsRaining'] = $ir;
                 $data['Typ'] = "KS300";
                 $val = "T: $tmp  H: $hum  W: $wnd  R: $rainc  IR: $ir";
-            }
-            //signal
-            if ($len == 15) {
-                $rssi = $this->GetSignal(substr($line, 13, 2));
-                $data['Signal'] = $rssi;
-                $caps .= 'Signal;';
+                //signal
+                if ($len == 16) {
+                    $rssi = $this->GetSignal(substr($line, 15, 2));
+                    $data['Signal'] = $rssi;
+                    $caps .= 'Signal;';
+                }
+
+            } else {
+                $this->debug(__FUNCTION__, "WS300: Invalid record: $line");
             }
         }
         if (!$data['Typ']) $data['Typ'] = ($typid ? $typid : 'unknown');
         $text = "Dev $dev ($typid): $val";
-        $this->debug(__FUNCTION__, "HMS:" . $text);
+        $this->debug(__FUNCTION__, "WS300:" . $text);
         $this->SendWSData($data, $caps);
     }//function
 
