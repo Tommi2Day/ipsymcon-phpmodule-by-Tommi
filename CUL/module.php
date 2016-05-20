@@ -957,7 +957,7 @@ class CUL extends T2DModule
                 }
             } elseif ($len > 13) {          # KS300/2
 
-                $rainc = $a[14] . $a[11] . $a[12];
+                $rainc = hexdec($a[14] . $a[11] . $a[12]);
                 $wnd = intval($a[9] . $a[10] . $a[7]) / 10;
                 $hum = intval($a[8] . $a[5]);
                 $tmp = intval($a[6] . $a[3] . $a[4]) / 10;
