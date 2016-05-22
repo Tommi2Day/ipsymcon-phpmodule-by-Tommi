@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.3
- * @date 2016-05-20
+ * @version 4.4
+ * @date 2016-05-22
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -617,12 +617,18 @@ class CUL extends T2DModule
         $addr = substr($line, 5, 2);
         $code = substr($line, 7, 2);
         $acode=hexdec($code);
+        #fix
+        if ($acode>0x3f) {
+            $acode=$acode & 0x3f;
+            $code=strtoupper(sprintf("%02x",$acode));
+            $this->debug(__FUNCTION__ , "fix Action Code $code, Line: $line");
+        }
 
         $hc = FHZ_helper::hex2four($hcode . $addr);
-        $action = FHZ_helper::$fs20_codes[$code];
+        $action = (isset(FHZ_helper::$fs20_codes[$code])?FHZ_helper::$fs20_codes[$code]:'');
         if (!$action) {
             $this->incError();
-            IPS_LogMessage(__CLASS__, __FUNCTION__ . "unknown Action Code $code");
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . ":: unknown Action Code $code, Line: $line");
             return;
         }
 
@@ -645,7 +651,7 @@ class CUL extends T2DModule
 
         } else {
             //signal
-            if ((strlen($line) > 9) && ($acode<32)) {
+            if ((strlen($line) > 9) && ($acode<0x20)) {
                 $rssi = $this->GetSignal(substr($line, 9, 2));
                 $data['Signal'] = $rssi;
                 $caps.='Signal;';
@@ -1506,8 +1512,11 @@ class CUL extends T2DModule
      */
     private function incError()
     {
-        $vid = $this->GetIDForIdent('Error');
-        $val = GetValueInteger($vid);
-        SetValueInteger($vid, $val + 1);
+        $vid = $this->GetIDForIdent('Errors');
+        if ($vid) {
+            $val = GetValueInteger($vid);
+            SetValueInteger($vid, $val + 1);
+        }
+
     }
 }//class
