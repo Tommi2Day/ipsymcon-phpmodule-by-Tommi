@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.3
- * @date 2016-04-10
+ * @version 1.4
+ * @date 2016-05-27
  */
 
 
@@ -275,7 +275,6 @@ class EnergyDev extends T2DModule
                 //Counter types with factor
                 case 'Counter':
                     $iv = (int)$s;
-
                     switch ($this->GetType()) {
                         case 'EMWZ':
                         case 'EMEM':
@@ -285,9 +284,12 @@ class EnergyDev extends T2DModule
                                 $offset=GetValueInteger($opid);
                                 if ($last>$iv) {
                                     $offset+=65535;
+                                    $this->debug(__FUNCTION__, "EMEM/WZ:Increase Offset by 65535: $offset");
                                     SetValueInteger($opid,$offset);
                                 }
                                 $iv=$iv+$offset;
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM/WZ:No vid for OCounter");
                             }
 
                             $pvid=$this->GetIDForIdent('TPower');
@@ -295,6 +297,9 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMEM/WZ:TPower:($pvid)=" . $iv);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM/WZ:No vid for TPower");
                             }
 
                             break;
@@ -304,12 +309,14 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMGZ:TGas:($pvid)=" . $val);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMGZ:No vid for TGas");
                             }
                             break;
-                        default:
-                            SetValueInteger($vid, $iv);
-                    }
 
+                    }
+                    SetValueInteger($vid, $iv);
                     break;
                 case 'ACounter':
                     $iv = (int)$s;
@@ -318,6 +325,9 @@ class EnergyDev extends T2DModule
                             $pvid=$this->GetIDForIdent('APower');
                             if ($pvid) {
                                 SetValueFloat($pvid,$iv);
+                                $this->debug(__FUNCTION__, "EMEM:APower:($pvid)=" . $iv);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM:No vid for APower");
                             }
                         break;
                         case 'EMWZ':
@@ -326,6 +336,9 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMWZ:APower:($pvid)=" . $val);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMWZ:No vid for APower");
                             }
                             break;
                         case 'EMGZ':
@@ -334,6 +347,9 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMGZ:AGas:($pvid)=" . $val);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMGZ:No vid for AGas");
                             }
                             break;
 
@@ -347,6 +363,9 @@ class EnergyDev extends T2DModule
                             $pvid=$this->GetIDForIdent('PPower');
                             if ($pvid) {
                                 SetValueFloat($pvid,$iv);
+                                $this->debug(__FUNCTION__, "EMEM:PPower:($pvid)=" . $iv);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM:No vid for PPower");
                             }
                             break;
                         case 'EMWZ':
@@ -355,6 +374,9 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMWZ:PPower:($pvid)=" . $val);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMWZ:No vid for PPower");
                             }
                             break;
                         case 'EMGZ':
@@ -363,13 +385,13 @@ class EnergyDev extends T2DModule
                                 $factor=$this->GetCounterFactor();
                                 $val=$iv*$factor;
                                 SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMGZ:PGas:($pvid)=" . $val);
+                            }else{
+                                $this->debug(__FUNCTION__, "EMGZ:No vid for PGas");
                             }
                             break;
-                        default:
-                            SetValueInteger($vid, $iv);
-                            break;
                     }
-                    
+                    SetValueInteger($vid, $iv);
                     break;
                 //int types
                 case 'Signal': //RSSI
@@ -417,7 +439,7 @@ class EnergyDev extends T2DModule
                 default:
                     $this->debug(__FUNCTION__, "$cap not handled");
             }//switch
-            $this->debug(__FUNCTION__, "$cap:($vid)" . $s);
+            $this->debug(__FUNCTION__, "$cap:($vid)=" . $s);
         }//for
     }//function
 }//class
