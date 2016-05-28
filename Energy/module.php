@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.4
- * @date 2016-05-27
+ * @version 1.5
+ * @date 2016-05-28
  */
 
 
@@ -95,7 +95,7 @@ class EnergyDev extends T2DModule
         $this->RegisterPropertyString('Class', '');
         $this->RegisterPropertyString('CapList', '');
         $this->RegisterPropertyBoolean('Debug', false);
-        $this->RegisterPropertyFloat('CounterFactor',1);
+        $this->RegisterPropertyFloat('CounterFactor',1.0);
 
         //NonStandard Profiles (needed for Webfront)
         $this->check_profile('Time.min', 2, "", ' min', "Hourglass", null, null, null, 1, false);
@@ -243,7 +243,7 @@ class EnergyDev extends T2DModule
      */
     private function GetCounterFactor()
     {
-        return (String)IPS_GetProperty($this->InstanceID, 'CounterFactor');
+        return floatval(IPS_GetProperty($this->InstanceID, 'CounterFactor'));
     }
 
     //------------------------------------------------------------------------------
@@ -277,6 +277,33 @@ class EnergyDev extends T2DModule
                     $iv = (int)$s;
                     switch ($this->GetType()) {
                         case 'EMWZ':
+                            $last=GetValueInteger($vid);
+                            $opid=$this->GetIDForIdent('OCounter');
+                            if ($opid) {
+                                $offset=GetValueInteger($opid);
+                                if ($last>$iv) {
+                                    $offset+=65535;
+                                    $this->debug(__FUNCTION__, "EMWZ:Increase Offset by 65535: $offset");
+                                    SetValueInteger($opid,$offset);
+                                }
+                                $iv=$iv+$offset;
+                            }else{
+                                $this->debug(__FUNCTION__, "EMWZ:No vid for OCounter");
+                            }
+
+                            $pvid=$this->GetIDForIdent('TPower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                if ($factor == 0) $factor=150;
+                                $val=$iv*(1/$factor); //counter%ticks pro kw
+                                SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMWZ:TPower:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
+                                
+                            }else{
+                                $this->debug(__FUNCTION__, "EMWZ:No vid for TPower");
+                            }
+
+                            break;
                         case 'EMEM':
                             $last=GetValueInteger($vid);
                             $opid=$this->GetIDForIdent('OCounter');
@@ -284,22 +311,23 @@ class EnergyDev extends T2DModule
                                 $offset=GetValueInteger($opid);
                                 if ($last>$iv) {
                                     $offset+=65535;
-                                    $this->debug(__FUNCTION__, "EMEM/WZ:Increase Offset by 65535: $offset");
+                                    $this->debug(__FUNCTION__, "EMEM:Increase Offset by 65535: $offset");
                                     SetValueInteger($opid,$offset);
                                 }
                                 $iv=$iv+$offset;
                             }else{
-                                $this->debug(__FUNCTION__, "EMEM/WZ:No vid for OCounter");
+                                $this->debug(__FUNCTION__, "EMEM:No vid for OCounter");
                             }
 
                             $pvid=$this->GetIDForIdent('TPower');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor); //counter%ticks pro kw
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMEM/WZ:TPower:($pvid)=" . $iv);
+                                $this->debug(__FUNCTION__, "EMEM:TPower:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
                             }else{
-                                $this->debug(__FUNCTION__, "EMEM/WZ:No vid for TPower");
+                                $this->debug(__FUNCTION__, "EMEM:No vid for TPower");
                             }
 
                             break;
@@ -307,9 +335,10 @@ class EnergyDev extends T2DModule
                             $pvid=$this->GetIDForIdent('TGas');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor); //Counter%ticks pro m3
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMGZ:TGas:($pvid)=" . $val);
+                                $this->debug(__FUNCTION__, "EMGZ:TGas:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
                             }else{
                                 $this->debug(__FUNCTION__, "EMGZ:No vid for TGas");
                             }
@@ -321,33 +350,38 @@ class EnergyDev extends T2DModule
                 case 'ACounter':
                     $iv = (int)$s;
                     switch ($this->GetType()) {
-                        case 'EMEM':
-                            $pvid=$this->GetIDForIdent('APower');
-                            if ($pvid) {
-                                SetValueFloat($pvid,$iv);
-                                $this->debug(__FUNCTION__, "EMEM:APower:($pvid)=" . $iv);
-                            }else{
-                                $this->debug(__FUNCTION__, "EMEM:No vid for APower");
-                            }
-                        break;
                         case 'EMWZ':
                             $pvid=$this->GetIDForIdent('APower');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=150;
+                                $val=$iv*(1/$factor)*1000; //W statt KW
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMWZ:APower:($pvid)=" . $val);
+                                $this->debug(__FUNCTION__, "EMWZ:APower:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
                             }else{
                                 $this->debug(__FUNCTION__, "EMWZ:No vid for APower");
+                            }
+                        break;
+                        case 'EMEM':
+                            $pvid=$this->GetIDForIdent('APower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor)*1000; //W statt KW
+                                SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMEM:APower:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM:No vid for APower");
                             }
                             break;
                         case 'EMGZ':
                             $pvid=$this->GetIDForIdent('AGas');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor); //m3
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMGZ:AGas:($pvid)=" . $val);
+                                $this->debug(__FUNCTION__, "EMGZ:AGas:($pvid)=" . $val ." F:$factor(".$this->GetCounterFactor().")");
                             }else{
                                 $this->debug(__FUNCTION__, "EMGZ:No vid for AGas");
                             }
@@ -359,33 +393,38 @@ class EnergyDev extends T2DModule
                 case 'PCounter':
                     $iv = (int)$s;
                     switch ($this->GetType()) {
-                        case 'EMEM':
-                            $pvid=$this->GetIDForIdent('PPower');
-                            if ($pvid) {
-                                SetValueFloat($pvid,$iv);
-                                $this->debug(__FUNCTION__, "EMEM:PPower:($pvid)=" . $iv);
-                            }else{
-                                $this->debug(__FUNCTION__, "EMEM:No vid for PPower");
-                            }
-                            break;
                         case 'EMWZ':
                             $pvid=$this->GetIDForIdent('PPower');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=150;
+                                $val=$iv*(1/$factor)*1000; //W statt KW
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMWZ:PPower:($pvid)=" . $val);
+                                $this->debug(__FUNCTION__, "EMWZ:PPower:($pvid)=" . $val ."F:$factor(".$this->GetCounterFactor().")");
                             }else{
                                 $this->debug(__FUNCTION__, "EMWZ:No vid for PPower");
+                            }
+                            break;
+                        case 'EMEM':
+                            $pvid=$this->GetIDForIdent('PPower');
+                            if ($pvid) {
+                                $factor=$this->GetCounterFactor();
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor)*1000; //W statt KW
+                                SetValueFloat($pvid,$val);
+                                $this->debug(__FUNCTION__, "EMEM:PPower:($pvid)=" . $val ." F:$factor(".$this->GetCounterFactor().")");
+                            }else{
+                                $this->debug(__FUNCTION__, "EMEM:No vid for PPower");
                             }
                             break;
                         case 'EMGZ':
                             $pvid=$this->GetIDForIdent('PGas');
                             if ($pvid) {
                                 $factor=$this->GetCounterFactor();
-                                $val=$iv*$factor;
+                                if ($factor == 0) $factor=100;
+                                $val=$iv*(1/$factor); //m3
                                 SetValueFloat($pvid,$val);
-                                $this->debug(__FUNCTION__, "EMGZ:PGas:($pvid)=" . $val);
+                                $this->debug(__FUNCTION__, "EMGZ:PGas:($pvid)=" . $val ." F:$factor(".$this->GetCounterFactor().")");
                             }else{
                                 $this->debug(__FUNCTION__, "EMGZ:No vid for PGas");
                             }
