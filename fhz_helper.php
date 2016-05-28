@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.2
- * @date 2016-04-08
+ * @version 1.3
+ * @date 2016-05-28
  */
 
 /** @class FHZ_helper
@@ -112,6 +112,45 @@ class FHZ_helper
         "3D" => "ramp-off-time",     //time to reach the off state on dimmers
         "3E" => "on-old-for-timer-prev", // old val for timer, then go to prev. state
         "3F" => "on-100-for-timer-prev", // 100% for timer, then go to previous state
+    );
+    
+    public static $FS20_DimCodes=array(
+        "01" => "Dim to 06%",
+        "02" => "Dim to 12%",
+        "03" => "Dim to 18%",
+        "04" => "Dim to 25%",
+        "05" => "Dim to 31%",
+        "06" => "Dim to 37%",
+        "07" => "Dim to 43%",
+        "08" => "Dim to 50%",
+        "09" => "Dim to 56%",
+        "0A" => "Dim to 62%",
+        "0B" => "Dim to 68%",
+        "0C" => "Dim to 75%",
+        "0D" => "Dim to 81%",
+        "0E" => "Dim to 87%",
+        "0F" => "Dim to 93%",
+        "13" => "Dim up",
+        "14" => "Dim down",
+        "15" => "Dim updown",
+        "21" => "Timed Dim to 06%",
+        "22" => "Timed Dim to 12%",
+        "23" => "Timed Dim to 18%",
+        "24" => "Timed Dim to 25%",
+        "25" => "Timed Dim to 31%",
+        "26" => "Timed Dim to 37%",
+        "27" => "Timed Dim to 43%",
+        "28" => "Timed Dim to 50%",
+        "29" => "Timed Dim to 56%",
+        "2A" => "Timed Dim to 62%",
+        "2B" => "Timed Dim to 68%",
+        "2C" => "Timed Dim to 75%",
+        "2D" => "Timed Dim to 81%",
+        "2E" => "Timed Dim to 87%",
+        "2F" => "Timed Dim to 93%",
+        "33" => "Dim Timer up one level",
+        "34" => "Dim Timer down one level",
+        "35" => "updown one level, out after Timer ",
     );
 
     /**

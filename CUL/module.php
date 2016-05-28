@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.4
- * @date 2016-05-22
+ * @version 4.5
+ * @date 2016-05-28
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -559,11 +559,11 @@ class CUL extends T2DModule
             $caps .= 'TPower;APower;PPower;ACounter;PCounter;';
         } elseif ($addr_num >= 5 && $addr_num <= 8) {
             $data['Typ'] = 'EMEM';
-            $data['CounterFactor'] = 0.01;
+            $data['CounterFactor'] = 100;
             $caps .= 'TPower;APower;PPower;ACounter;PCounter;';
         } elseif ($addr_num >= 9 && $addr_num <= 12) {
             $data['Typ'] = 'EMGZ';
-            $data['CounterFactor'] = 0.01;
+            $data['CounterFactor'] = 100;
             $caps .= 'TGas;AGas;ACounter;PGas;PCounter;';
         } else {
             $this->incError();
@@ -612,7 +612,7 @@ class CUL extends T2DModule
     private function parse_FS20($line)
     {
         $data = array();
-        $caps = "Switch:1;Dimmer:1;Timer;FS20;TimerActionCode;";//enable action for switch and dimmer
+        $caps = "Switch:1;Timer;FS20;TimerActionCode;";//enable action for switch and dimmer
         $hcode = substr($line, 1, 4);
         $addr = substr($line, 5, 2);
         $code = substr($line, 7, 2);
@@ -631,7 +631,9 @@ class CUL extends T2DModule
             IPS_LogMessage(__CLASS__, __FUNCTION__ . ":: unknown Action Code $code, Line: $line");
             return;
         }
-
+        if (isset(FHZ_helper::$FS20_DimCodes[$code])) {
+            $caps.="Dimmer:1;";
+        }
         //timer
         if ($acode >31){
             $timer = substr($line, 9, 2);
@@ -1410,7 +1412,8 @@ class CUL extends T2DModule
 
                 //set factor
                 if (isset($data['CounterFactor'])) {
-                    IPS_SetProperty($instID, 'CounterFactor', $data['CounterFactor']);
+                    IPS_SetProperty($instID, 'CounterFactor', floatval($data['CounterFactor']));
+                    $this->debug(__FUNCTION__, 'Set Counterfactor=' . $data['CounterFactor']);
                 }
                 //set category
                 $cat = $this->GetCategory();
