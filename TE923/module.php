@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.1
- * @date 2016-04-08
+ * @version 1.2
+ * @date 2016-05-29
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -51,7 +51,7 @@ class TE923 extends T2DModule
     /**
      * Fieldlist for Logging
      */
-    private  $fieldlist = array("Date","Typ","Id","Temp","Hum","Battery","Press","Forecast","Wind","WindDir","WindGust","WindChill","Storm","Rain","RainCounter","RainDaily");
+    private  $fieldlist = array("Date","Typ","Id","Temp","Hum","Battery","Press","Forecast","Wind","WindDir","WindGust","WindChill","Storm","Rain","RainCounter","RainDaily","RainLastDay");
 
 
     //--------------------------------------------------------
@@ -462,7 +462,7 @@ class TE923 extends T2DModule
             //rain
             if (trim($data[21])!='i') {
                 $new=(int)$data[21];
-                $te_data['Rain']['RainCounter'] = $new;
+                $factor=$this->GetRainPerCount()/1000;
                 $rcid = @$this->GetIDForIdent('LastRainCounter');
                 $dailyid = @$this->GetIDForIdent('NewDayRainCounter');
 
@@ -470,20 +470,21 @@ class TE923 extends T2DModule
                 $daily = GetValueInteger($dailyid);
                 $diff = $new - $old;
                 $dailydiff=$new-$daily;
-                $rain = ($diff * $this->GetRainPerCount())/1000;
-                $raindaily = ($dailydiff * $this->GetRainPerCount())/1000;
 
+                $rain = $diff * $factor;
+                $raindaily = $dailydiff * $factor;
+
+                $te_data['Rain']['RainLastDay']='';
                 $dailyvar=IPS_GetVariable($dailyid);
                 $dailyupdated=$dailyvar['VariableUpdated'];
                 if (is_new_day($dailyupdated)) {
-                    //new day routine,set
-                    //$rcvar=IPS_GetVariable($rcid);
-                    //$updated=$rcvar['VariableUpdated'];
-                    //if($updated<$date) {
-                        //set last day sum
-                        $this->debug(__FUNCTION__,'NewDay, Store old Counter');
-                        SetValueInteger($dailyid, $old);
-                    //}
+                    //set last day sum
+                    SetValueInteger($dailyid, $old);
+                    //calculate rain last day
+                    $lastday=($old-$daily)*$factor;
+                    if (($lastday < 0) or ($lastday > 500)) $lastday = 0;
+                    $te_data['Rain']['RainLastDay']=$lastday;
+                    $this->debug(__FUNCTION__,"::NewDay, Store old Counter($old) and Daily($lastday)");
                 }
                 if ($new>$old) SetValueInteger($rcid,$new);
                 if (($rain < 0) or ($rain > 100)) $rain = 0;
@@ -675,6 +676,7 @@ class TE923 extends T2DModule
                 //set TE923_Storm profile for Storm
                 $vid=@IPS_GetObjectIDByIdent('Storm',$instID);
                 if ($vid>0) IPS_SetVariableCustomProfile($vid, "TE923_Storm");
+                IPS_ApplyChanges($instID);
             } else {
                 $this->debug(__FUNCTION__, 'Instance  is not created!');
             }
