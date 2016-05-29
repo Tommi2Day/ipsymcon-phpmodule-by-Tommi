@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.7
- * @date 2016-04-10
+ * @version 1.8
+ * @date 2016-05-29
  */
 
 /**
@@ -41,8 +41,9 @@ class WSDEV extends T2DModule
         "WindDir" => array("ident" => 'WindDir', "type" => self::VT_Float, "name" => 'Wind Direction', "profile" => 'WindDirection.Text', "pos" => 4),
         "Storm" => array("ident" => "Storm", "type" => self::VT_Boolean, "name" => 'Storm Indicator', "profile" => '', "pos" => 5), //reversed state
         "Rain" => array("ident" => "Rain", "type" => self::VT_Float, "name" => 'Rain', "profile" => 'Rainfall', "pos" => 6),
-        "RainHourly" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
-        "RainDaily" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain Daily', "profile" => 'Rainfall', "pos" => 6),
+        "RainHourly" => array("ident" => "RainHourly", "type" => self::VT_Float, "name" => 'Rain Hourly', "profile" => 'Rainfall', "pos" => 6),
+        "RainDaily" => array("ident" => "RainDaily", "type" => self::VT_Float, "name" => 'Rain this Day', "profile" => 'Rainfall', "pos" => 6),
+        "RainLastDay" => array("ident" => "RainLastDay", "type" => self::VT_Float, "name" => 'Rain last Day', "profile" => 'Rainfall', "pos" => 6),
         "RainCounter" => array("ident" => "RainCounter", "type" => self::VT_Integer, "name" => 'Rain Counter', "profile" => '', "pos" => 7,"hidden" => true),
         "IsRaining" => array("ident" => "IsRaining", "type" => self::VT_Boolean, "name" => 'Raining', "profile" => 'Raining', "pos" => 8),
         "Light" =>array("ident" => 'Light', "type" => self::VT_Integer, "name" => 'Brightness', "profile" => 'Illumination', "pos" => 8),
@@ -252,6 +253,7 @@ class WSDEV extends T2DModule
                 case 'TS'; //TimeStamp
                 case 'Lost'://lost
                 case 'Signal':
+                    if(strlen($s)==0) continue;
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
@@ -262,8 +264,10 @@ class WSDEV extends T2DModule
                 case 'WindGust'://wind
                 case 'WindDir'://wind
                 case 'Rain'://rain
-                case 'RainDaily'://rain 24h
+                case 'RainDaily'://rain this day
                 case 'RainHourly'://rain 1h
+                case 'RainLastDay'://rain 24h
+                    if(strlen($s)==0) continue;
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;
