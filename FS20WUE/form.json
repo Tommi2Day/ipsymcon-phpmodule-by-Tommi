@@ -5,9 +5,8 @@
 		{ "name": "RainPerCount", "type": "NumberSpinner", "caption": "mm per count(*1000)" },
 		{ "name": "Category", "type": "ValidationTextBox", "caption": "Category Name" },
 		{ "name": "ParentCategory", "type": "NumberSpinner", "caption": "Category Parent" },
-        { "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
         { "type": "Label", "label": "--- optional settings ---------" },
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" },
+		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
 		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "LogFile (full qualified)" }
 
 	]

@@ -4,8 +4,7 @@
 		{ "name": "DeviceID", "type": "ValidationTextBox", "caption": "DeviceID" },
 		{ "name": "Typ", "type": "ValidationTextBox", "caption": "Typ" },
         { "name": "Class", "type": "ValidationTextBox", "caption": "Creator" },
-		{ "name": "CounterFactor", "type": "NumberSpinner", "caption": "Correction Factor", "digits": 3},
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+		{ "name": "CounterFactor", "type": "NumberSpinner", "caption": "Correction Factor", "digits": 3}
 	]
 
 }

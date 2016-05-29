@@ -271,6 +271,7 @@ class T2DModule extends IPSModule
         $caps = explode(";", $caplist);
         //$this->debug(__FUNCTION__,"CapVars:".print_r($this->capvars,true));
         foreach ($caps as $tag) {
+            if(preg_match("/^\s*$/",$tag)) continue;
             $parts=explode(":",$tag);
             $cap=$parts[0];
             if (isset($this->capvars[$cap])) {
@@ -510,11 +511,6 @@ class T2DModule extends IPSModule
             //available as of #150 (2016-04-22)
             $this->SendDebug($topic,$data,0);
         }
-        $data = "(ID #$this->InstanceID) $topic ::" . $data;
-        if ($this->isDebug()) {
-            IPS_LogMessage($this->name, $data);
-
-        }
     }
     //------------------------------------------------------------------------------
     /**
@@ -584,7 +580,7 @@ function hexToStr($hex)
 
 /**
  * Check for new Day from Timestamp
- * @param $ts Unix Timestamp
+ * @param $ts int Unix Timestamp
  * @return boolean
  */
 function is_new_day($ts) {

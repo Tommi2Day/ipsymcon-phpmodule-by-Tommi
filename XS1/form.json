@@ -5,9 +5,8 @@
 		{ "name": "Host", "type": "ValidationTextBox", "caption": "XS1 Hostname or IP" },
 		{ "name": "ParentCategory", "type": "NumberSpinner", "caption": "Category Parent" },
 		{ "name": "UpdateInterval", "type": "NumberSpinner", "caption": "Update Interval (sec)" },
-        { "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
         { "type": "Label", "label": "--- optional settings ---------" },
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" }
 
 	],
 	"actions":

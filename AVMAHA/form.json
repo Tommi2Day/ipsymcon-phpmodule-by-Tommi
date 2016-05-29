@@ -7,9 +7,8 @@
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
 		{ "name": "ParentCategory", "type": "NumberSpinner", "caption": "Category Parent" },
 		{ "name": "UpdateInterval", "type": "NumberSpinner", "caption": "Update Interval (sec)" },
-        { "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
-        { "type": "Label", "label": "--- optional settings ---------" },
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+		{ "type": "Label", "label": "--- optional settings ---------" },
+		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" }
 
 	],
 	"actions":

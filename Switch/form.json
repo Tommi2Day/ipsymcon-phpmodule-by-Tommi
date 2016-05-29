@@ -3,8 +3,7 @@
 	[
 		{ "name": "DeviceID", "type": "ValidationTextBox", "caption": "DeviceID" },
 		{ "name": "Typ", "type": "ValidationTextBox", "caption": "Typ" },
-        { "name": "Class", "type": "ValidationTextBox", "caption": "Creator" },
-		{ "name": "Debug", "type": "CheckBox", "caption": "Add Debug output to Messages" }
+        { "name": "Class", "type": "ValidationTextBox", "caption": "Creator" }
 	],
 	"actions":
 	[
