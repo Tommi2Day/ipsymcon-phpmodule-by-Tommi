@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.5
- * @date 2016-05-28
+ * @version 4.6
+ * @date 2016-06-03
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -458,22 +458,22 @@ class CUL extends T2DModule
 
         $this->debug(__FUNCTION__, "Line:$line");
         //---------------EM1000-----------------------------------
-        if (preg_match("/(E[0-9A-F]{18,20})\s*\$/", $line, $res)) {
+        if (preg_match("/^(E[0-9A-F]{18,20})\s*\$/", $line, $res)) {
             $this->parse_EM1000($res[1]);
         } //-----------------------FS20
-        elseif (preg_match("/(F[0-9A-F]{8,12})\s*\$/", $line, $res)) {
+        elseif (preg_match("/^(F[0-9A-F]{8,12})\s*\$/", $line, $res)) {
             $this->parse_FS20($res[1]);
         } //------------------FHT---------------------------------
-        elseif (preg_match("/(T[0-9A-F]{8,12})\s*\$/", $line, $res)) {
+        elseif (preg_match("/^(T[0-9A-F]{8,12})\s*\$/", $line, $res)) {
             $this->parse_FHT($res[1]);
         } //---------------------Wetter(WS300)-----------------------------------------
-        elseif (preg_match("/(K[0-9A-F]{6,16})\s*\$/", $line, $res)) {
+        elseif (preg_match("/^(K[0-9A-F]{6,16})\s*\$/", $line, $res)) {
             $this->parse_WS300($res[1]);
         } //--------------------HMS-------------------------------------------------------
-        elseif (preg_match("/(H[0-9A-F]{12,14})\s*\$/", $line, $res)) {
+        elseif (preg_match("/^(H[0-9A-F]{12,14})\s*\$/", $line, $res)) {
             $this->parse_HMS($res[1]);
         } //--------------------ESA-------------------------------------------------------
-        elseif (preg_match("/(S[0-9A-F]{32,34})\s*\$/", $line, $res)) {
+        elseif (preg_match("/^(S[0-9A-F]{32,34})\s*\$/", $line, $res)) {
             $this->parse_ESA($res[1]);
         } #-----------aux/unknown/unimplemented cul/cun/coc message------
         elseif (!preg_match("/^\s*$/", $line)) {
@@ -481,14 +481,14 @@ class CUL extends T2DModule
             SetValueString($lmid, $line);
 
             //--------------------OneWire---------------------------------------------
-            if (preg_match("/R:[0-9A-F]{16}\s*\$/", $line)) {
+            if (preg_match("/^R:[0-9A-F]{16}\s*\$/", $line)) {
                 $this->debug(__FUNCTION__, 'OneWire Device:' . substr($line, 2));
-            } elseif (preg_match("/D:\s*([0-9]+)\s*\$/", $line, $res)) {
+            } elseif (preg_match("/^D:\s*([0-9]+)\s*\$/", $line, $res)) {
                 $this->debug(__FUNCTION__, 'OneWire detected Devices:' . $res[1]);
             } elseif (preg_match("/^\s*(ON|OFF)\s*\$/", $line, $res)) {
                 $this->debug(__FUNCTION__, 'OneWire HMS Emulation:' . $res[1]);
             } //------ Init messages --------------
-            elseif (preg_match("/(V\s*[0-9\.]+)\s*CSM.*/", $line, $res)) {
+            elseif (preg_match("/^(V\s*[0-9\.]+)\s*CSM.*/", $line, $res)) {
                 $vers = $res[1];
                 $versid = $this->GetIDForIdent('Version');
                 if ($versid) SetValueString($versid,$vers);
@@ -517,9 +517,10 @@ class CUL extends T2DModule
      * Parse EM1000 CUL Hex Record
      *
      * @code
-     * # Ettaacc111122223333
+     * # Ettaacc111122223333SS
      * # E0101E2997805002F02
-     * # 0123456789012345678
+     * # E030A51DC410000DC4110
+     * # 012345678901234567890
      * @endcode
      * -tt:type 01=EM-1000s, 02=EM-100-EM, 03=1000GZ
      * -aa:address, depending on the type above 01:01-04, 02:05-08, 03:09-12
