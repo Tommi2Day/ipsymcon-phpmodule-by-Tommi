@@ -31,8 +31,10 @@ Public Functions:
 
 forward data to splitter only, real actor control will need a Splitter with matching capabilities like AVMAHA or CUL
 
-* SWD_SwitchMode($id,$state): set the switch to the desired state
+* SWD_SetSwitchMode($id,$state): set the switch to the desired state
 * SWD_SetIntensity($id,$percent): Dim to the given level
+* SWD_DimUp($id): Dim one Level(Step) Up
+* SWD_DimDown($id): Dim one Level(Step) down
 
 #### WS300PC
 Splittermodul for reading ELV WS300PC Datalogger. The Logger will be accessed via serial port.
