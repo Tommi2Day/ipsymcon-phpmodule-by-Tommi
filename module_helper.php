@@ -104,6 +104,7 @@ class T2DModule extends IPSModule
         "AVMAHA" => "{0837AE77-B72A-4AA6-8680-D6DDCDAEFA39}", //AVM AHA Splitter
         "CUL" => "{5B0BB3C6-C35A-4438-94E4-8A6CF9EF3A4A}", //Busware CUL/CUN/COC Splitter
         "NUT" => "{431281F9-77DC-46A6-8AA9-A6E2C60A5FB2}", //NUT USV Splitter
+        "APCUPSD" => "{11437557-8091-4FAA-9C8B-B0AA993A1347}", //APC USV Splitter
         "TE923" => "{137511E0-F98B-49F3-9A6C-95234DF2E1FB}", //TE923,Ventus etc Weather Splitter
         "OWN" => "{A68F9DEC-A490-4E35-B500-B45FC5F4FF6A}", //OWNet Splitter
         "XS1" => "{8B015BFA-3CDD-4D45-99C8-3F250AEF1E83}", //XS1 Splitter

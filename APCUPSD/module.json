@@ -1,0 +1,11 @@
+{
+	"id": "{11437557-8091-4FAA-9C8B-B0AA993A1347}",
+	"name": "APCUPSD",
+	"type": 2,
+	"vendor": "Tommi2Day",
+	"aliases": ["APCUPSD attached USV"],
+	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+	"childRequirements": ["{3C60BF34-7DD3-4234-B865-AF1606BB267C}"],
+	"implemented": ["{63056B9B-EF14-4F65-8235-D292391AE591}"],
+	"prefix": "APCUPSD"
+}

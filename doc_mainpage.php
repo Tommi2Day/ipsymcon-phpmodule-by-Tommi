@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.1
- * @date 2016-04-08
+ * @version 1.2
+ * @date 2016-07-13
  */
 /**
 @mainpage Index
@@ -34,7 +34,6 @@ This is a Library of PHP Modules for the home automation software <a href="https
 - \b Class: Class of the creator. Will be matched when receiving Data
 - \b Caplist; Keywords of actual capabilies for matching status variables,
  seperated by semicolon, set by splitter. Idents must match definitions in $capvars
-- \b Debug: Flag to enable debug output via IPS_LogMessages
 @par "Standard Actions:"
 - \b None
 
@@ -51,7 +50,7 @@ Displays depending of the capability of the connected sensor out of the followin
 - \b Class: Class of the creator. Will be matched when receiving Data
 - \b Caplist; Keywords of actual capabilies for matching status variables,
  seperated by semicolon, set by splitter. Idents must match definitions in $capvars
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par Standard Actions (if supported by the attached splitter and the physical device)
 - \b None
 
@@ -68,7 +67,6 @@ Displays depending of the capability of the connected sensor out of the followin
 - \b DeviceID: ID/Serial of the connected Device. Will be matched when receiving Data
 - \b Typ: Typ/Model of the Device, if available. Will be matched when receiving Data
 - \b Class: Class of the creator. Will be matched when receiving Data
-- \b Debug: Flag to enable debug output via IPS_LogMessages
 - \b CapList; Keywords of actual capabilies for matching status variables,
    seperated by semicolon, set by splitter. Idents must match definitions in $capvars.
     If the standard action for the matching status variable should be enable the Splitter should append ":1"
@@ -180,7 +178,7 @@ The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
 File will be in csv format with one line per sensor. Header will be in the first line
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
 - \b None
 
@@ -207,7 +205,7 @@ File will be in csv format with one line per sensor. Header will be in the first
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
 File will be in csv format with one line per sensor. Header will be in the first line
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
 - \b None
 
@@ -237,7 +235,7 @@ File will be in csv format with one line per sensor. Header will be in the first
 - \b User (default none): Username for Frotz!OS login (if required)
 - \b Password (default none): Password for Fritz!OS Login
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
 - Query: manual data refresh
 @code
@@ -260,7 +258,7 @@ TE923 :Splitter for %TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 9
 - \b URL: URL to query TE923con
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
 - Query: manual data refresh
 @code
@@ -311,7 +309,7 @@ and the Indoor Sensor with Temp/Hum and Pressure
 - \b RainPerCount (Default 295): How much rain will be added for one count (mm/1000), Range: 200-500
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
 - Query: manual data refresh
 @code
@@ -366,7 +364,7 @@ The Data will be presented as Energy Device instances
 - \b Port (Default:3493): Port to query remote %NUT deamon
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
-- \b Debug: Flag to enable debug output via IPS_LogMessages
+
 @par "Public Functions:"
  - Query: manual data refresh
 @code
@@ -377,8 +375,37 @@ The Data will be presented as Energy Device instances
   The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
   For explanation see http://networkupstools.org/documentation.html
 
+@subsection APCUPSD
 
- @subsection CUL
+APCUPSD : Splitter modul to query a %APCUPSD daemon for attached UPS/USV via Socket
+
+@par "supported Devices:"
+Any via %APCUPSD accessible UPS/USV.
+@par "Data Handling:"
+The Data will be presented as Energy Device instances
+@par Prefix: APCUPSD_
+
+@par Properties
+- \b  Active (Default: Off/Inactive):
+- \b Category (Default '%APCUPSD Devices'):  name of category for subsequent devices
+- \b ParentCategory (Default 0): ID of parent category for newly created category
+- \b Host: Host to query remote %APCUPSD deamon
+- \b Port (Default:3551): Port to query remote %APCUPSD deamon
+- \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
+- \b Logfile (Default none): optional fully qualified filename of a logfile.
+
+@par "Public Functions:"
+- Query: manual data refresh
+@code
+NUT_Query($id);
+@endcode
+
+@par Hint:
+The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
+For explanation see http://networkupstools.org/documentation.html
+
+
+@subsection CUL
  CUL : IPSymcon PHP Splitter Module to receives Data from a CULFW driven tranceiver gadget like Busware
  
 These devices receives and decodes a lot of common smarthome protocols used by ELV Sensors and devices. 
@@ -422,7 +449,6 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 - \b Host: Host to query remote %OWNet daemon
 - \b Port (Default:4304): Port to query remote %OWNet daemon
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
-- \b Debug: Flag to enable debug output via IPS_LogMessages
 
 @par Actions (if supported by the attached splitter and the physical device)
 
@@ -444,7 +470,6 @@ XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controle
 - \b Host: Host to query remote %OWNet daemon
 - \b Port (Default:4304): Port to query remote %OWNet daemon
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
-- \b Debug: Flag to enable debug output via IPS_LogMessages
 
 @par Actions (if supported by the attached splitter and the physical device)
 

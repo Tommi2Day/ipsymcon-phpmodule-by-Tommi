@@ -188,6 +188,20 @@ The Data will be presented as Energy Device instances
 
 Prefix: NUT_
 
+####APCUPSD
+Splittermodul to query an APCUPSD daemon for attached UPS/USV
+
+supported Devices:
+Any via APCUPSD accessible UPS/USV.
+
+Data Handling:
+The Data will be presented as Energy Device instances
+  The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
+  For explanation see
+ http://www.apcupsd.org/manual/manual.html
+
+Prefix: APCUPSD_
+
 #### CUL
 
 CUL IPSymcon PHP Splitter Module Class
@@ -263,6 +277,7 @@ For a complete XS1 description see vendor documentation at http://www.ezcontrol.
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
 * TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
 * NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
+* APCUPSD attached USV: http://www.tdressler.net/ipsymcon/apcupsd_ips.html
 * CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
 * IPS_JSON Wrapper API: http://www.tdressler.net/ipsymcon/jsonapi.html
 * OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
