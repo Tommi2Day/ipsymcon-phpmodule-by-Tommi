@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.0
- * @date 2016-07-14
+ * @version 1.1
+ * @date 2016-07-15
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -44,7 +44,8 @@ class APCUPSD extends T2DModule
         400 => 240,
         500 => 300,
         550 => 330,
-        800 => 540); //Back UPS RS
+        800 => 540,
+        900 => 540); //Back UPS RS
 
     /**
      * Fieldlist for Logging
@@ -472,41 +473,53 @@ class APCUPSD extends T2DModule
 
         if (isset($apc['LINEV'])) {
             list($data['VoltIn'],)=explode(' ',$apc['LINEV'],2);
+            $this->debug(__FUNCTION__, ":: VoltIn=" . $data['VoltIn']);
         }
         if (isset($apc['OUTPUTV'])){
             list($data['VoltOut'],)=explode(' ',$apc['OUTPUTV'],2);
+            $this->debug(__FUNCTION__, ":: VoltOut=" . $data['VoltOut']);
         }
         if (isset($apc['LOADPCT'])){
             list($data['LoadPct'],)=explode(' ',$apc['LOADPCT'],2);
+            $this->debug(__FUNCTION__, ":: LoadPct=" . $data['LoadPct']);
         }
         if (isset($apc['ITEMP'])){
             list($data['Temp'],)=explode(' ',$apc['ITEMP'],2);
+            $this->debug(__FUNCTION__, ":: Temp=" . $data['Temp']);
         }
         if (isset($apc['MODEL'])) {
             $data['Typ']=$apc['MODEL'];
+            $this->debug(__FUNCTION__, ":: Typ=" . $data['Typ']);
         }
         if (isset($apc['STATUS'])) {
             $data['Status']=$apc['STATUS'];
+            $this->debug(__FUNCTION__, ":: Status=" . $data['Status']);
         }
         if (isset($apc['UPSNAME'])) {
             $data['Name']=$apc['UPSNAME'];
+            $this->debug(__FUNCTION__, ":: Name=" . $data['Name']);
         }
         if (isset($apc['TIMELEFT'])){
             list($data['TimeLeft'],)=explode(' ',$apc['TIMELEFT'],2);
+            $this->debug(__FUNCTION__, ":: TimeLeft=" . $data['TimeLeft']);
         }
         if (isset($apc['BCHARGE'])){
             list($data['Charged'],)=explode(' ',$apc['BCHARGE'],2);
+            $this->debug(__FUNCTION__, ":: Charged=" . $data['Charged']);
         }
         if (isset($apc['LINEFREQ'])) {
             list($data['Freq'],)=explode(' ',$apc['LINEFREQ'],2);
+            $this->debug(__FUNCTION__, ":: Freq=" . $data['Freq']);
         }
-
-
 
         //retrieve nominal power from APC
         if (isset($apc['NOMPOWER'])) {
             //value is supplied by APC
             list($data['Nominal'],)=explode(' ',$apc['NOMPOWER'],2);
+            $watt = $data['Nominal'] * $data['LoadPct'];
+            if ($watt > 0) $watt=round($watt / 100);
+            $data['Watt'] = $watt;
+            $this->debug(__FUNCTION__, ":: Power=" . $watt);
         }else{
             //try to use hardcoded power table based on digits in model name(ex. SMART UPS 750)
             if (!empty($data['Typ'])) {
@@ -516,12 +529,13 @@ class APCUPSD extends T2DModule
                     $watt = $data['Nominal'] * $data['LoadPct'];
                     if ($watt > 0) $watt=round($watt / 100);
                     $data['Watt'] = $watt;
-                    $this->debug(__FUNCTION__, ":: Power from Model(" . $data['Typ'] . "=" . $watt);
+                    $this->debug(__FUNCTION__, ":: Power from Model(" . $data['Typ'] . ") =" . $watt);
                 }
             }
         }
         if (isset($data['Status'])) {
             $data['Alert'] = ($data['Status'] == 'ONLINE') ? 'No' : 'Yes';
+            $this->debug(__FUNCTION__, ":: Alert=" . $data['Alert']);
         }
 
         if (!isset($data['Typ'])) $data['Typ'] = "APCUPSD attached USV";
