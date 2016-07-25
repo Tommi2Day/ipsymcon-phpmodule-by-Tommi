@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.6
- * @date 2016-06-03
+ * @version 4.1.2
+ * @date 2016-07-22
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -70,8 +70,6 @@ class CUL extends T2DModule
         $this->RegisterPropertyBoolean('UseOW', false);
         
         //status Vars
-        $this->RegisterVariableString('Buffer', 'Buffer', "", -1);
-        IPS_SetHidden($this->GetIDForIdent('Buffer'), true);
         $this->RegisterVariableString('LastUpdate', 'Last Update', "", -2);
         IPS_SetHidden($this->GetIDForIdent('LastUpdate'), true);
         $this->RegisterVariableString('AuxMessage', 'Last System Message', "", 1);
@@ -144,29 +142,6 @@ class CUL extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
 
-    //------------------------------------------------------------------------------
-    /**
-     * Get status variable Buffer
-     * contains incoming data from IO, act as regVar
-     * @return String
-     */
-    private function GetBuffer()
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        $val = GetValueString($id);
-        return $val;
-    }
-
-    //------------------------------------------------------------------------------
-    /**
-     * Set status variable Buffer
-     * @param String $val
-     */
-    private function SetBuffer($val)
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        SetValueString($id, $val);
-    }
 
     //------------------------------------------------------------------------------
     /**
@@ -228,7 +203,7 @@ class CUL extends T2DModule
         $versid = $this->GetIDForIdent('Version');
         SetValueString($mid, ""); //reset status variable
         SetValueString($versid, "");
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
 
         //retrieve 1wire property
         $ow_use_hms = $this->GetUseOw();
@@ -269,7 +244,7 @@ class CUL extends T2DModule
             $this->init_onewire();
         }
         $this->debug(__FUNCTION__, "Version:$version, Modus: $modus");
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
 
     }
 
@@ -387,7 +362,7 @@ class CUL extends T2DModule
             $data = json_decode($JSONString);
             //entry for data from parent
 
-            $buffer = $this->GetBuffer();
+            $buffer = $this->GetLocalBuffer();
             if (is_object($data)) $data = get_object_vars($data);
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
@@ -408,7 +383,7 @@ class CUL extends T2DModule
                         $pos = strpos($buffer, chr(0x0a));
                         if ($buffer) $this->debug(__FUNCTION__, "Remains:$buffer,RPos: $pos");
                     }
-                    $this->SetBuffer($buffer);
+                    $this->SetLocalBuffer($buffer);
                 }//target
             }//dataid
             else {

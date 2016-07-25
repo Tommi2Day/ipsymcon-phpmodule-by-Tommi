@@ -124,6 +124,7 @@ class WSDEV extends T2DModule
         }
         //must be here!!
         $this->SetStatusVariables(); //Update Variables
+        $this->SetReceiveDataFilter(".*");
     }
     
     //------------------------------------------------------------------------------

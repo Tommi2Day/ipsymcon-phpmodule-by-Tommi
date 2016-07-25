@@ -90,8 +90,6 @@ class WS300PC extends T2DModule
         //Vars
         $this->RegisterVariableInteger('RecCount', 'History Record Count');
         $this->RegisterVariableString('Last', 'Last History Record');
-        $this->RegisterVariableString('Buffer', 'Buffer', "", -1);
-        IPS_SetHidden($this->GetIDForIdent('Buffer'), true);
         $this->RegisterVariableBoolean('isPolling', 'isPolling', "", -2);
         IPS_SetHidden($this->GetIDForIdent('isPolling'), true);
         $this->RegisterVariableString('Config', 'Config Record', "", -3);
@@ -159,7 +157,7 @@ class WS300PC extends T2DModule
             $this->SetTimerInterval('ReInit', 0);
             $this->SetTimerInterval('Update', 0);
         }
-
+        $this->SetForwardDataFilter(".*");
     }
 
     //--------------------------------------------------------
@@ -325,30 +323,6 @@ class WS300PC extends T2DModule
 
     //------------------------------------------------------------------------------
     /**
-     * Get status variable Buffer
-     * contains incoming data from IO, act as regVar
-     * @return String
-     */
-    private function GetBuffer()
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        $val = GetValueString($id);
-        return $val;
-    }
-
-    //------------------------------------------------------------------------------
-    /**
-     * Set status variable Buffer
-     * @param String $val
-     */
-    private function SetBuffer($val)
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        SetValueString($id, $val);
-    }
-
-    //------------------------------------------------------------------------------
-    /**
      * Get status variable Config
      * contains WS300PC config record in hex
      * @return String
@@ -472,7 +446,7 @@ class WS300PC extends T2DModule
                 $tosend = chr(0xfe) . chr(0x39) . chr(0xfc);
                 $this->SendDataToParent($tosend);
                 IPS_Sleep(500);
-                $this->SetBuffer('');
+                $this->SetLocalBuffer('');
                 $this->GetVersion();
             }
 
@@ -488,7 +462,7 @@ class WS300PC extends T2DModule
     {
         $this->debug(__FUNCTION__, 'executing Init');
         $this->SyncParent();
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
         SetValueInteger($this->GetIDForIdent('RecCount'), 0);
         $i = $this->GetWS300pcInterval();
         $this->SetTimerInterval('Update', ($i * 1000));//ms
@@ -556,7 +530,7 @@ class WS300PC extends T2DModule
             $data = json_decode($JSONString);
             //entry for data from parent
 
-            $buffer = $this->GetBuffer();
+            $buffer = $this->GetLocalBuffer();
             if (is_object($data)) $data = get_object_vars($data);
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
@@ -568,7 +542,7 @@ class WS300PC extends T2DModule
                         $buffer = substr($buffer, 500);
                         IPS_LogMessage(__CLASS__, "Buffer length exceeded, dropping...");
                     }
-                    $this->SetBuffer($buffer);
+                    $this->SetLocalBuffer($buffer);
                 }//target
             }//dataid
             else {
@@ -711,7 +685,7 @@ class WS300PC extends T2DModule
         $this->SendDataToParent($Text);
         IPS_Sleep(1000);
         //check answer
-        $answer = $this->GetBuffer();
+        $answer = $this->GetLocalBuffer();
         $this->debug(__FUNCTION__, "Answer:" . strToHex($answer));
         if (strlen($answer) == 4) {
             if (ord($answer[3]) == 6) {
@@ -720,7 +694,7 @@ class WS300PC extends T2DModule
                 IPS_LogMessage(__CLASS__, __FUNCTION__ . "::unexpected answer");
             }
         }
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
     }//function
 
     //------------------------------------------------------------------------------
@@ -1042,7 +1016,7 @@ class WS300PC extends T2DModule
             return $result;
         }
         //send to device
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
         $tosend = chr(0xfe) . chr($cmd) . chr(0xfc);
         $this->SendDataToParent($tosend);
         //waiting for response
@@ -1051,7 +1025,7 @@ class WS300PC extends T2DModule
         $ende = false;
         $this->SetPolling(true);
         IPS_Sleep(1000);
-        $buffer = $this->GetBuffer();
+        $buffer = $this->GetLocalBuffer();
         $fstart = false;
         $indata = str_split($buffer);
         $il = count($indata);
@@ -1111,7 +1085,7 @@ class WS300PC extends T2DModule
             return false;
         }//if !ende
         $this->debug(__FUNCTION__, 'RAW: ' . strlen($inbuf) . ' bytes: ' . strToHex($inbuf));
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
         $datum = date('Y-m-d H:i:s', time());
         $vid = $this->GetIDForIdent('LastUpdate');
         SetValueString($vid, $datum);

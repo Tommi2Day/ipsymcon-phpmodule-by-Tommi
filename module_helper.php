@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 2.5
- * @date 2016-05-03
+ * @version 4.1.1
+ * @date 2016-07-22
  */
 //disable html errors in modules
 ini_set("html_errors", "0");
@@ -21,6 +21,7 @@ ini_set("html_errors", "0");
  */
 class T2DModule extends IPSModule
 {
+    protected $useBufferVar=false;
     //------------------------------------------------------------------------------
     //module const and vars
     //------------------------------------------------------------------------------
@@ -60,6 +61,8 @@ class T2DModule extends IPSModule
      * IPS Variable Type String
      */
     const VT_String = 3;
+
+
 
     /**
      * Vital module data build out of module.json
@@ -495,6 +498,53 @@ class T2DModule extends IPSModule
             return;
         }
         IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Error Variable $ident not found");
+    }
+
+    //------------------------------------------------------------------------------
+    /**
+     * Get status variable Buffer
+     * contains incoming data from IO, act as regVar
+     * @return String
+     */
+    protected function GetLocalBuffer()
+    {
+        if($this->useBufferVar) {
+            $vid = @$this->GetIDForIdent('Buffer');
+            if (!$vid) {
+                $this->RegisterVariableString('Buffer','Buffer','',-1);
+                $vid=$this->GetIDForIdent('Buffer');
+                IPS_SetHidden($vid, true);
+            }
+            $val = GetValueString($vid);
+        }else{
+            $val=parent::GetBuffer('LocalBuffer');
+
+        }
+        $this->debug(__FUNCTION__,'LocalBuffer returned:'.$val);
+        return $val;
+    }
+
+    //------------------------------------------------------------------------------
+    /**
+     * Set status variable Buffer
+     * @param String $val
+     */
+    protected function SetLocalBuffer($val)
+    {
+        $this->debug(__FUNCTION__, 'set LocalBuffer:' . $val);
+        if($this->useBufferVar) {
+            $vid = @$this->GetIDForIdent('Buffer');
+            if (!$vid) {
+                $this->RegisterVariableString('Buffer','Buffer','',-1);
+                $vid=$this->GetIDForIdent('Buffer');
+                IPS_SetHidden($vid, true);
+            }
+            SetValueString($vid,$val);
+        }else {
+
+
+            parent::SetBuffer('LocalBuffer', $val);
+        }
     }
 
     //------------------------------------------------------------------------------

@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.1
- * @date 2016-07-15
+ * @version 4.1.1
+ * @date 2016-07-22
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -91,8 +91,6 @@ class APCUPSD extends T2DModule
         //timer
         $this->RegisterTimer('Update', 0, $this->module_data["prefix"] . '_UpdateEvent($_IPS[\'TARGET\']);');
         //Vars
-        $this->RegisterVariableString('Buffer', 'Buffer', "", -1);
-        IPS_SetHidden($this->GetIDForIdent('Buffer'), true);
 
         //Connect Parent
         $this->RequireParent($this->module_interfaces['ClientSocket']);
@@ -141,6 +139,8 @@ class APCUPSD extends T2DModule
             $this->SetStatus(self::ST_INACTIV);
         }
 
+        $this->SetForwardDataFilter(".*");
+        $this->SetReceiveDataFilter(".*");
     }
 
     ///--------------------------------------------------------
@@ -206,29 +206,6 @@ class APCUPSD extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
 
-    //------------------------------------------------------------------------------
-    /**
-     * Get status variable Buffer
-     * contains incoming data from IO, act as regVar
-     * @return String
-     */
-    private function GetBuffer()
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        $val = GetValueString($id);
-        return $val;
-    }
-
-    //------------------------------------------------------------------------------
-    /**
-     * Set status variable Buffer
-     * @param String $val
-     */
-    private function SetBuffer($val)
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        SetValueString($id, $val);
-    }
 
 
     //------------------------------------------------------------------------------
@@ -257,7 +234,7 @@ class APCUPSD extends T2DModule
     private function init()
     {
         $this->debug(__FUNCTION__, 'Init entered');
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
         $pid = $this->GetParent();
         if ($pid > 0) {
             //apply host+port to parent
@@ -297,7 +274,7 @@ class APCUPSD extends T2DModule
             $data = json_decode($JSONString);
             //entry for data from parent
 
-            $buffer = $this->GetBuffer();
+            $buffer = $this->GetLocalBuffer();
             if (is_object($data)) $data = get_object_vars($data);
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
@@ -305,7 +282,7 @@ class APCUPSD extends T2DModule
                     $buffer .= utf8_decode($data['Buffer']);
                     //$this->debug(__FUNCTION__, $buffer);
                     //$bl = strlen($buffer);
-                    $this->SetBuffer($buffer);
+                    $this->SetLocalBuffer($buffer);
                 }//target
             }//dataid
             else {
@@ -380,12 +357,12 @@ class APCUPSD extends T2DModule
         IPS_SetProperty($pid, 'Open', true);
         IPS_ApplyChanges($pid);
         //LIST UPS command
-        $this->SetBuffer("");
+        $this->SetLocalBuffer("");
         $this->SendText(chr(0).chr(6)."status");
         IPS_Sleep(1000);
-        $in = $this->GetBuffer();
+        $in = $this->GetLocalBuffer();
         $apc=$this->format_data($in);
-        $this->SetBuffer("");
+        $this->SetLocalBuffer("");
         if (isset($apc['APC']) && preg_match("/^(\d+),(\d+),(\d+)/",$apc['APC'])) {
             $apc_data=$this->Parse($apc);
         }else {

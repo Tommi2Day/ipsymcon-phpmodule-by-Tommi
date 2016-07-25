@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.7
- * @date 2016-04-10
+ * @version 4.1.1
+ * @date 2016-07-22
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -67,8 +67,6 @@ class FS20WUE extends T2DModule
         $this->RegisterPropertyBoolean('Active', false);
 
         //Vars
-        $this->RegisterVariableString('Buffer', 'Buffer', "", -1);
-        IPS_SetHidden($this->GetIDForIdent('Buffer'), true);
         $this->RegisterVariableString('LastUpdate', 'Last Update', "", -2);
         IPS_SetHidden($this->GetIDForIdent('LastUpdate'), true);
 
@@ -184,29 +182,6 @@ class FS20WUE extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'RainPerCount');
     }
 
-    //------------------------------------------------------------------------------
-    /**
-     * Get status variable Buffer
-     * contains incoming data from IO, act as regVar
-     * @return String
-     */
-    private function GetBuffer()
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        $val = GetValueString($id);
-        return $val;
-    }
-
-    //------------------------------------------------------------------------------
-    /**
-     * Set status variable Buffer
-     * @param String $val
-     */
-    private function SetBuffer($val)
-    {
-        $id = $this->GetIDForIdent('Buffer');
-        SetValueString($id, $val);
-    }
 
     //------------------------------------------------------------------------------
     //---Events
@@ -277,7 +252,7 @@ class FS20WUE extends T2DModule
     {
         $this->debug(__FUNCTION__, 'Init entered');
         $this->SyncParent();
-        $this->SetBuffer('');
+        $this->SetLocalBuffer('');
         if (!$this->HasActiveParent()) {
             $this->debug(__FUNCTION__, 'No active parent');
             return;
@@ -356,7 +331,7 @@ class FS20WUE extends T2DModule
             $data = json_decode($JSONString);
             //entry for data from parent
 
-            $buffer = $this->GetBuffer();
+            $buffer = $this->GetLocalBuffer();
             if (is_object($data)) $data = get_object_vars($data);
             if (isset($data['DataID'])) {
                 $target = $data['DataID'];
@@ -387,7 +362,7 @@ class FS20WUE extends T2DModule
                             }//if 02
                         }//while
                         if (!$fstart) {
-                            $this->SetBuffer($buffer);
+                            $this->SetLocalBuffer($buffer);
                             return;
                         }
                         $il = count($indata);
@@ -412,7 +387,7 @@ class FS20WUE extends T2DModule
                         $buffer = implode("", $indata);
                         $bl = strlen($buffer);
                     }//while bl>0
-                    $this->SetBuffer($buffer);
+                    $this->SetLocalBuffer($buffer);
                 }//target
             }//dataid
             else {
