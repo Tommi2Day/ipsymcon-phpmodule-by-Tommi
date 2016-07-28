@@ -6,7 +6,7 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 4.1.1
+ * @version 4.1.2
  * @date 2016-07-22
  */
 //disable html errors in modules
@@ -21,7 +21,7 @@ ini_set("html_errors", "0");
  */
 class T2DModule extends IPSModule
 {
-    protected $useBufferVar=false;
+
     //------------------------------------------------------------------------------
     //module const and vars
     //------------------------------------------------------------------------------
@@ -137,6 +137,12 @@ class T2DModule extends IPSModule
         "EN-RX" => "{3C60BF34-7DD3-4234-B865-AF1606BB267C}", //to Energy Device
     );
 
+    /**
+     * Use StatusVariable as buffer
+     * (if Get/SetBuffer module functions are not available in IPS <4.1)
+     * @var bool $useBufferVar
+     */
+    protected $useBufferVar=false;
 
     //------------------------------------------------------------------------------
     //Object functions
@@ -157,6 +163,7 @@ class T2DModule extends IPSModule
             IPS_LogMessage(__CLASS__, "Reading Moduldata from module.json failed!");
             return false;
         }
+        $this->useBufferVar=! (method_exists($this,'GetBuffer'));
         $this->DEBUGLOG = IPS_GetLogDir() . "/" . $data["name"] . "debug.log";
         return true;
     }
