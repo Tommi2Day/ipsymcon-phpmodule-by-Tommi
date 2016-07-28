@@ -6,6 +6,6 @@
 	"aliases": ["APCUPSD attached USV"],
 	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
 	"childRequirements": ["{3C60BF34-7DD3-4234-B865-AF1606BB267C}"],
-	"implemented": ["{63056B9B-EF14-4F65-8235-D292391AE591}"],
+	"implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}","{63056B9B-EF14-4F65-8235-D292391AE591}"],
 	"prefix": "APCUPSD"
 }
