@@ -6,17 +6,25 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.2
- * @date 2016-07-13
+ * @version 4.1
+ * @date 2016-07-28
  */
 /**
 @mainpage Index
 
 This is a Library of PHP Modules for the home automation software <a href="https://www.symcon.de">"Symcon"</a>
 
-@par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi
+@section Library Overview
+@image html PHPModules.png "Modul hierarchy"
 
- @image html PHPModules.png "Modul hierarchy"
+@section Installation
+@par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git
+@par Branch: 4.1
+
+ - Within Symcon Konsole go to "Kern Instancen" ->Modules
+ - Press "Hinzufügen" Button
+ - Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
+ - Click on "Edit" Icon and change Branch(Zweig) to "4.1"
 
 @section Devices
 
