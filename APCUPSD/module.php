@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.1
- * @date 2016-07-22
+ * @version 4.1.2
+ * @date 2016-07-29
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -295,9 +295,9 @@ class APCUPSD extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Data Interface from Childs
-     * @param $JSONString
+     * @param string $JSONString
      */
-    public function ForwardData($JSONString)
+    public function ForwardData(string $JSONString)
     {
         // decode Data from Device Instanz
         if (strlen($JSONString) > 0) {
@@ -332,9 +332,9 @@ class APCUPSD extends T2DModule
 
     /**
      * Data Interface to Childs
-     * @param $Data
+     * @param string $Data
      */
-    public function SendDataToChildren($Data)
+    public function SendDataToChildren(string $Data)
     {
         parent::SendDataToChildren($Data);
     }
@@ -385,10 +385,10 @@ class APCUPSD extends T2DModule
 
     /**
      *
-     * @param string $text output from apcupsd
+     * @param String $text output from apcupsd
      * @return array $apc Array Key/Values
      */
-    function format_data($text){
+    private function format_data($text){
         $entry=explode("\n",$text); //Satztrenner
         $apc=array();
         foreach($entry as $line) {
@@ -511,7 +511,7 @@ class APCUPSD extends T2DModule
             }
         }
         if (isset($data['Status'])) {
-            $data['Alert'] = ($data['Status'] == 'ONLINE') ? 'No' : 'Yes';
+            $data['Alert'] = ($data['Status'] == 'ONLINE') ? 'No' : 'YES';
             $this->debug(__FUNCTION__, ":: Alert=" . $data['Alert']);
         }
 

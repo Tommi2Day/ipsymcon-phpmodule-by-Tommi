@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.1
- * @date 2016-07-22
+ * @version 4.1.2
+ * @date 2016-07-29
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -250,7 +250,7 @@ class NUT extends T2DModule
 
     /**
      * Data Interface from Parent(IO-RX)
-     * @param string $JSONString
+     * @param String $JSONString
      */
     public function ReceiveData($JSONString)
     {
@@ -291,9 +291,9 @@ class NUT extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Data Interface from Childs
-     * @param $JSONString
+     * @param string $JSONString
      */
-    public function ForwardData($JSONString)
+    public function ForwardData(string $JSONString)
     {
         // decode Data from Device Instanz
         if (strlen($JSONString) > 0) {
@@ -328,9 +328,9 @@ class NUT extends T2DModule
 
     /**
      * Data Interface to Childs
-     * @param $Data
+     * @param string $Data
      */
-    public function SendDataToChildren($Data)
+    public function SendDataToChildren(string $Data)
     {
         parent::SendDataToChildren($Data);
     }
@@ -488,7 +488,7 @@ class NUT extends T2DModule
             }
         }
         if (isset($data['Status'])) {
-            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'No' : 'Yes';
+            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'No' : 'YES';
         }
 
         if (!isset($data['Typ'])) $data['Typ'] = "NUT attached USV";
