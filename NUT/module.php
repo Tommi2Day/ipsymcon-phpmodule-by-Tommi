@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 1.0
- * @date 2016-04-08
+ * @version 4.0.2
+ * @date 2016-09-12
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -211,7 +211,7 @@ class NUT extends T2DModule
      * contains incoming data from IO, act as regVar
      * @return String
      */
-    private function GetBuffer()
+    protected function GetBuffer()
     {
         $id = $this->GetIDForIdent('Buffer');
         $val = GetValueString($id);
@@ -223,7 +223,7 @@ class NUT extends T2DModule
      * Set status variable Buffer
      * @param String $val
      */
-    private function SetBuffer($val)
+    protected function SetBuffer($val)
     {
         $id = $this->GetIDForIdent('Buffer');
         SetValueString($id, $val);
