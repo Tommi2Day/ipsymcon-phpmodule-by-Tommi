@@ -514,7 +514,7 @@ class NUT extends T2DModule
             }
         }
         if (isset($data['Status'])) {
-            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'No' : 'Yes';
+            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'NO' : 'YES';
         }
 
         if (!isset($data['Typ'])) $data['Typ'] = "NUT attached USV";

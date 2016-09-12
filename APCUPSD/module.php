@@ -534,7 +534,7 @@ class APCUPSD extends T2DModule
             }
         }
         if (isset($data['Status'])) {
-            $data['Alert'] = ($data['Status'] == 'ONLINE') ? 'No' : 'Yes';
+            $data['Alert'] = ($data['Status'] == 'ONLINE') ? 'NO' : 'YES';
             $this->debug(__FUNCTION__, ":: Alert=" . $data['Alert']);
         }
 
