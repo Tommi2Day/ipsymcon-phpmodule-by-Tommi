@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.3
- * @date 2016-09-12
+ * @version 4.1.4
+ * @date 2016-09-18
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -293,7 +293,7 @@ class NUT extends T2DModule
      * Data Interface from Childs
      * @param string $JSONString
      */
-    public function ForwardData(string $JSONString)
+    public function ForwardData($JSONString)
     {
         // decode Data from Device Instanz
         if (strlen($JSONString) > 0) {
@@ -330,7 +330,7 @@ class NUT extends T2DModule
      * Data Interface to Childs
      * @param string $Data
      */
-    public function SendDataToChildren(string $Data)
+    public function SendDataToChildren($Data)
     {
         parent::SendDataToChildren($Data);
     }

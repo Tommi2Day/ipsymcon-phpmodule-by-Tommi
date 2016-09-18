@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2016
- * @version 4.1.1
- * @date 2016-07-29
+ * @version 4.1.2
+ * @date 2016-09-18
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -247,7 +247,7 @@ class AVMAHA extends T2DModule
      * Data Interface from Childs
      * @param string $JSONString
      */
-    public function ForwardData(string $JSONString)
+    public function ForwardData($JSONString)
     {
         // decode Data from Device Instanz
         if (strlen($JSONString) > 0) {
@@ -310,7 +310,7 @@ class AVMAHA extends T2DModule
      * @return bool
      */
     //query actual state
-    public function SwitchMode(string $ain, $val)
+    public function SwitchMode($ain, $val)
     {
         $state = $this->SwitchStatus($val);
         $ahaurl = $this->GetAHAURL();
@@ -966,4 +966,5 @@ class AVMAHA extends T2DModule
         IPS_LogMessage(__CLASS__, __FUNCTION__ . '::Not implemented yet');
 
     }
+
 }//class
