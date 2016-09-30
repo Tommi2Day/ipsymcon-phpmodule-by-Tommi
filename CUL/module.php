@@ -150,9 +150,9 @@ class CUL extends T2DModule
      * contains incoming data from IO, act as regVar
      * @return String
      */
-    private function GetBuffer()
+    protected function GetBuffer($Name='buffer')
     {
-        $id = $this->GetIDForIdent('Buffer');
+        $id = $this->GetIDForIdent($Name);
         $val = GetValueString($id);
         return $val;
     }
@@ -162,10 +162,10 @@ class CUL extends T2DModule
      * Set status variable Buffer
      * @param String $val
      */
-    private function SetBuffer($val)
+    protected function SetBuffer($Name='Buffer',$Data)
     {
-        $id = $this->GetIDForIdent('Buffer');
-        SetValueString($id, $val);
+        $id = $this->GetIDForIdent($Name);
+        SetValueString($id, $Data);
     }
 
     //------------------------------------------------------------------------------
