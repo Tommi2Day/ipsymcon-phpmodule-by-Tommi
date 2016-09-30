@@ -150,7 +150,7 @@ class CUL extends T2DModule
      * contains incoming data from IO, act as regVar
      * @return String
      */
-    protected function GetBuffer($Name='buffer')
+    protected function GetBuffer($Name='Buffer')
     {
         $id = $this->GetIDForIdent($Name);
         $val = GetValueString($id);
