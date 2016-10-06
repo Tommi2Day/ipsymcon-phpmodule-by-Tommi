@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.4
- * @date 2016-09-18
+ * @version 4.1.5
+ * @date 2016-10-06
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -23,10 +23,9 @@ class NUT extends T2DModule
     //------------------------------------------------------------------------------
 
     /**
-     * Field for ID definition
+     * default Nominal Value
      */
-    const idname = 'ups.serial';
-
+    const default_nomval=100;
     /**
      * Nominal power map
      */
@@ -81,6 +80,9 @@ class NUT extends T2DModule
         $this->RegisterPropertyInteger('ParentCategory', 0); //parent cat is root
         $this->RegisterPropertyInteger('Port', 3493);
         $this->RegisterPropertyInteger('UpdateInterval', 300);
+        $this->RegisterPropertyInteger('NomPower', self::default_nomval);
+        $this->RegisterPropertyString('IDfield', 'ups.serial');
+        $this->RegisterPropertyString('UPSname', '');
         $this->RegisterPropertyString('Host', '');
         $this->RegisterPropertyString('LogFile', '');
         $this->RegisterPropertyBoolean('AutoCreate', true);
@@ -203,6 +205,59 @@ class NUT extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
 
+    //--------------------------------------------------------
+
+    /**
+     * Get Nominal Power in W
+     * @return int
+     */
+    private function GetNomPower()
+    {
+        return (Integer)IPS_GetProperty($this->InstanceID, 'NomPower');
+    }
+
+    //--------------------------------------------------------
+    /**
+     * Set Nominal Power in W
+     * @param  int
+     */
+    private function SetNomPower($val)
+    {
+        $this->debug(__FUNCTION__, "Set NomPower:$val");
+        IPS_SetProperty($this->InstanceID, 'NomPower',(Integer)$val);
+        parent::ApplyChanges();
+    }
+    //------------------------------------------------------------------------------
+    /**
+     * Get ID field
+     * @return string
+     */
+    private function GetIDfield()
+    {
+        return (String)IPS_GetProperty($this->InstanceID, 'IDfield');
+    }
+
+    //------------------------------------------------------------------------------
+    /**
+     * Get NUT UPS name
+     * @return string
+     */
+    private function GetUPSname()
+    {
+        return (String)IPS_GetProperty($this->InstanceID, 'UPSname');
+    }
+
+    //--------------------------------------------------------
+    /**
+     * Set NUT name as send by NUT
+     * @param  int
+     */
+    private function SetUPSname($val)
+    {
+        $this->debug(__FUNCTION__, "UPS Name:$val");
+        IPS_SetProperty($this->InstanceID, 'UPSname',$val);
+        parent::ApplyChanges();
+    }
 
     //------------------------------------------------------------------------------
     //---Events
@@ -354,16 +409,24 @@ class NUT extends T2DModule
         IPS_ApplyChanges($pid);
         //LIST UPS command
         $this->SetLocalBuffer("");
-        $this->SendText("LIST UPS\n");
-        IPS_Sleep(1000);
-        $in = $this->GetLocalBuffer();
-        $lines = explode("\n", $in);
-        $this->SetLocalBuffer("");
-        //extract UPS Name to query (assume only one!)
-        if (isset($lines[1]) && preg_match('/^UPS\s+(\w+)\s+"(.*)"/', $lines[1], $res)) {
-            $ups = $res[1];
-            //$desc=$res[2];
-            //query named UPS
+        $ups = $this->GetUPSname();
+        if (empty($ups)) {
+            $this->SetLocalBuffer("");
+            $this->SendText("LIST UPS\n");
+            IPS_Sleep(1000);
+            $in = $this->GetLocalBuffer();
+            $lines = explode("\n", $in);
+            $this->SetLocalBuffer("");
+            //extract UPS Name to query (assume only one!)
+            if (isset($lines[1]) && preg_match('/^UPS\s+(\w+)\s+"(.*)"/', $lines[1], $res)) {
+                $ups = $res[1];
+                $this->SetUPSname($ups);
+            }
+
+        }
+
+        //query named UPS
+        if (! empty($ups)) {
             $this->SendText("LIST VAR $ups \n");
             //wait
             IPS_Sleep(1000);
@@ -375,17 +438,13 @@ class NUT extends T2DModule
             $nut = $this->format_data($in);
             if (count($nut) > 1) {
                 //more than one valid row found, looks good
-                //$GLOBALS['name']=$ups;
-                //$GLOBALS['desc']=$desc;
                 //parse
                 $nut_data = $this->Parse($nut);
-
             } else {
-                IPS_LogMessage(__CLASS__, 'no valid VAR data');
+                IPS_LogMessage(__CLASS__, 'no valid VAR data found for UPS $ups');
             }
-        } else {
-            IPS_LogMessage(__CLASS__, 'no valid ups data found');
-
+        }else{
+            $this->debug(__FUNCTION__,"UPSname property not set and no UPS found");
         }
         //Socket close=terminate
         IPS_SetProperty($pid, 'Open', false);
@@ -433,13 +492,15 @@ class NUT extends T2DModule
     {
 
         $data = array();
-        if (isset($nut[self::idname])) {
-            $dev = $nut[self::idname];
-            $data['Id'] = $dev;
+        $ups=$this->GetUPSname();
+        $data["Name"]=$ups;
+        $idfield=$this->GetIDfield();
+        if (isset($nut[$idfield])) {
+            $dev = $nut[$idfield];
         } else {
-            IPS_LogMessage(__CLASS__, "Identifier " . self::idname . " not found");
-            return $data;
+            $dev=$ups."@".$this->GetHost();
         }
+        $data['Id'] = $dev;
         if (isset($nut['input.voltage'])) {
             $data['VoltIn'] = $nut['input.voltage'];
         }
@@ -467,30 +528,43 @@ class NUT extends T2DModule
         if (isset($nut['output.frequency'])) {
             $data['Freq'] = $nut['output.frequency'];
         }
-        //retrieve nominal power from APC
-        if (isset($nut['ups.realpower.nominal']) && isset($data['LoadPct'])) {
-            $data['Nominal'] = $nut['ups.realpower.nominal'];
-            $watt = $data['Nominal'] * $data['LoadPct'];
-            if ($watt > 0) $watt=round($watt / 100);
-            $data['Watt'] = $watt;
-            $this->debug(__FUNCTION__, ":: Power=" . $watt);
-        } else {
-            //try to use hardcoded power table based on digits in model name(ex. SMART UPS 750)
-            if (!empty($data['Typ'])) {
-                preg_match("/(\d{3,4})/", $data['Typ'], $result);
-                if (isset($result[0]) && (isset($nomvals[$result[0]]))) {
-                    $data['Nominal'] = $this->nomvals[$result[0]];
-                    $watt = $data['Nominal'] * $data['LoadPct'];
-                    if ($watt > 0) $watt=round($watt / 100);
-                    $data['Watt'] = $watt;
-                    $this->debug(__FUNCTION__, ":: Power from Model(" . $data['Typ'] . "=" . $watt);
+        //nominal value
+        $nominal=$this->GetNomPower();
+        if ($nominal==self::default_nomval) {
+            //looks like nompower isnt adjusted
+            if (isset($nut['ups.realpower.nominal'])) {
+                //retrieve nominal power from device data
+                $nominal=$nut['ups.realpower.nominal'];
+                $this->debug(__FUNCTION__, "Set Nominal Power Data =" . $nominal);
+                $this->SetNomPower($nominal);
+            }else{
+                //guess from typ
+                if (!empty($data['Typ'])) {
+                    preg_match("/(\d{3,4})/", $data['Typ'], $result);
+                    if (isset($result[0]) && (isset($nomvals[$result[0]]))) {
+                        $nominal = $this->nomvals[$result[0]];
+                        $this->debug(__FUNCTION__, "Set Nominal Power from Model(" . $data['Typ'] . "=" . $nominal);
+                        $this->SetNomPower($nominal);
+                    }
                 }
             }
         }
-        if (isset($data['Status'])) {
-            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'No' : 'YES';
+        $data['Nominal']=$nominal;
+
+        //load
+        if (isset($data['LoadPct'])) {
+            $watt = $data['Nominal'] * $data['LoadPct'];
+            if ($watt > 0) $watt=round($watt / 100);
+            $data['Watt'] = $watt;
+            $this->debug(__FUNCTION__, "Power=" . $watt);
         }
 
+        //Alert
+        if (isset($data['Status'])) {
+            $data['Alert'] = (substr($data['Status'], 0, 2) == 'OL') ? 'NO' : 'YES';
+        }
+
+        //set typ field
         if (!isset($data['Typ'])) $data['Typ'] = "NUT attached USV";
 
         $data['Date'] = date('Y-m-d H:i:s', time());
