@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 4.1
- * @date 2016-07-28
+ * @version 4.1.2
+ * @date 2016-10-06
  */
 /**
 @mainpage Index
@@ -370,6 +370,11 @@ The Data will be presented as Energy Device instances
 - \b ParentCategory (Default 0): ID of parent category for newly created category
 - \b Host: Host to query remote %NUT deamon
 - \b Port (Default:3493): Port to query remote %NUT deamon
+- \b UPSname Name of UPS as set in %NUT configuration. This identifies the USV if there are more than one attached.
+     May be empty, then it will take the first UPS as shown by LIST UPS command
+- \b IDfield (default ups.serial) %NUT field which holds the UPS identifier
+- \b NomPower (default 100) the 100% load value in Watt. An USV which provides "ups.realpower.nominal" will
+     set this value as property only if the previous value is default
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
 - \b Logfile (Default none): optional fully qualified filename of a logfile.
 
