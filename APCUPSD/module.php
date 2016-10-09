@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.4
- * @date 2016-09-18
+ * @version 4.1.5
+ * @date 2016-10-09
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -50,7 +50,7 @@ class APCUPSD extends T2DModule
     /**
      * Fieldlist for Logging
      */
-    private $fieldlist = array("Date","Typ", "Id", "Name", "VoltIn", "VoltOut", "Freq", "LoadPct", "Charged", "Watt", "Nominal", "TimeLeft", "Status", "Alert");
+    private $fieldlist = array("Date","Typ", "Id", "Name", "VoltIn", "VoltOut", "Freq", "LoadPct", "Charged", "Watt", "Nominal", "TimeLeft", "Status", "Alert","VoltBatt");
 
 
     //--------------------------------------------------------
@@ -455,6 +455,10 @@ class APCUPSD extends T2DModule
         if (isset($apc['OUTPUTV'])){
             list($data['VoltOut'],)=explode(' ',$apc['OUTPUTV'],2);
             $this->debug(__FUNCTION__, ":: VoltOut=" . $data['VoltOut']);
+        }
+        if (isset($apc['BATTV'])) {
+            list($data['VoltBatt'],)=explode(' ',$apc['BATTV'],2);
+            $this->debug(__FUNCTION__, ":: VoltBatt=" . $data['VoltBatt']);
         }
         if (isset($apc['LOADPCT'])){
             list($data['LoadPct'],)=explode(' ',$apc['LOADPCT'],2);

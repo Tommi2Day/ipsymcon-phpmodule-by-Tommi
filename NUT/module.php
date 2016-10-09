@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.5
- * @date 2016-10-06
+ * @version 4.1.6
+ * @date 2016-10-09
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -48,7 +48,7 @@ class NUT extends T2DModule
     /**
      * Fieldlist for Logging
      */
-    private $fieldlist = array("Date","Typ", "Id", "Name", "VoltIn", "VoltOut", "Freq", "LoadPct", "Charged", "Watt", "Nominal", "TimeLeft", "Status", "Alert");
+    private $fieldlist = array("Date","Typ", "Id", "Name", "VoltIn", "VoltOut", "Freq", "LoadPct", "Charged", "Watt", "Nominal", "TimeLeft", "Status", "Alert","VoltBatt");
 
 
     //--------------------------------------------------------
@@ -524,6 +524,9 @@ class NUT extends T2DModule
         }
         if (isset($nut['battery.charge'])) {
             $data['Charged'] = $nut['battery.charge'];
+        }
+        if (isset($nut['battery.voltage'])) {
+            $data['VoltBatt'] = $nut['battery.voltage'];
         }
         if (isset($nut['output.frequency'])) {
             $data['Freq'] = $nut['output.frequency'];
