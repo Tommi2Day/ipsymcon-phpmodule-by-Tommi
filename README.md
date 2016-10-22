@@ -278,6 +278,54 @@ Prefix: XS1_
 
 For a complete XS1 description see vendor documentation at http://www.ezcontrol.de/content/view/36/28/ (german)
 
+### MQTTPUB
+
+IOModule to publish IPS Variable updates to an MQTT brocker
+
+The module allows subscriptions to IPS Variable update messages and forwards this as json record to 
+a MQTT broker. An external client may subscribe to these broker messages and proceed further 
+
+Prefix: MQTTPUB_
+
+Public Functions:
+* MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker 
+* MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
+* MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
+* MQTTPUB_Subscribe_All($id,$objectid): Subscribes all variable IDs below $objectid to IPS Messageloop
+* MQTTPUB_UnSubscribe_ALL($id,$objectid): UnSubscribes all variable IDs below $objectid from IPS Messageloop
+
+Topic:
+Topic may be configured with config dialog window. You may set template variables within definition
+ ```
+ IPS/status/%varid%/%varident%/%path%
+ ```
+will result in
+```
+IPS/status/42440/Watt/APCUPSD_Devices/Back-UPS_RS_900G/Watt
+```
+Payload:
+Payload is a Json string with the following components:
+* Path: IPS tree of names from root to the variable
+* TS: Unix Timestamp message received in MQTTPUB module
+* UTF8Value: stringyfied actual value of variable
+* VariableChanged: VariableChange Field of variable object
+* VariableIdent: Ident of variable
+* VariableType: VariableType Field of variable object
+* VariableUpdated: VariableUpdated Field of variable object
+```
+{'Path': 'APCUPSD Devices/Back-UPS RS 900G/Watt',
+ 'TS': 1477132802,
+ 'UTF8Value': '124',
+ 'VariableChanged': 1477132502,
+ 'VariableID': 42440,
+ 'VariableIdent': 'Watt',
+ 'VariableType': 2,
+ 'VariableUpdated': 1477132802}
+ ```
+
+you can retrieve the data from MQTT with simple scripts. A sample python script 
+[ips_mqtt.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/MQTTPUB/ips_mqtt.py) 
+demonstrates how to write the payload into a mysql database
 ### see also (in german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
@@ -290,7 +338,7 @@ For a complete XS1 description see vendor documentation at http://www.ezcontrol.
 * XS1 Module: http://www.tdressler.net/ipsymcon/xs1_ips.html
 
 #### Debug:
-By activating the Debug property (if available) a lot of noise will appear as LogMessages
+By activating the Instance Debug Tab a lot of noise will appear
 
 ### additional documentation
 You may generate additional documentation using <a href="http://www.stack.nl/~dimitri/doxygen/index.html"> Doxygen</a>

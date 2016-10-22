@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 4.1.2
- * @date 2016-07-22
+ * @version 4.1.4
+ * @date 2016-10-22
  */
 //disable html errors in modules
 ini_set("html_errors", "0");
@@ -26,9 +26,25 @@ class T2DModule extends IPSModule
     //module const and vars
     //------------------------------------------------------------------------------
     /**
+     * IPS Message IDs
+     * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/nachrichten/
+     */
+    /**
+     * Kernel Message  ID
+     */
+    const IPS_KERNELMESSAGE = 10100;
+    /**
+     * Kernel Status "INIT"
+     */
+    const KR_INIT = 10102;
+    /**
      * Kernel Status "Ready"
      */
     const KR_READY = 10103;
+    /**
+     * Kernel Status "UnInit"
+     */
+    const KR_UNINIT= 10104;	//"Shutdown"-Befehl erhalten, finalisiere alles geladene
     /**
      * Module Status aktive
      */
@@ -62,7 +78,18 @@ class T2DModule extends IPSModule
      */
     const VT_String = 3;
 
-
+    /**
+     * Instance Message Status change
+     */
+    const IM_CHANGESTATUS=10505;//	Instance Status hat sich geändert
+    /**
+     * Variable Message Delete
+     */
+    const VM_DELETE=10602;	//Variable wurde entfernt
+    /**
+     * Variable Message Update
+     */
+    const VM_UPDATE=10603;	//Variable wurde aktualisiert
 
     /**
      * Vital module data build out of module.json
@@ -112,6 +139,8 @@ class T2DModule extends IPSModule
         "OWN" => "{A68F9DEC-A490-4E35-B500-B45FC5F4FF6A}", //OWNet Splitter
         "XS1" => "{8B015BFA-3CDD-4D45-99C8-3F250AEF1E83}", //XS1 Splitter
         "WS2500PC" => "{90F68511-0628-4718-A7BF-EDBBC2BB55D4}", //WS2500 Splitter
+        "MQTTPUB"=> "{E4CD7A6D-ADF6-4BD2-94D6-754F57037101}", //MQTT Publisher
+        "MQTTSUB"=> "{5E1B4ED3-B6E6-47D9-98E5-987A65CD651E}", //MQTT Subscriber
         
         //IO
         "VirtIO" => "{6179ED6A-FC31-413C-BB8E-1204150CF376}",
@@ -365,7 +394,7 @@ class T2DModule extends IPSModule
         //use logmessages instead of debug because this isnt available in early stage
         $caps = $this->GetCaps();
         $actions= $this->GetActions();
-        IPS_LogMessage($this->name, __FUNCTION__ ."(#".$this->InstanceID.") entered for Caps:".print_r($caps,true)."Actions:".print_r($actions,true));
+        IPS_LogMessage($this->name, __FUNCTION__ ."(#".$this->InstanceID.") entered");
         if (count($caps) < 1) {
             IPS_LogMessage($this->name, __FUNCTION__ . "(#".$this->InstanceID.") Caps empty");
             return;

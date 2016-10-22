@@ -1,0 +1,11 @@
+{
+	"elements":
+	[
+		{ "name": "Active", "type": "CheckBox", "caption": "Activate Instance" },
+		{ "name": "Host", "type": "ValidationTextBox", "caption": "MQTT Host/IP" },
+		{ "name": "Port", "type": "NumberSpinner", "caption": "MQTT Port" },
+		{ "name": "Topic", "type": "ValidationTextBox", "caption": "MQTT topic" },
+		{ "name": "ClientID", "type": "ValidationTextBox", "caption": "MQTT ClientID" },
+		{ "type": "Label", "label": "(MQTT topic variables: %varid%,%varident%,%path%)" }
+	]
+}

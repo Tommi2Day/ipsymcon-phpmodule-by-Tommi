@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 4.1.2
- * @date 2016-10-06
+ * @version 4.1.3
+ * @date 2016-10-22
  */
 /**
 @mainpage Index
@@ -410,7 +410,7 @@ The Data will be presented as Energy Device instances
 @par "Public Functions:"
 - Query: manual data refresh
 @code
-NUT_Query($id);
+APCUPSD_Query($id);
 @endcode
 
 @par Hint:
@@ -448,7 +448,6 @@ Receivers may be connect to a serial port or client socket instance. You must cr
 your %CUL instance as parent for yourself
 
  @see http://culfw.de/commandref.html
-
 
 @subsection OWNet
 
@@ -490,6 +489,74 @@ XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controle
 
 @see vendor docs on http://www.ezcontrol.de/content/view/36/28/ (german)
 
+@subsection MQTTPUB
+
+MQTTPUB: IOModule to publish IPS Variable updates to an MQTT brocker
+@par Prefix: MQTTPUB_
+
+  The module allows subscriptions to IPS Variable update messages and forwards this as json record to
+a MQTT broker. An external client may subscribe to these broker messages and proceed further
+
+@par Properties
+
+ - \b Active (Default: Off/Inactive):
+ - \b Host MQTT Broker Host/IP to connect
+ - \b Port (Default:1883): MQTT Broker Port to connect
+ - \b Topic (Default 'IPS/status/%varid%/%varident%/%path%'):  Topic pattern to pass to broker (see below)
+ - \b ClientID (Default 'symcon'): $ClientID@$host will be used wenn connecting to broker
+
+IPS_SetProperty only:
+ - \b User (Default empty)
+ - \b Password (Default empty)
+ - \b Subscriptions Json array string with registered subscriptions. To register subscriptions pls use public functions only
+
+@par Actions
+
+ - \b None
+
+
+@par "Public Functions:"
+
+ - \b MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker
+ - \b MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
+ - \b MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
+ - \b MQTTPUB_Subscribe_All($id,$objectid): Subscribes all variable IDs below $objectid to IPS Messageloop
+ - \b MQTTPUB_UnSubscribe_ALL($id,$objectid): UnSubscribes all variable IDs below $objectid from IPS Messageloop
+
+@par Data Handling
+
+- Topic:
+ - Topic may be configured with config dialog window. You may set template variables within definition
+   IPS/status/%varid%/%varident%/%path%/varname
+
+   will result in
+@code
+IPS/status/42440/Watt/APCUPSD_Devices/Back-UPS_RS_900G/Watt
+@endcode
+
+- Payload is a Json string with the following components:
+  - Path: IPS tree of names from root to the variable
+  - TS: Unix Timestamp message received in %MQTTPUB module
+  - UTF8Value: stringyfied actual value of variable
+  - VariableChanged: VariableChange Field of variable object
+  - VariableIdent: Ident of variable
+  - VariableType: VariableType Field of variable object
+  - VariableUpdated: VariableUpdated Field of variable object
+
+    Sample:
+    @code
+    {'Path': 'APCUPSD Devices/Back-UPS RS 900G/Watt',
+    'TS': 1477132802,
+    'UTF8Value': '124',
+    'VariableChanged': 1477132502,
+    'VariableID': 42440,
+    'VariableIdent': 'Watt',
+    'VariableType': 2,
+    'VariableUpdated': 1477132802}
+    @endcode
+
+A sample consumer script ips_mqtt.py for logging into a mysql database is provided
+
 @section adddoc additional documentation in german
 
 - %WS300PC, %FS20WUE, %WDE1: http://www.tdressler.net/ipsymcon/ws300series.html
@@ -501,7 +568,7 @@ XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controle
 
 @section debug Debug:
 
-By activating the Debug property (if available) a lot of noise will appear as LogMessages
+By activating the Instance Debug Tab a lot of noise will appear
 
 @section gendoc general documentation
 

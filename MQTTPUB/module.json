@@ -1,0 +1,11 @@
+{
+	"id": "{E4CD7A6D-ADF6-4BD2-94D6-754F57037101}",
+	"name": "MQTTPUB",
+	"type": 1,
+	"vendor": "Tommi2Day",
+	"aliases": ["MQTT Publisher"],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "MQTTPUB"
+}
