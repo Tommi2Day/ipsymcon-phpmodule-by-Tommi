@@ -327,7 +327,7 @@ Payload is a Json string with the following components:
  ```
 ##### Sample consumer script
 you can retrieve the published data from MQTT with simple scripts. A sample python script 
-[ips_mqtt.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/MQTTPUB/ips_mqtt.py) 
+[ips_mqtt.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.1/MQTTPUB/ips_mqtt.py) 
 demonstrates how to write the payload into a mysql database
 
 How to use:
