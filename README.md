@@ -18,22 +18,22 @@ This is a Library of PHP Modules for the home automation software "Symcon"
  ![Module Hierarchy](doc/images/PHPModules.png)
 
 
-#### Weather Device
+### Weather Device
 Generic Device module to present weather data
 
 Prefix: WSD_
 
-#### Energy Device
+### Energy Device
 Generic Device module to present energy data
 
-Prefix: END_
+##### Prefix: END_
 
-#### Switch Device
+### Switch Device
 Generic Device module to present weather data
 
-Prefix: SWD_
+##### Prefix: SWD_
 
-Public Functions:
+##### Public Functions:
 
 forward data to splitter only, real actor control will need a Splitter with matching capabilities like AVMAHA or CUL
 
@@ -42,19 +42,20 @@ forward data to splitter only, real actor control will need a Splitter with matc
 * SWD_DimUp($id): Dim one Level(Step) Up
 * SWD_DimDown($id): Dim one Level(Step) down
 
-#### WS300PC
+### WS300PC
 Splittermodul for reading ELV WS300PC Datalogger. The Logger will be accessed via serial port.
 
-Supported Devices:
+##### Supported Devices:
 
 The logger supports 8 external T/H WS300 Series Sensor (S300TH,PS50), one KS300 Kombisensor (T/H, Wind, Rain)
 and the internal Indoor Sensor (T/H, Pressure, Forecast(Willi) Indicator).
 
-Data Handling: The Data will be presented as Weather Device instances
+##### Data Handling: 
+The Data will be presented as Weather Device instances
 
-Prefix: WS300PC_
+##### Prefix: WS300PC_
 
- Public Functions:
+##### Public Functions:
 * WS300PC_ReadCurrentRecord($id): read current sensor status, returns csv fragment. Is empty, an error occured
 * WS300PC_ReadNextRecord($id): Read next history record, returns csv fragment. If empty, is error or no more records are available
 Reading of all historic data at once in a loop will consume a lot of time and will usually exceed PHP max_execution_time. 
@@ -63,53 +64,53 @@ See ws300pc_history.pl for an idea running it outside using IPS_JSON Wrapper Api
         RainPerCount, Altitude and RecordInterval. After executing the Logger will go in Resync for 10min
 * WS300PC_GetVersion($id): Query and returns Logger firmware version
 
-#### WDE1
+### WDE1
 Splittermodul for reading ELV WDE1 Datalogger.  The Logger will be accessed via serial port.
 
-Supported Devices:
+##### Supported Devices:
 The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
 
-Data Handling: The Data will be presented as Weather Device instances
+##### Data Handling: 
+The Data will be presented as Weather Device instances
 
-Prefix: WDE1_
+##### Prefix: WDE1_
 
-#### FS20WUE
+### FS20WUE
 Splittermodul for reading ELV FS20WUE Receiver.  The Receiver will be accessed via serial port.
 
-Supported Devices:
-
+##### Supported Devices:
 * Weather: The Receiver supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
 * FS20: reading of ELV FS20 telegrams for Switch devices, but cannot control such device.
 
-Data Handling:
+##### Data Handling:
 * Weather: The Data will be presented as Weather Device instances
 * FS20: The Data will be presented as Switch instances. FS20 codes will be transformed
 
-Prefix: WUE_
+##### Prefix: WUE_
 
-#### AVMAHA
+### AVMAHA
 
 AVM AHA-API IPSymcon PHP Splitter Module Class
 
 read AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.)
 
-supported Devices: 
+##### supported Devices: 
 * Fritz Powerline 546E
 * Fritz Dect200(need FritzOS6.20+ for Temperature), 
 * Repeater 100 (need FritzOS6.50+)
 
-Data Handling:
+##### Data Handling:
 * Power measures will be displayed in an Energey Device instance
 * Temperature mesures will be displayed in a Weather Sensor Device instance
 * Switch status will be displayed in a Switch Device instance.
 
-Actions:
+##### Actions:
  * Switching of capable Devices like DECT!200 and Fritz!Powerline 546.
 Changes on the status will be transmitted to the connected actor
 
-Prefix: AHA_
+##### Prefix: AHA_
 
-#### TE923
+### TE923
 Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
  * This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
  The following simple get_data.cgi script is sufficient
@@ -137,14 +138,15 @@ Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) 
  fi
  </pre>
 
-Supported Devices:
+##### Supported Devices:
 5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
 
-Data Handling: The Data will be presented as Weather Device instances
+##### Data Handling: 
+The Data will be presented as Weather Device instances
 
-Prefix: TE923_
+##### Prefix: TE923_
 
-#### WS2500PC
+### WS2500PC
 Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary output
  * This requires a running webservice providing output from <a href="http://userpages.uni-koblenz.de/~krienke/ftp/unix/ws2500/">ws2500</a> binary.
    The following simple get_ws2500_data.cgi script to be placed in your webservers cgi-bin directory  along ws2500 binary is sufficient
@@ -172,43 +174,44 @@ Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary outp
  fi
  </pre>
 
-Supported Devices:
+##### Supported Devices:
 8 external Temp/Hum Sensors(1-8), Rain, Wind, UV(not seen yet),Light(Brighness)
 and the Indoor Sensor with Temp/Hum and Pressure
 
-Data Handling: The Data will be presented as Weather Device instances
+##### Data Handling: 
+The Data will be presented as Weather Device instances
 
-Prefix: WS2500PC_
+##### Prefix: WS2500PC_
 
-####NUT
+### NUT
 Splittermodul to query a NUT daemon for attached UPS/USV
 
-supported Devices:
+##### supported Devices:
 Any via NUT accessible UPS/USV.
 
-Data Handling:
+##### Data Handling:
 The Data will be presented as Energy Device instances
   The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
   For explanation see
  http://networkupstools.org/documentation.html
 
-Prefix: NUT_
+##### Prefix: NUT_
 
-####APCUPSD
+### APCUPSD
 Splittermodul to query an APCUPSD daemon for attached UPS/USV
 
-supported Devices:
+##### supported Devices:
 Any via APCUPSD accessible UPS/USV.
 
-Data Handling:
+##### Data Handling:
 The Data will be presented as Energy Device instances
   The DeviceID should be supplied via ups.serial field. The Status Variable refers to the ups.status field.
   For explanation see
  http://www.apcupsd.org/manual/manual.html
 
-Prefix: APCUPSD_
+##### Prefix: APCUPSD_
 
-#### CUL
+### CUL
 
 CUL IPSymcon PHP Splitter Module Class
 
@@ -217,40 +220,40 @@ These devices receives and decodes a lot of common smarthome protocols used by E
 supported Receivers may be connect to a serial port or client socket instance. You must create such one for
 your CUL instance as parent for yourself
 
+##### supported Devices:
 * Receivers: CUL,CUN,CUNO,COC
-* decoded Protocols
 
- ELV EM1000 Energy Messures EM-WZ, EM-GZ and EMEM
+##### decoded Protocols
 
- ELV FS20: Any TFK and Switch actor. Dimmer are implemented, but because lack of such device untested
+ * ELV EM1000: Energy Messures EM-WZ, EM-GZ and EMEM
+ * ELV FS20: Any TFK and Switch actor. Dimmer are implemented, but because lack of such device untested
+ * ELV HMS: HMS100T(also used as Emulation for connected 1Wire DS1820 Sensors), HMS100TF,HMS100-TFK ...
+ * ELV WS300: S300TH,PS50,KS300 Weather Sensors
+ * ELV FHT: TFK  Window opening Sensor only. FHT Heating Controls like FHT80b are not implemented!
+ * ELV ESA: some of the Energy Sensors. see source code. Untested!
 
- ELV HMS: HMS100T(also used as Emulation for connected 1Wire DS1820 Sensors), HMS100TF,HMS100-TFK ...
-
- ELV WS300: S300TH,PS50,KS300 Weather Sensors
- ELV FHT: TFK  Window opening Sensor only. FHT Heating Controls like FHT80b are not implemented!
- ELV ESA: some of the Energy Sensors. see source code. Untested!
-
-Data Handling:
+##### Data Handling:
 * Power measures will be displayed in an Energey Device instance
 * Temperature mesures will be displayed in a Weather Sensor Device instance
 * Switch status will be displayed in a Switch Device instance. Changes on the status will be transmitted to the connected actor
 
-Actions:
+##### Actions:
  * Switching of FS20 Devices.
  Changes of the status variable will be transmitted to the connected actor
 
-Prefix: CUL_
+##### Prefix: CUL_
 
 ### OWNet
 
 Splittermodule to query a 1Wire Device connected to server running OWServer with OWNet API
 
-Supported Devices:
+##### Supported Devices:
 * DS18B20, DS18S20, DS1820 temperature sensors
 
-Data Handling:
+##### Data Handling:
 The Temperature sensors will be presented as weather devices
 
+##### Prefix: OWN_
 For more details about OWServer see
 http://owfs.org/index.php?page=owserver
 
@@ -258,11 +261,11 @@ http://owfs.org/index.php?page=owserver
 
 Splittermodule to access Ezcontrol XS1 Homeautomation Receiver/Controler
 
-Supportet Devices:
+##### Supportet Devices:
 * XS1 may receive and control up to 128 Sensors metrics and 64 actors.
 Because lack of availablility, not all Actors and Sensors types are implemented. See sources.
 
-Data Handling:
+##### Data Handling:
 Data will be quieried via http JSON API. Unfortunately, the API will hide the physical device typ
 by mapping to internal generixc types. So far as possible we map these types to our own system.
 * Power Consumtion Sensors will be mapped to Energy Devices
@@ -274,7 +277,7 @@ Actions (if supported by the physical device)
  * Switching(On/Off) of attached actors.
  Changes of the status variable will be transmitted to the connected actor
 
-Prefix: XS1_
+##### Prefix: XS1_
 
 For a complete XS1 description see vendor documentation at http://www.ezcontrol.de/content/view/36/28/ (german)
 
@@ -282,20 +285,20 @@ For a complete XS1 description see vendor documentation at http://www.ezcontrol.
 
 IOModule to publish IPS Variable updates to an MQTT brocker
 
-The module allows subscriptions to IPS Variable update messages and forwards this as json record to 
+The module allows subscriptions of IPS Variable update messages and forwards this as json record to 
 a MQTT broker. An external client may subscribe to these broker messages and proceed further 
 
-Prefix: MQTTPUB_
+##### Prefix: MQTTPUB_
 
-Public Functions:
+##### Public Functions:
 * MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker 
 * MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
 * MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
 * MQTTPUB_Subscribe_All($id,$objectid): Subscribes all variable IDs below $objectid to IPS Messageloop
 * MQTTPUB_UnSubscribe_ALL($id,$objectid): UnSubscribes all variable IDs below $objectid from IPS Messageloop
 
-Topic:
-Topic may be configured with config dialog window. You may set template variables within definition
+##### MQTT Topic:
+The topic may be configured with config dialog window. You may set template variables within definition
  ```
  IPS/status/%varid%/%varident%/%path%
  ```
@@ -303,7 +306,7 @@ will result in
 ```
 IPS/status/42440/Watt/APCUPSD_Devices/Back-UPS_RS_900G/Watt
 ```
-Payload:
+##### Payload:
 Payload is a Json string with the following components:
 * Path: IPS tree of names from root to the variable
 * TS: Unix Timestamp message received in MQTTPUB module
@@ -322,10 +325,37 @@ Payload is a Json string with the following components:
  'VariableType': 2,
  'VariableUpdated': 1477132802}
  ```
-
-you can retrieve the data from MQTT with simple scripts. A sample python script 
+##### Sample consumer script
+you can retrieve the published data from MQTT with simple scripts. A sample python script 
 [ips_mqtt.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/MQTTPUB/ips_mqtt.py) 
 demonstrates how to write the payload into a mysql database
+
+How to use:
+ * create mysql account and database.
+ * Grant "Create table, Insert,update,delete,index " or simple "All" on <database>
+ * check if you can connect
+ * create a configuration file in YAML format somewhere with the needed credentials and adjust the values.
+   ```
+    mysql:
+        host: localhost
+        user: ips
+        passwd: secret
+        db: ips
+    mqtt:
+        host: localhost
+        port: 1883
+        topic: IPS/
+   ```
+
+ * now call the script
+   ```
+    python ips_mqtt.py <configfilename>
+   ```
+   or if the configfile is named ips_mqtt.yml and in the same directory
+   ```
+   python ips_mqtt.py
+   ```
+
 ### see also (in german)
 * WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
 * AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
