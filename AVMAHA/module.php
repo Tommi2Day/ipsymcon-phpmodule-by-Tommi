@@ -306,11 +306,11 @@ class AVMAHA extends T2DModule
     /**
      * Send Switch command to Device
      * @param string $ain Actor ID
-     * @param int $val new actor value
+     * @param bool $val new actor value
      * @return bool
      */
     //query actual state
-    public function SwitchMode(string $ain, int $val)
+    public function SwitchMode(string $ain, bool $val)
     {
         $state = $this->SwitchStatus($val);
         $ahaurl = $this->GetAHAURL();
