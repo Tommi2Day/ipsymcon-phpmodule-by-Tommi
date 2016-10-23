@@ -321,7 +321,7 @@ class MQTTPUB extends T2DModule
      * Subscribe variables by ID
      * @param int $id variable ID to subscribe
      */
-    public function Subscribe($id)
+    public function Subscribe(int $id)
     {
         $this->debug(__FUNCTION__,"entered for ID ".$id);
         $subs=$this->GetSubscriptions();
