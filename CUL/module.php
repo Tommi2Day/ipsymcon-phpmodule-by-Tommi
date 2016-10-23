@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.2
- * @date 2016-07-22
+ * @version 4.1.3
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -17,7 +17,7 @@ include_once(__DIR__ . "/../fhz_helper.php");
  *
  * CUL IPSymcon PHP Splitter Module Class
  * for busware.de CUL/CUN/COC receiver
- * tested with IPS 4.0 COC FW 1.61 (ESA,Dimmer not tested,FHT not implementd, only FHT-TFK)
+ * tested with IPS 4.1 COC FW 1.61 (ESA,Dimmer not tested,FHT not implementd, only FHT-TFK)
  *
  * protocol decodes translated from CULFW project
  * @see http://culfw.de/commandref.html
@@ -416,13 +416,15 @@ class CUL extends T2DModule
     }//function
 
     //------------------------------------------------------------------------------
-    //internal functions
+    // Public function
+    //------------------------------------------------------------------------------
+
     //------------------------------------------------------------------------------
     /**
-     * Main parsing function, will split into device specific parsing
+     * Main CUL data parsing function, will split into device specific parsing
      * @param $line
      */
-    private function Parse($line)
+    public function Parse($line)
     {
         $lmid = $this->GetIDForIdent('AuxMessage');
         //load error variable
@@ -488,6 +490,9 @@ class CUL extends T2DModule
     }//functio
 
     //------------------------------------------------------------------------------
+    //internal functions
+    //------------------------------------------------------------------------------
+
     /**
      * Parse EM1000 CUL Hex Record
      *
