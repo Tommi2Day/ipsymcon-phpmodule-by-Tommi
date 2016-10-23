@@ -422,9 +422,9 @@ class CUL extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Main CUL data parsing function, will split into device specific parsing
-     * @param $line
+     * @param string $line Received record from CUL
      */
-    public function Parse($line)
+    public function Parse(string $line)
     {
         $lmid = $this->GetIDForIdent('AuxMessage');
         //load error variable

@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.5
- * @date 2016-10-09
+ * @version 4.1.6
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -433,10 +433,10 @@ class APCUPSD extends T2DModule
     /**
      * parses an record string
      *
-     * @param $apc string
+     * @param string $apc
      * @return array
      */
-    private function Parse($apc)
+    private function Parse(string $apc)
     {
 
         $data = array();

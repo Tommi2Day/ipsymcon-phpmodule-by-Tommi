@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2016
- * @version 4.1.2
- * @date 2016-09-18
+ * @version 4.1.3
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -305,12 +305,12 @@ class AVMAHA extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Send Switch command to Device
-     * @param $ain String Actor ID
-     * @param $val mixed new actor value
+     * @param string $ain Actor ID
+     * @param int $val new actor value
      * @return bool
      */
     //query actual state
-    public function SwitchMode($ain, $val)
+    public function SwitchMode(string $ain, int $val)
     {
         $state = $this->SwitchStatus($val);
         $ahaurl = $this->GetAHAURL();

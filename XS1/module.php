@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2012-2016
- * @version 1.1
- * @date 2016-05-07
+ * @version 4.1.2
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -376,12 +376,12 @@ class XS1 extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Send Switch command to Device
-     * @param $dev String Actor ID
-     * @param $val mixed new actor value
+     * @param string $dev  Actor ID
+     * @param int $val new actor value
      * @return bool
      */
     //query actual state
-    public function SwitchMode($dev, $val)
+    public function SwitchMode(string $dev, int $val)
     {
         $this->debug(__FUNCTION__, "Actor $dev switch to $val");
         $state = $this->SwitchStatus($val);

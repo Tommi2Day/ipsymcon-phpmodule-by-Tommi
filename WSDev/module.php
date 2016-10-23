@@ -6,7 +6,7 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.9
+ * @version 4.1.9
  * @date 2016-06-15
  */
 

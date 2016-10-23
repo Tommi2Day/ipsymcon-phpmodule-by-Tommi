@@ -7,8 +7,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 4.1.1
- * @date 2016-10-22
+ * @version 4.1.2
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -346,7 +346,7 @@ class MQTTPUB extends T2DModule
      * Subscribe all variables below Parent ID
      * @param int $id subscribe all variables below this object id
      */
-    public function Subscribe_All($id)
+    public function Subscribe_All(int $id)
     {
         $this->debug(__FUNCTION__,"starting with ID ".$id);
         if (IPS_VariableExists($id)) {
@@ -368,7 +368,7 @@ class MQTTPUB extends T2DModule
      * UnSubscribe variables by ID
      * @param int $id variable ID to unsubscribe
      */
-    public function UnSubscribe($id)
+    public function UnSubscribe(int $id)
     {
 
         $this->debug(__FUNCTION__,"entered for ID ".$id);
@@ -389,7 +389,7 @@ class MQTTPUB extends T2DModule
      * UnSubscribe variables below parent ID
      * @param int $id Unsubscribe all below object id
      */
-    public function UnSubscribe_All($id)
+    public function UnSubscribe_All(int $id)
     {
         $this->debug(__FUNCTION__,"starting with ID ".$id);
         if (IPS_VariableExists($id)) {
@@ -409,7 +409,7 @@ class MQTTPUB extends T2DModule
      * Publish data of a variable to MQTT
      * @param int $id Variable ID
      */
-    public function Publish($id)
+    public function Publish(int $id)
     {
         $this->debug(__FUNCTION__,"entered for ID ".$id);
 

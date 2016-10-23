@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 4.1.1
- * @date 2016-07-22
+ * @version 4.1.2
+ * @date 2016-10-23
  */
 
 
@@ -387,10 +387,10 @@ class WDE1 extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Takes an input string and prepare it for parsing
-     * @param $inbuf
+     * @param string $inbuf Record from wde1, terminated by CRLF
      * @return string
      */
-    public function ReadRecord($inbuf)
+    public function ReadRecord(string $inbuf)
     {
         $this->debug(__FUNCTION__, 'ReadRecord:' . $inbuf);
         while (strlen($inbuf) > 0) {

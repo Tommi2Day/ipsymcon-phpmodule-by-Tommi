@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2016
- * @version 4.1.6
- * @date 2016-10-09
+ * @version 4.1.7
+ * @date 2016-10-23
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -485,10 +485,10 @@ class NUT extends T2DModule
     /**
      * parses an record string
      *
-     * @param $nut string
+     * @param string $nut
      * @return array
      */
-    private function Parse($nut)
+    private function Parse(string $nut)
     {
 
         $data = array();

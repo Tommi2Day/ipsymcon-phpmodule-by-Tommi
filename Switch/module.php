@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.6
- * @date 2016-04-08
+ * @version 4.1.7
+ * @date 2016-10-23
  */
 
 
@@ -365,7 +365,7 @@ class SwitchDev extends T2DModule
      * @param integer $percent Dimmer value percent
      * @return bool
      */
-    public function SetIntensity($percent)
+    public function SetIntensity(int $percent)
     {
         $res = false;
         $val = $percent;
@@ -423,7 +423,7 @@ class SwitchDev extends T2DModule
      * @param integer $duration Duration in sec
      * @return bool
      */
-    public function SetDuration($duration)
+    public function SetDuration(int $duration)
     {
         $res = false;
         $val = $duration;
@@ -481,7 +481,7 @@ class SwitchDev extends T2DModule
      * @param bool $val On or Off
      * @return bool
      */
-    public function SetSwitchMode($val)
+    public function SetSwitchMode(bool $val)
     {
         $res = false;
         $caps = $this->GetCaps();

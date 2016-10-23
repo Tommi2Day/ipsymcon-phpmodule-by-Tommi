@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 1.9
- * @date 2016-05-14
+ * @version 4.1.10
+ * @date 2016-10-23
  */
 
 /**
@@ -315,7 +315,7 @@ class WS300PC extends T2DModule
      * Set status variable RecCount
      * @param Integer $val
      */
-    public function SetHistoryCount($val)
+    public function SetHistoryCount(int $val)
     {
         $id = @$this->GetIDForIdent('RecCount');
         SetValueInteger($id, $val);
