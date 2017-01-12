@@ -5,9 +5,9 @@
  * Ezcontrol XS1 IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2012-2016
- * @version 4.1.2
- * @date 2016-10-23
+ * @copyright Thomas Dressler 2012-2017
+ * @version 4.1.3
+ * @date 2017-01-12
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -424,9 +424,16 @@ class XS1 extends T2DModule
         if ($last_id) $max=GetValueInteger($last_id);
 
 
-        $answer = chop(@file_get_contents($url));
-        $response = $http_response_header[0];
-        if ((preg_match("/200\s+OK$/", $response)) && (strlen($answer) > 0)) {
+        $answer = @file_get_contents($url);
+        if (! isset($http_response_header)) {
+            $response = error_get_last()['message'];
+
+        }else {
+            $response = $http_response_header[0];
+        }
+
+        if ((preg_match("/200\s+OK$/", $response)) && (strlen($answer) > 1)) {
+            $answer=chop($answer);
             $json=preg_replace('/list\((\{.*\})\)/s','\1',$answer);
             $data = json_decode($json);
             switch($branch) {
@@ -437,7 +444,7 @@ class XS1 extends T2DModule
             }
 
             if (!$data){
-                IPS_LogMessage("XS1","no sensor data returned");
+                IPS_LogMessage(__CLASS__, __FUNCTION__ . "::no sensor data returned");
                 return;
             }
             $n=0;
@@ -541,7 +548,9 @@ class XS1 extends T2DModule
             SetValueInteger($last_id,$max);
 
         } else {
-            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::Error Answer calling $url");
+            $this->debug( __FUNCTION__ , "Error: GetData with $url failed, Response: $response");
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::Error: GetData with $url failed, Response: $response");
+            $this->SetStatus(self::ST_ERROR);
         }
 
 
