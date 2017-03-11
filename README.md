@@ -337,7 +337,8 @@ How to use:
  * Grant "Create table, Insert,update,delete,index " or simple "All" on <database>
  * check if you can connect
  * create a configuration file in YAML format somewhere with the needed credentials and adjust the values.
-   ```yaml
+ 
+   ```
     mysql:
         host: localhost
         user: ips
@@ -348,6 +349,7 @@ How to use:
         port: 1883
         topic: IPS/status/#
    ```
+   
  * install required additional pip libraries:
   ```
   paho_mqtt
