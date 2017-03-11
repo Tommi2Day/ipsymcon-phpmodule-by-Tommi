@@ -294,8 +294,10 @@ a MQTT broker. An external client may subscribe to these broker messages and pro
 * MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker 
 * MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
 * MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
-* MQTTPUB_Subscribe_All($id,$objectid): Subscribes all variable IDs below $objectid to IPS Messageloop
-* MQTTPUB_UnSubscribe_ALL($id,$objectid): UnSubscribes all variable IDs below $objectid from IPS Messageloop
+* MQTTPUB_Subscribe_All($id,$objectid,$ident): Subscribes all variable IDs below $objectid to IPS Messageloop,
+optionally only thus equal which supplied ident
+* MQTTPUB_UnSubscribe_ALL($id,$objectid,$ident): UnSubscribes all variable IDs below $objectid from IPS Messageloop,
+optionally only thus equal which supplied ident 
 
 ##### MQTT Topic:
 The topic may be configured with config dialog window. You may set template variables within definition
@@ -327,7 +329,7 @@ Payload is a Json string with the following components:
  ```
 ##### Sample consumer script
 you can retrieve the published data from MQTT with simple scripts. A sample python script 
-[ips_mqtt.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.1/MQTTPUB/ips_mqtt.py) 
+[ips_mqtt2db.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.1/MQTTPUB/ips_mqtt2db.py) 
 demonstrates how to write the payload into a mysql database
 
 How to use:
@@ -344,16 +346,22 @@ How to use:
     mqtt:
         host: localhost
         port: 1883
-        topic: IPS/
+        topic: IPS/status/#
    ```
+ * install required xtra pip libraries:
+  ```
+  paho_mqtt
+  MySQL-python
+  PyYAML
+  ```
 
  * now call the script
    ```
-    python ips_mqtt.py <configfilename>
+    python ips_mqtt2db.py <configfilename>
    ```
    or if the configfile is named ips_mqtt.yml and in the same directory
    ```
-   python ips_mqtt.py
+   python ips_mqtt2db.py
    ```
 
 ### see also (in german)
