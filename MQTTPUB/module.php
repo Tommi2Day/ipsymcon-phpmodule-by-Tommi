@@ -6,9 +6,9 @@
  * uses IPSphpMQTT.php
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016
- * @version 4.1.2
- * @date 2016-10-23
+ * @copyright Thomas Dressler 2016-2017
+ * @version 4.1.3
+ * @date 2017-03-11
  */
 
 include_once(__DIR__ . "/../module_helper.php");
@@ -270,7 +270,8 @@ class MQTTPUB extends T2DModule
         $this->debug(__FUNCTION__, "TS: $TimeStamp SenderID ".$SenderID." with MessageID ".$Message." Data: ".print_r($Data, true));
         switch ($Message) {
             case self::VM_UPDATE:
-                $this->Publish($id,$Data);
+                //dont use supplied Data, query variable instead
+                $this->Publish($id);
                 break;
             case self::VM_DELETE:
                 $this->UnSubscribe($id);
@@ -293,6 +294,7 @@ class MQTTPUB extends T2DModule
                         IPS_LogMessage(__CLASS__,__FUNCTION__." Kernelmessage unhahndled, ID".$kmsg);
                         break;
                 }
+                break;
 
             default:
                 IPS_LogMessage(__CLASS__,__FUNCTION__." Unknown Message $Message");
@@ -345,19 +347,34 @@ class MQTTPUB extends T2DModule
     /**
      * Subscribe all variables below Parent ID
      * @param int $id subscribe all variables below this object id
+     * @param string $ident subscribe only if has the variable this ident, default all
      */
-    public function Subscribe_All(int $id)
+    public function Subscribe_All(int $id,string $ident=null)
     {
         $this->debug(__FUNCTION__,"starting with ID ".$id);
         if (IPS_VariableExists($id)) {
-            $this->Subscribe($id);
+            if ($ident) {
+                //ident parameter set, check if variable ident is equal
+                $obj=IPS_GetObject($id);
+                $i=$obj['ObjectIdent'];
+                $n=$obj['ObjectName'];
+                if (! $i) $i=$n;
+                if ($i === $ident)  {
+                    $this->Subscribe($id);
+                }else{
+                    $this->debug(__FUNCTION__," ID $id($i) not matching condition '$ident'");
+                }
+            }else{
+                //subscribe this id
+                $this->Subscribe($id);
+            }
         }
 
         if (IPS_HasChildren($id)) {
             $childs=@IPS_GetChildrenIDs($id);
             foreach ($childs as $child ) {
                 $this->debug(__FUNCTION__,"found Child ID ".$child);
-                $this->Subscribe_All($child); //rekursiv call
+                $this->Subscribe_All($child,$ident); //rekursiv call
             }
 
         }
@@ -388,18 +405,33 @@ class MQTTPUB extends T2DModule
     /**
      * UnSubscribe variables below parent ID
      * @param int $id Unsubscribe all below object id
+     * @param string $ident subscribe only if has the variable this name, default all
      */
-    public function UnSubscribe_All(int $id)
+    public function UnSubscribe_All(int $id, string $ident=null)
     {
         $this->debug(__FUNCTION__,"starting with ID ".$id);
         if (IPS_VariableExists($id)) {
-            $this->UnSubscribe($id);
+            if ($ident) {
+                //ident parameter set, check if variable ident is equal
+                $obj=IPS_GetObject($id);
+                $i=$obj['ObjectIdent'];
+                $n=$obj['ObjectName'];
+                if (! $i) $i=$n;
+                if ($i === $ident)  {
+                    $this->UnSubscribe($id);
+                }else{
+                    $this->debug(__FUNCTION__," ID $id($i) not matching condition '$ident'");
+                }
+            }else {
+                //subscribe this id
+                $this->UnSubscribe($id);
+            }
         }
         if (IPS_HasChildren($id)) {
             $childs=@IPS_GetChildrenIDs($id);
             foreach ($childs as $child ) {
                 $this->debug(__FUNCTION__," found Child ID".$child);
-                $this->UnSubscribe_All($child); //rekursiv call
+                $this->UnSubscribe_All($child,$ident); //rekursiv call
             }
         }
         $this->debug(__FUNCTION__,"leaved");
@@ -408,6 +440,7 @@ class MQTTPUB extends T2DModule
     /**
      * Publish data of a variable to MQTT
      * @param int $id Variable ID
+     *
      */
     public function Publish(int $id)
     {
