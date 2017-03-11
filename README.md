@@ -294,7 +294,7 @@ a MQTT broker. An external client may subscribe to these broker messages and pro
 * MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker 
 * MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
 * MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
-* MQTTPUB_Subscribe_All($id,$objectid,$ident=0): Subscribes all variable IDs below $objectid to IPS Messageloop,
+* MQTTPUB_Subscribe_All($id,$objectid,$ident=null): Subscribes all variable IDs below $objectid to IPS Messageloop,
 optionally only thus equal which supplied ident
 * MQTTPUB_UnSubscribe_ALL($id,$objectid,$ident=null): UnSubscribes all variable IDs below $objectid from IPS Messageloop,
 optionally only thus equal which supplied ident 
@@ -337,7 +337,7 @@ How to use:
  * Grant "Create table, Insert,update,delete,index " or simple "All" on <database>
  * check if you can connect
  * create a configuration file in YAML format somewhere with the needed credentials and adjust the values.
-   ```
+   ```yaml
     mysql:
         host: localhost
         user: ips
