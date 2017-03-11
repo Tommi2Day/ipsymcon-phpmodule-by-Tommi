@@ -520,8 +520,10 @@ IPS_SetProperty only:
  - \b MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker
  - \b MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
  - \b MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
- - \b MQTTPUB_Subscribe_All($id,$objectid): Subscribes all variable IDs below $objectid to IPS Messageloop
- - \b MQTTPUB_UnSubscribe_ALL($id,$objectid): UnSubscribes all variable IDs below $objectid from IPS Messageloop
+ - \b MQTTPUB_Subscribe_All($id,$objectid,$ident=null): Subscribes all variable IDs below $objectid to IPS Messageloop,
+optionally only thus equal which supplied ident
+ - \b MQTTPUB_UnSubscribe_ALL($id,$objectid,$ident=null): UnSubscribes all variable IDs below $objectid from IPS Messageloop,
+optionally only thus equal which supplied ident
 
 @par Data Handling
 
@@ -555,7 +557,7 @@ IPS/status/42440/Watt/APCUPSD_Devices/Back-UPS_RS_900G/Watt
     'VariableUpdated': 1477132802}
     @endcode
 
-A sample consumer script ips_mqtt.py for logging into a mysql database is provided
+A sample consumer script ips_mqtt2db.py for logging into a mysql database is provided
 
 @section adddoc additional documentation in german
 

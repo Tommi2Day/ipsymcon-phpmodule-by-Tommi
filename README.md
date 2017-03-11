@@ -294,9 +294,9 @@ a MQTT broker. An external client may subscribe to these broker messages and pro
 * MQTTPUP_Publish($id,$varid): trigger immediately publishing variable $varid to the broker 
 * MQTTPUB_Subscribe($id,$varid): Subscribes VM_UPDATE messages for variable $varid on IPS Messageloop
 * MQTTPUB_UnSubscribe($id,$varid): UnSubscribes VM_UPDATE messages for variable $varid from IPS Messageloop
-* MQTTPUB_Subscribe_All($id,$objectid,$ident): Subscribes all variable IDs below $objectid to IPS Messageloop,
+* MQTTPUB_Subscribe_All($id,$objectid,$ident=0): Subscribes all variable IDs below $objectid to IPS Messageloop,
 optionally only thus equal which supplied ident
-* MQTTPUB_UnSubscribe_ALL($id,$objectid,$ident): UnSubscribes all variable IDs below $objectid from IPS Messageloop,
+* MQTTPUB_UnSubscribe_ALL($id,$objectid,$ident=null): UnSubscribes all variable IDs below $objectid from IPS Messageloop,
 optionally only thus equal which supplied ident 
 
 ##### MQTT Topic:
@@ -348,7 +348,7 @@ How to use:
         port: 1883
         topic: IPS/status/#
    ```
- * install required xtra pip libraries:
+ * install required additional pip libraries:
   ```
   paho_mqtt
   MySQL-python
@@ -359,7 +359,7 @@ How to use:
    ```
     python ips_mqtt2db.py <configfilename>
    ```
-   or if the configfile is named ips_mqtt.yml and in the same directory
+   or if the configfile is named ips_mqtt2db.yml and in the same directory
    ```
    python ips_mqtt2db.py
    ```
