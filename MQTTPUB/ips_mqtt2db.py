@@ -6,9 +6,9 @@
 # to run adjust credentials first
 #
 # @author
-# @date 2016-10-22
-# @version 0.1
-# @copyright Thomas Dressler 2016
+# @date 2017-03-11
+# @version 0.2
+# @copyright Thomas Dressler 2016-2017
 #
 # How to use:
 # - create mysql account and database.
@@ -24,29 +24,35 @@
 #mqtt:
 #  host: localhost
 #  port: 1883
-#  topic: IPS/
+#  topic: IPS/status/#
 #   @endcode
 #
+# - install required xtra pip libraries:
+#   @code
+#  paho_mqtt
+#  MySQL-python
+#  PyYAML
+#   @endcode
+
 # - now call the script
 #   @code
-# python ips_mqtt.py <configfilename>
+# python ips_mqtt2db.py <configfilename>
 #   @endcode
-#   or if the configfile is named ips_mqtt.yml and in the same directory
+#   or if the configfile is named ips_mqtt2db.yml and in the same directory
 #  @code
-# python ips_mqtt.py
+# python ips_mqtt2db.py
 #  @endcode
 #
 #
 # Script Content:
 #
-# @include ips_mqtt.py
+# @include ips_mqtt2db.py
 
 import sys
 import warnings
 import paho.mqtt.client as mqtt
-#import MySQLdb as mysql #python2
-import pymysql as mysql #python3
-
+import MySQLdb as mysql #python2
+#import pymysql as mysql #python3
 import json
 import pprint
 import datetime
@@ -88,7 +94,7 @@ def read_config():
 # @param flags
 # @param rc
 def on_connect(client, userdata, flags, rc):
-    client.subscribe(base_topic+"#")
+    client.subscribe(base_topic)
     print ("subscribed to '%s' on '%s:%s' " % ( base_topic,mqttcfg['host'], mqttcfg['port']))
 
 ##
@@ -146,7 +152,7 @@ def on_message(client, userdata, msg):
             pass
 
 # mysql credentials
-cfg=read_config();
+cfg=read_config()
 mysqlcfg=cfg['mysql']
 # mqtt credentials
 mqttcfg=cfg['mqtt']
