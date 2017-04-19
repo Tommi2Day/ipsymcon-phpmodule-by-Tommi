@@ -5,9 +5,9 @@
  * WDE1 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2016
- * @version 4.1.2
- * @date 2016-10-23
+ * @copyright Thomas Dressler 2009-2017
+ * @version 4.1.3
+ * @date 2017-04-19
  */
 
 
@@ -393,33 +393,31 @@ class WDE1 extends T2DModule
     public function ReadRecord(string $inbuf)
     {
         $this->debug(__FUNCTION__, 'ReadRecord:' . $inbuf);
+        $r=0;
         while (strlen($inbuf) > 0) {
             $pos = strpos($inbuf, chr(13));
-            if (!$pos) {
-                return $inbuf;
+            if ($pos===false) {
+                break;
             }
             $data = substr($inbuf, 0, $pos);
-            $inbuf = substr($inbuf, $pos);
-            if (preg_match('/\$([0-9,-;]+0)$/', $data, $records)) {
-                $r = count($records);
-                $this->debug(__FUNCTION__, "Found $r records");
-                for ($i = 1; $i < $r; $i++) { //matches starting with 1
-                    $data = $records[$i];
-                    $data = str_replace(',', '.', $data);
-                    $wde1_data = $this->parse_weather($data);
-                    //if result
-                    if ($wde1_data) {
-                        $this->SendWSData($wde1_data);
-                        $this->log_weather($wde1_data);
-
-                    } else {
-                        $this->debug(__FUNCTION__, "No wsdata returned for $data");
-                    }//if wsdata
-                }//for
+            $inbuf = substr($inbuf, $pos+1);
+            if (preg_match('/\$([0-9,-;]+)$/', $data, $records)) {
+                $r++;
+                $data = $records[1]; //[1]=matched value, only this one expected
+                $data = str_replace(',', '.', $data);
+                $wde1_data = $this->parse_weather($data);
+                //if result
+                if ($wde1_data) {
+                    $this->SendWSData($wde1_data);
+                    $this->log_weather($wde1_data);
+                } else {
+                    $this->debug(__FUNCTION__, "No wsdata returned for $data");
+                }//if wsdata
             } else {
-                $this->debug(__FUNCTION__, "No match in inbuf");
+                $this->debug(__FUNCTION__, "No match in inbuf,try next");
             }//if pregmatch
         }//while
+        $this->debug(__FUNCTION__, "Found $r records");
         return $inbuf;
     }//function
 
