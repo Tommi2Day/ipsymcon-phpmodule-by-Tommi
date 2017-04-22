@@ -5,9 +5,9 @@
  * Doxygen main page
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016
- * @version 4.1.3
- * @date 2016-10-22
+ * @copyright Thomas Dressler 2016-2017
+ * @version 4.2.1
+ * @date 2017-04-22
  */
 /**
 @mainpage Index
@@ -19,12 +19,12 @@ This is a Library of PHP Modules for the home automation software <a href="https
 
 @section Installation
 @par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git
-@par Branch: 4.1
+@par Branch: 4.2
 
  - Within Symcon Konsole go to "Kern Instancen" ->Modules
  - Press "Hinzufügen" Button
  - Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
- - Click on "Edit" Icon and change Branch(Zweig) to "4.1"
+ - Click on "Edit" Icon and change Branch(Zweig) to "4.2"
 
 @section Devices
 
@@ -170,6 +170,9 @@ WS300PC_WriteConfig($id);
 @subsection WDE1
 
 WDE1 Splittermodul for reading ELV %WDE1 Datalogger.  The Logger will be accessed via serial port.
+
+@warning This module is deprecated/unsupported as of 2017. I dont have this anymore.
+
 
 @par "Supported Devices:"
 The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
@@ -473,6 +476,10 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 @subsection XS1
 
 XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controler
+
+@warning This module is deprecated/unsupported as of 2017. I dont have this anymore.
+
+
 @par Prefix: XS1_
 
 @par Properties

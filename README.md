@@ -5,7 +5,7 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 
 
 ### Requirements:
-* Symcon (https://www.symcon.de/en/) Version 4.1
+* Symcon (https://www.symcon.de/en/) Version 4.2
 
 ### Installation
 * Within Symcon Konsole go to "Kern Instancen" ->Modules
@@ -15,7 +15,7 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 
 ### Modules provides in this library:
 
- ![Module Hierarchy](doc/images/PHPModules.png)
+ ![Module Hierarchy](docs/images/PHPModules.png)
 
 
 ### Weather Device
@@ -66,6 +66,10 @@ See ws300pc_history.pl for an idea running it outside using IPS_JSON Wrapper Api
 
 ### WDE1
 Splittermodul for reading ELV WDE1 Datalogger.  The Logger will be accessed via serial port.
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2017. I dont have this anymore.
+</span>
 
 ##### Supported Devices:
 The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
@@ -261,6 +265,10 @@ http://owfs.org/index.php?page=owserver
 
 Splittermodule to access Ezcontrol XS1 Homeautomation Receiver/Controler
 
+<span style="color:red">
+This module is deprecated/unsupported as of 2017. I dont have this anymore.
+</span>
+
 ##### Supportet Devices:
 * XS1 may receive and control up to 128 Sensors metrics and 64 actors.
 Because lack of availablility, not all Actors and Sensors types are implemented. See sources.
@@ -329,7 +337,7 @@ Payload is a Json string with the following components:
  ```
 ##### Sample consumer script
 you can retrieve the published data from MQTT with simple scripts. A sample python script 
-[ips_mqtt2db.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.1/MQTTPUB/ips_mqtt2db.py) 
+[ips_mqtt2db.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.2/MQTTPUB/ips_mqtt2db.py) 
 demonstrates how to write the payload into a mysql database
 
 How to use:
