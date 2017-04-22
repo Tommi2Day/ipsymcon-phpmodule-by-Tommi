@@ -247,6 +247,18 @@ your CUL instance as parent for yourself
 
 ##### Prefix: CUL_
 
+##### IPS Device module learning
+
+Its important for the proper creation of IPS devices these must be received from the CUx Splitter
+instead of manually created. Only this ensures a set of valid parameters. As example a FS20 dimming device must 
+be created by receiving a dimming command apply the dimming functions, otherwise it will left as a switch.
+You may use your remote control or a learning procedure for this. as an alternative, you may create a valid CUL
+response string and send this manually to the CUL splitter. This procedure is described in this forum entry 
+https://www.symcon.de/forum/threads/31352-neue-PHP-Module-als-Ersatz-meiner-Delphi-Module?p=303129#post303129 (in german)
+
+see http://culfw.de/commandref.html for valid CUL response strings
+
+
 ### OWNet
 
 Splittermodule to query a 1Wire Device connected to server running OWServer with OWNet API
