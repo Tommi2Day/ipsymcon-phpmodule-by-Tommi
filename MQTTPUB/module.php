@@ -7,11 +7,11 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016-2017
- * @version 4.1.3
- * @date 2017-03-11
+ * @version 4.2.1
+ * @date 2017-04-22
  */
 
-include_once(__DIR__ . "/../module_helper.php");
+include_once(__DIR__ . "/../libs/module_helper.php");
 include_once(__DIR__ . "/IPSphpMQTT.php");
 
 /** @class MQTTPUB

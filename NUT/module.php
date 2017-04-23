@@ -5,12 +5,12 @@
  * NUT Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2016
- * @version 4.1.7
- * @date 2016-10-23
+ * @copyright Thomas Dressler 2011-2017
+ * @version 4.2.1
+ * @date 2017-04-22
  */
 
-include_once(__DIR__ . "/../module_helper.php");
+include_once(__DIR__ . "/../libs/module_helper.php");
 
 /** @class NUT
  *

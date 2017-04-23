@@ -6,11 +6,11 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2016
- * @version 4.1.2
- * @date 2016-05-29
+ ** @version 4.2.1
+ * @date 2017-04-22
  */
 
-include_once(__DIR__ . "/../module_helper.php");
+include_once(__DIR__ . "/../libs/module_helper.php");
 
 /** @class TE923
  *
