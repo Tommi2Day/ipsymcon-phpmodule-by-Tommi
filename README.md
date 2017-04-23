@@ -11,7 +11,7 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 * Within Symcon Konsole go to "Kern Instancen" ->Modules
 * Press "Hinzufügen" Button
 * Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
-* Click on "Edit" Icon and change Branch(Zweig) to "4.1"
+* Click on "Edit" Icon and change Branch(Zweig) to "4.2"
 
 ### Modules provides in this library:
 
