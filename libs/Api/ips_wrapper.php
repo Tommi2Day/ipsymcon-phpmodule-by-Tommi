@@ -10,8 +10,8 @@
  * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well.
  * @copyright Thomas Dressler 2013-2016
  * @version 0.7 (gen_ips_wrapper.php)
- * @version 4.00 (IPSymcon)
- * @date 2016-05-14 (generated)
+ * @version 4.20 (IPSymcon)
+ * @date 2017-04-25 (generated)
  * @see http://www.tdressler.net/ipsymcon/funktionsliste.html
  * @see http://www.tdressler.net/ipsymcon/jsonapi.html
  * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
@@ -251,127 +251,6 @@ function AC_SetLoggingStatus( $InstanceID,$VariableID,$Active ){
 }
 
 /**
-* AESGI_RequestCurrentLimit
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestCurrentLimit( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestCurrentLimit( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_RequestErrors
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestErrors( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestErrors( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_RequestPowerReduction
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestPowerReduction( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestPowerReduction( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_RequestRunMode
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestRunMode( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestRunMode( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_RequestStatus
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestStatus( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestStatus( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_RequestType
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function AESGI_RequestType( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_RequestType( $InstanceID );
-	return $result;
-}
-
-/**
-* AESGI_SetCurrentLimit
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param float $Limit
-*/
-
-function AESGI_SetCurrentLimit( $InstanceID,$Limit ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_SetCurrentLimit( $InstanceID,$Limit );
-	return $result;
-}
-
-/**
-* AESGI_SetPowerReduction
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $Percent
-*/
-
-function AESGI_SetPowerReduction( $InstanceID,$Percent ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_SetPowerReduction( $InstanceID,$Percent );
-	return $result;
-}
-
-/**
-* AESGI_SetRunMode
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $Mode
-* @param float $PowerLimit
-*/
-
-function AESGI_SetRunMode( $InstanceID,$Mode,$PowerLimit ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->AESGI_SetRunMode( $InstanceID,$Mode,$PowerLimit );
-	return $result;
-}
-
-/**
 * AHA_Query
 * 
 * @returns variant
@@ -389,8 +268,8 @@ function AHA_Query( $InstanceID ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $ain
-* @param variant $val
+* @param string $ain
+* @param boolean $val
 */
 
 function AHA_SwitchMode( $InstanceID,$ain,$val ){
@@ -468,6 +347,59 @@ function ALL_UpdateValues( $InstanceID ){
 }
 
 /**
+* APCUPSD_Query
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function APCUPSD_Query( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->APCUPSD_Query( $InstanceID );
+	return $result;
+}
+
+/**
+* APCUPSD_SendDataToChildren
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param variant $Data
+*/
+
+function APCUPSD_SendDataToChildren( $InstanceID,$Data ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->APCUPSD_SendDataToChildren( $InstanceID,$Data );
+	return $result;
+}
+
+/**
+* APCUPSD_UpdateEvent
+* 
+* @returns variant
+* @param integer $InstanceID
+*/
+
+function APCUPSD_UpdateEvent( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->APCUPSD_UpdateEvent( $InstanceID );
+	return $result;
+}
+
+/**
+* CC_ActivateServer
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function CC_ActivateServer( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->CC_ActivateServer( $InstanceID );
+	return $result;
+}
+
+/**
 * CC_GetURL
 * 
 * @returns string
@@ -477,6 +409,19 @@ function ALL_UpdateValues( $InstanceID ){
 function CC_GetURL( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->CC_GetURL( $InstanceID );
+	return $result;
+}
+
+/**
+* CMI_UpdateValues
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function CMI_UpdateValues( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->CMI_UpdateValues( $InstanceID );
 	return $result;
 }
 
@@ -491,6 +436,20 @@ function CC_GetURL( $InstanceID ){
 function CSCK_SendText( $InstanceID,$Text ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->CSCK_SendText( $InstanceID,$Text );
+	return $result;
+}
+
+/**
+* CUL_Parse
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param string $line
+*/
+
+function CUL_Parse( $InstanceID,$line ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->CUL_Parse( $InstanceID,$line );
 	return $result;
 }
 
@@ -697,6 +656,32 @@ function DS_DimSet( $InstanceID,$Intensity ){
 function DS_GetKnownDevices( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->DS_GetKnownDevices( $InstanceID );
+	return $result;
+}
+
+/**
+* DS_RequestBinaryInputs
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function DS_RequestBinaryInputs( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->DS_RequestBinaryInputs( $InstanceID );
+	return $result;
+}
+
+/**
+* DS_RequestSensorInputs
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function DS_RequestSensorInputs( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->DS_RequestSensorInputs( $InstanceID );
 	return $result;
 }
 
@@ -1343,6 +1328,19 @@ function ENO_SendLearn( $InstanceID ){
 }
 
 /**
+* ENO_SendLearnEx
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function ENO_SendLearnEx( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ENO_SendLearnEx( $InstanceID );
+	return $result;
+}
+
+/**
 * ENO_SendRO
 * 
 * @returns boolean
@@ -1456,20 +1454,6 @@ function ENO_SetLockRoomOccupancy( $InstanceID,$Locked ){
 }
 
 /**
-* ENO_SetMeasureTemperature
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param boolean $Active
-*/
-
-function ENO_SetMeasureTemperature( $InstanceID,$Active ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ENO_SetMeasureTemperature( $InstanceID,$Active );
-	return $result;
-}
-
-/**
 * ENO_SetMode
 * 
 * @returns boolean
@@ -1553,6 +1537,20 @@ function ENO_ShutterMoveDown( $InstanceID ){
 }
 
 /**
+* ENO_ShutterMoveDownEx
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Seconds
+*/
+
+function ENO_ShutterMoveDownEx( $InstanceID,$Seconds ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ENO_ShutterMoveDownEx( $InstanceID,$Seconds );
+	return $result;
+}
+
+/**
 * ENO_ShutterMoveUp
 * 
 * @returns boolean
@@ -1562,6 +1560,46 @@ function ENO_ShutterMoveDown( $InstanceID ){
 function ENO_ShutterMoveUp( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ENO_ShutterMoveUp( $InstanceID );
+	return $result;
+}
+
+/**
+* ENO_ShutterMoveUpEx
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Seconds
+*/
+
+function ENO_ShutterMoveUpEx( $InstanceID,$Seconds ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ENO_ShutterMoveUpEx( $InstanceID,$Seconds );
+	return $result;
+}
+
+/**
+* ENO_ShutterStepDown
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function ENO_ShutterStepDown( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ENO_ShutterStepDown( $InstanceID );
+	return $result;
+}
+
+/**
+* ENO_ShutterStepUp
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function ENO_ShutterStepUp( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ENO_ShutterStepUp( $InstanceID );
 	return $result;
 }
 
@@ -1955,7 +1993,7 @@ function HM_GetKnownDevices( $InstanceID ){
 * @returns boolean
 * @param integer $InstanceID
 * @param integer $Protocol
-*   enum[0=hmpRadio, 1=hmpWired]
+*   enum[0=hmpRadio, 1=hmpWired, 2=hmpIP]
 */
 
 function HM_LoadDevices( $InstanceID,$Protocol ){
@@ -2359,20 +2397,6 @@ function IPS_DeleteVariableProfile( $ProfileName ){
 }
 
 /**
-* IPS_DisableAction
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $VariableIdent
-*/
-
-function IPS_DisableAction( $InstanceID,$VariableIdent ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_DisableAction( $InstanceID,$VariableIdent );
-	return $result;
-}
-
-/**
 * IPS_DisableDebug
 * 
 * @returns boolean
@@ -2395,20 +2419,6 @@ function IPS_DisableDebug( $ID ){
 function IPS_DisconnectInstance( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->IPS_DisconnectInstance( $InstanceID );
-	return $result;
-}
-
-/**
-* IPS_EnableAction
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $VariableIdent
-*/
-
-function IPS_EnableAction( $InstanceID,$VariableIdent ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_EnableAction( $InstanceID,$VariableIdent );
 	return $result;
 }
 
@@ -3033,6 +3043,30 @@ function IPS_GetLiveConsoleFile(  ){
 }
 
 /**
+* IPS_GetLiveDashboardCRC
+* 
+* @returns string
+*/
+
+function IPS_GetLiveDashboardCRC(  ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->IPS_GetLiveDashboardCRC(  );
+	return $result;
+}
+
+/**
+* IPS_GetLiveDashboardFile
+* 
+* @returns string
+*/
+
+function IPS_GetLiveDashboardFile(  ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->IPS_GetLiveDashboardFile(  );
+	return $result;
+}
+
+/**
 * IPS_GetLiveUpdateVersion
 * 
 * @returns string
@@ -3449,6 +3483,18 @@ function IPS_GetScriptTimer( $ScriptID ){
 }
 
 /**
+* IPS_GetSecurityMode
+* 
+* @returns integer
+*/
+
+function IPS_GetSecurityMode(  ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->IPS_GetSecurityMode(  );
+	return $result;
+}
+
+/**
 * IPS_GetSnapshot
 * 
 * @returns array
@@ -3777,66 +3823,6 @@ function IPS_ObjectExists( $ID ){
 }
 
 /**
-* IPS_RegisterPropertyBoolean
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $Name
-* @param boolean $DefaultValue
-*/
-
-function IPS_RegisterPropertyBoolean( $InstanceID,$Name,$DefaultValue ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_RegisterPropertyBoolean( $InstanceID,$Name,$DefaultValue );
-	return $result;
-}
-
-/**
-* IPS_RegisterPropertyFloat
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $Name
-* @param float $DefaultValue
-*/
-
-function IPS_RegisterPropertyFloat( $InstanceID,$Name,$DefaultValue ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_RegisterPropertyFloat( $InstanceID,$Name,$DefaultValue );
-	return $result;
-}
-
-/**
-* IPS_RegisterPropertyInteger
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $Name
-* @param integer $DefaultValue
-*/
-
-function IPS_RegisterPropertyInteger( $InstanceID,$Name,$DefaultValue ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_RegisterPropertyInteger( $InstanceID,$Name,$DefaultValue );
-	return $result;
-}
-
-/**
-* IPS_RegisterPropertyString
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $Name
-* @param string $DefaultValue
-*/
-
-function IPS_RegisterPropertyString( $InstanceID,$Name,$DefaultValue ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_RegisterPropertyString( $InstanceID,$Name,$DefaultValue );
-	return $result;
-}
-
-/**
 * IPS_RequestAction
 * 
 * @returns boolean
@@ -4022,34 +4008,6 @@ function IPS_SemaphoreEnter( $Name,$Milliseconds ){
 function IPS_SemaphoreLeave( $Name ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->IPS_SemaphoreLeave( $Name );
-	return $result;
-}
-
-/**
-* IPS_SendDataToChildren
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param string $JSONData
-*/
-
-function IPS_SendDataToChildren( $InstanceID,$JSONData ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_SendDataToChildren( $InstanceID,$JSONData );
-	return $result;
-}
-
-/**
-* IPS_SendDataToParent
-* 
-* @returns string
-* @param integer $InstanceID
-* @param string $JSONData
-*/
-
-function IPS_SendDataToParent( $InstanceID,$JSONData ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_SendDataToParent( $InstanceID,$JSONData );
 	return $result;
 }
 
@@ -4390,20 +4348,6 @@ function IPS_SetInfo( $ID,$Info ){
 }
 
 /**
-* IPS_SetInstanceStatus
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $Status
-*/
-
-function IPS_SetInstanceStatus( $InstanceID,$Status ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->IPS_SetInstanceStatus( $InstanceID,$Status );
-	return $result;
-}
-
-/**
 * IPS_SetLicense
 * 
 * @returns boolean
@@ -4584,6 +4528,20 @@ function IPS_SetScriptFile( $ScriptID,$FilePath ){
 function IPS_SetScriptTimer( $ScriptID,$Interval ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->IPS_SetScriptTimer( $ScriptID,$Interval );
+	return $result;
+}
+
+/**
+* IPS_SetSecurity
+* 
+* @returns boolean
+* @param integer $Mode
+* @param string $Password
+*/
+
+function IPS_SetSecurity( $Mode,$Password ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->IPS_SetSecurity( $Mode,$Password );
 	return $result;
 }
 
@@ -5195,6 +5153,20 @@ function LCN_ShiftTargetValue( $InstanceID,$Target,$RelativeValue ){
 }
 
 /**
+* LCN_ShutterMove
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Position
+*/
+
+function LCN_ShutterMove( $InstanceID,$Position ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->LCN_ShutterMove( $InstanceID,$Position );
+	return $result;
+}
+
+/**
 * LCN_ShutterMoveDown
 * 
 * @returns boolean
@@ -5405,6 +5377,76 @@ function MC_GetModuleRepositoryInfo( $InstanceID,$Module ){
 }
 
 /**
+* MC_GetModuleRepositoryLocalBranchList
+* 
+* @returns array
+* @param integer $InstanceID
+* @param string $Module
+*/
+
+function MC_GetModuleRepositoryLocalBranchList( $InstanceID,$Module ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_GetModuleRepositoryLocalBranchList( $InstanceID,$Module );
+	return $result;
+}
+
+/**
+* MC_GetModuleRepositoryRemoteBranchList
+* 
+* @returns array
+* @param integer $InstanceID
+* @param string $Module
+*/
+
+function MC_GetModuleRepositoryRemoteBranchList( $InstanceID,$Module ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_GetModuleRepositoryRemoteBranchList( $InstanceID,$Module );
+	return $result;
+}
+
+/**
+* MC_IsModuleUpdateAvailable
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
+*/
+
+function MC_IsModuleUpdateAvailable( $InstanceID,$Module ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_IsModuleUpdateAvailable( $InstanceID,$Module );
+	return $result;
+}
+
+/**
+* MC_IsModuleValid
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
+*/
+
+function MC_IsModuleValid( $InstanceID,$Module ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_IsModuleValid( $InstanceID,$Module );
+	return $result;
+}
+
+/**
+* MC_ReloadModule
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
+*/
+
+function MC_ReloadModule( $InstanceID,$Module ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_ReloadModule( $InstanceID,$Module );
+	return $result;
+}
+
+/**
 * MC_UpdateModule
 * 
 * @returns boolean
@@ -5415,6 +5457,107 @@ function MC_GetModuleRepositoryInfo( $InstanceID,$Module ){
 function MC_UpdateModule( $InstanceID,$Module ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->MC_UpdateModule( $InstanceID,$Module );
+	return $result;
+}
+
+/**
+* MC_UpdateModuleRepositoryBranch
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Module
+* @param string $Branch
+*/
+
+function MC_UpdateModuleRepositoryBranch( $InstanceID,$Module,$Branch ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MC_UpdateModuleRepositoryBranch( $InstanceID,$Module,$Branch );
+	return $result;
+}
+
+/**
+* MQTTPUB_Publish
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param integer $id
+*/
+
+function MQTTPUB_Publish( $InstanceID,$id ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MQTTPUB_Publish( $InstanceID,$id );
+	return $result;
+}
+
+/**
+* MQTTPUB_Subscribe
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param integer $id
+*/
+
+function MQTTPUB_Subscribe( $InstanceID,$id ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MQTTPUB_Subscribe( $InstanceID,$id );
+	return $result;
+}
+
+/**
+* MQTTPUB_Subscribe_All
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param integer $id
+* @param string $ident
+*/
+
+function MQTTPUB_Subscribe_All( $InstanceID,$id,$ident ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MQTTPUB_Subscribe_All( $InstanceID,$id,$ident );
+	return $result;
+}
+
+/**
+* MQTTPUB_UnSubscribe
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param integer $id
+*/
+
+function MQTTPUB_UnSubscribe( $InstanceID,$id ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MQTTPUB_UnSubscribe( $InstanceID,$id );
+	return $result;
+}
+
+/**
+* MQTTPUB_UnSubscribe_All
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param integer $id
+* @param string $ident
+*/
+
+function MQTTPUB_UnSubscribe_All( $InstanceID,$id,$ident ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MQTTPUB_UnSubscribe_All( $InstanceID,$id,$ident );
+	return $result;
+}
+
+/**
+* MSCK_SendText
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
+*/
+
+function MSCK_SendText( $InstanceID,$Text ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->MSCK_SendText( $InstanceID,$Text );
 	return $result;
 }
 
@@ -5884,6 +6027,23 @@ function NC_GetDevices( $InstanceID ){
 }
 
 /**
+* NC_PushNotification
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $WebFrontConfiguratorID
+* @param string $Title
+* @param string $Body
+* @param string $Sound
+*/
+
+function NC_PushNotification( $InstanceID,$WebFrontConfiguratorID,$Title,$Body,$Sound ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->NC_PushNotification( $InstanceID,$WebFrontConfiguratorID,$Title,$Body,$Sound );
+	return $result;
+}
+
+/**
 * NC_RemoveDevice
 * 
 * @returns boolean
@@ -6231,6 +6391,21 @@ function OZW_WriteDataPoint( $InstanceID,$Value ){
 }
 
 /**
+* OZW_WriteDataPointEx
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $DataPoint
+* @param variant $Value
+*/
+
+function OZW_WriteDataPointEx( $InstanceID,$DataPoint,$Value ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->OZW_WriteDataPointEx( $InstanceID,$DataPoint,$Value );
+	return $result;
+}
+
+/**
 * PJ_Backlight
 * 
 * @returns boolean
@@ -6386,6 +6561,20 @@ function PJ_SetServo( $InstanceID,$Channel,$Value ){
 }
 
 /**
+* PJ_SetVoltage
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param float $Voltage
+*/
+
+function PJ_SetVoltage( $InstanceID,$Voltage ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->PJ_SetVoltage( $InstanceID,$Voltage );
+	return $result;
+}
+
+/**
 * PJ_SwitchDuration
 * 
 * @returns boolean
@@ -6479,6 +6668,37 @@ function POP3_UpdateCache( $InstanceID ){
 function RegVar_GetBuffer( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->RegVar_GetBuffer( $InstanceID );
+	return $result;
+}
+
+/**
+* RegVar_SendEvent
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $ReportID
+* @param string $Text
+*/
+
+function RegVar_SendEvent( $InstanceID,$ReportID,$Text ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->RegVar_SendEvent( $InstanceID,$ReportID,$Text );
+	return $result;
+}
+
+/**
+* RegVar_SendPacket
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
+* @param string $ClientIP
+* @param integer $ClientPort
+*/
+
+function RegVar_SendPacket( $InstanceID,$Text,$ClientIP,$ClientPort ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->RegVar_SendPacket( $InstanceID,$Text,$ClientIP,$ClientPort );
 	return $result;
 }
 
@@ -6998,6 +7218,22 @@ function SPRT_SetRTS( $InstanceID,$OnOff ){
 }
 
 /**
+* SSCK_SendPacket
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param string $Text
+* @param string $ClientIP
+* @param integer $ClientPort
+*/
+
+function SSCK_SendPacket( $InstanceID,$Text,$ClientIP,$ClientPort ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->SSCK_SendPacket( $InstanceID,$Text,$ClientIP,$ClientPort );
+	return $result;
+}
+
+/**
 * SSCK_SendText
 * 
 * @returns boolean
@@ -7056,7 +7292,7 @@ function SWD_SendDataToParent( $InstanceID,$Data ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $duration
+* @param integer $duration
 */
 
 function SWD_SetDuration( $InstanceID,$duration ){
@@ -7070,7 +7306,7 @@ function SWD_SetDuration( $InstanceID,$duration ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $percent
+* @param integer $percent
 */
 
 function SWD_SetIntensity( $InstanceID,$percent ){
@@ -7084,7 +7320,7 @@ function SWD_SetIntensity( $InstanceID,$percent ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $val
+* @param boolean $val
 */
 
 function SWD_SetSwitchMode( $InstanceID,$val ){
@@ -7388,6 +7624,75 @@ function UC_FindInFiles( $InstanceID,$Files,$SearchStr ){
 }
 
 /**
+* UC_FindInvalidStrings
+* 
+* @returns array
+* @param integer $InstanceID
+*/
+
+function UC_FindInvalidStrings( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_FindInvalidStrings( $InstanceID );
+	return $result;
+}
+
+/**
+* UC_FindReferences
+* 
+* @returns array
+* @param integer $InstanceID
+* @param integer $ID
+*/
+
+function UC_FindReferences( $InstanceID,$ID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_FindReferences( $InstanceID,$ID );
+	return $result;
+}
+
+/**
+* UC_FixInvalidStrings
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param array $References
+*/
+
+function UC_FixInvalidStrings( $InstanceID,$References ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_FixInvalidStrings( $InstanceID,$References );
+	return $result;
+}
+
+/**
+* UC_GetLastLogMessages
+* 
+* @returns array
+* @param integer $InstanceID
+* @param integer $Type
+*   enum[0=lmtDefault, 1=lmtSuccess, 2=lmtNotify, 3=lmtWarning, 4=lmtError, 5=lmtDebug, 6=lmtCustom]
+*/
+
+function UC_GetLastLogMessages( $InstanceID,$Type ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_GetLastLogMessages( $InstanceID,$Type );
+	return $result;
+}
+
+/**
+* UC_GetLogMessageStatistics
+* 
+* @returns array
+* @param integer $InstanceID
+*/
+
+function UC_GetLogMessageStatistics( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_GetLogMessageStatistics( $InstanceID );
+	return $result;
+}
+
+/**
 * UC_RenameScript
 * 
 * @returns boolean
@@ -7415,6 +7720,32 @@ function UC_RenameScript( $InstanceID,$ScriptID,$Filename ){
 function UC_ReplaceInFiles( $InstanceID,$Files,$SearchStr,$ReplaceStr ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->UC_ReplaceInFiles( $InstanceID,$Files,$SearchStr,$ReplaceStr );
+	return $result;
+}
+
+/**
+* UC_ResetLastLogMessages
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function UC_ResetLastLogMessages( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_ResetLastLogMessages( $InstanceID );
+	return $result;
+}
+
+/**
+* UC_ResetLogMessageStatistics
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function UC_ResetLogMessageStatistics( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->UC_ResetLogMessageStatistics( $InstanceID );
 	return $result;
 }
 
@@ -7859,6 +8190,20 @@ function WDE1_ReInitEvent( $InstanceID ){
 }
 
 /**
+* WDE1_ReadRecord
+* 
+* @returns variant
+* @param integer $InstanceID
+* @param string $inbuf
+*/
+
+function WDE1_ReadRecord( $InstanceID,$inbuf ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WDE1_ReadRecord( $InstanceID,$inbuf );
+	return $result;
+}
+
+/**
 * WDE1_SendDataToChildren
 * 
 * @returns variant
@@ -8064,6 +8409,20 @@ function WFC_GetSnapshotChangesEx( $InstanceID,$CategoryID,$LastTimeStamp ){
 function WFC_GetSnapshotEx( $InstanceID,$CategoryID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->WFC_GetSnapshotEx( $InstanceID,$CategoryID );
+	return $result;
+}
+
+/**
+* WFC_OpenCategory
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $CategoryID
+*/
+
+function WFC_OpenCategory( $InstanceID,$CategoryID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->WFC_OpenCategory( $InstanceID,$CategoryID );
 	return $result;
 }
 
@@ -8394,7 +8753,7 @@ function WS300PC_SendDataToParent( $InstanceID,$Data ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $val
+* @param integer $val
 */
 
 function WS300PC_SetHistoryCount( $InstanceID,$val ){
@@ -8572,8 +8931,8 @@ function XBee_SendCommand( $InstanceID,$Command ){
 * 
 * @returns variant
 * @param integer $InstanceID
-* @param variant $dev
-* @param variant $val
+* @param string $dev
+* @param integer $val
 */
 
 function XS1_SwitchMode( $InstanceID,$dev,$val ){
@@ -8640,17 +8999,20 @@ function ZW_Basic( $InstanceID,$Value ){
 }
 
 /**
-* ZW_CheckCapability
+* ZW_ColorRGBWW
 * 
 * @returns boolean
 * @param integer $InstanceID
-* @param integer $Cap
-*   enum[0=zcPrimaryController, 1=zcSecondaryController, 2=zcIsSUC, 3=zcHasSIS]
+* @param integer $Red
+* @param integer $Green
+* @param integer $Blue
+* @param integer $WarmWhite
+* @param integer $ColdWhite
 */
 
-function ZW_CheckCapability( $InstanceID,$Cap ){
+function ZW_ColorRGBWW( $InstanceID,$Red,$Green,$Blue,$WarmWhite,$ColdWhite ){
 	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_CheckCapability( $InstanceID,$Cap );
+	$result=$rpc->ZW_ColorRGBWW( $InstanceID,$Red,$Green,$Blue,$WarmWhite,$ColdWhite );
 	return $result;
 }
 
@@ -8679,6 +9041,21 @@ function ZW_ConfigurationGetValue( $InstanceID,$Parameter ){
 function ZW_ConfigurationResetValue( $InstanceID,$Parameter ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ZW_ConfigurationResetValue( $InstanceID,$Parameter );
+	return $result;
+}
+
+/**
+* ZW_ConfigurationResetValueEx
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Parameter
+* @param integer $Size
+*/
+
+function ZW_ConfigurationResetValueEx( $InstanceID,$Parameter,$Size ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_ConfigurationResetValueEx( $InstanceID,$Parameter,$Size );
 	return $result;
 }
 
@@ -8755,41 +9132,16 @@ function ZW_DimStop( $InstanceID ){
 }
 
 /**
-* ZW_GetCapabilities
+* ZW_DoorLockOperation
 * 
-* @returns array
+* @returns boolean
 * @param integer $InstanceID
+* @param integer $Mode
 */
 
-function ZW_GetCapabilities( $InstanceID ){
+function ZW_DoorLockOperation( $InstanceID,$Mode ){
 	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetCapabilities( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_GetDevices
-* 
-* @returns array
-* @param integer $InstanceID
-*/
-
-function ZW_GetDevices( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetDevices( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_GetHomeID
-* 
-* @returns string
-* @param integer $InstanceID
-*/
-
-function ZW_GetHomeID( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetHomeID( $InstanceID );
+	$result=$rpc->ZW_DoorLockOperation( $InstanceID,$Mode );
 	return $result;
 }
 
@@ -8807,54 +9159,28 @@ function ZW_GetKnownDevices( $InstanceID ){
 }
 
 /**
-* ZW_GetNodeID
+* ZW_GetUserCodeList
 * 
-* @returns integer
+* @returns array
 * @param integer $InstanceID
 */
 
-function ZW_GetNodeID( $InstanceID ){
+function ZW_GetUserCodeList( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetNodeID( $InstanceID );
+	$result=$rpc->ZW_GetUserCodeList( $InstanceID );
 	return $result;
 }
 
 /**
-* ZW_GetSUCID
+* ZW_GetWakeUpQueue
 * 
-* @returns integer
+* @returns array
 * @param integer $InstanceID
 */
 
-function ZW_GetSUCID( $InstanceID ){
+function ZW_GetWakeUpQueue( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetSUCID( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_GetType
-* 
-* @returns integer
-* @param integer $InstanceID
-*/
-
-function ZW_GetType( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetType( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_GetVersion
-* 
-* @returns string
-* @param integer $InstanceID
-*/
-
-function ZW_GetVersion( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_GetVersion( $InstanceID );
+	$result=$rpc->ZW_GetWakeUpQueue( $InstanceID );
 	return $result;
 }
 
@@ -8882,6 +9208,19 @@ function ZW_LockMode( $InstanceID,$Locked ){
 function ZW_MeterReset( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ZW_MeterReset( $InstanceID );
+	return $result;
+}
+
+/**
+* ZW_Optimize
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function ZW_Optimize( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_Optimize( $InstanceID );
 	return $result;
 }
 
@@ -8988,6 +9327,19 @@ function ZW_RequestInfo( $InstanceID ){
 }
 
 /**
+* ZW_RequestRoutingList
+* 
+* @returns array
+* @param integer $InstanceID
+*/
+
+function ZW_RequestRoutingList( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_RequestRoutingList( $InstanceID );
+	return $result;
+}
+
+/**
 * ZW_RequestStatus
 * 
 * @returns boolean
@@ -9036,75 +9388,6 @@ function ZW_RequestWakeUpInterval( $InstanceID ){
 function ZW_ResetToDefault( $InstanceID ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ZW_ResetToDefault( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_RoutingAssignReturnRoute
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $NodeID
-*/
-
-function ZW_RoutingAssignReturnRoute( $InstanceID,$NodeID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_RoutingAssignReturnRoute( $InstanceID,$NodeID );
-	return $result;
-}
-
-/**
-* ZW_RoutingGetNodes
-* 
-* @returns array
-* @param integer $InstanceID
-* @param integer $NodeID
-*/
-
-function ZW_RoutingGetNodes( $InstanceID,$NodeID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_RoutingGetNodes( $InstanceID,$NodeID );
-	return $result;
-}
-
-/**
-* ZW_RoutingOptimize
-* 
-* @returns boolean
-* @param integer $InstanceID
-*/
-
-function ZW_RoutingOptimize( $InstanceID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_RoutingOptimize( $InstanceID );
-	return $result;
-}
-
-/**
-* ZW_RoutingOptimizeNode
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $NodeID
-*/
-
-function ZW_RoutingOptimizeNode( $InstanceID,$NodeID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_RoutingOptimizeNode( $InstanceID,$NodeID );
-	return $result;
-}
-
-/**
-* ZW_RoutingTestNode
-* 
-* @returns boolean
-* @param integer $InstanceID
-* @param integer $NodeID
-*/
-
-function ZW_RoutingTestNode( $InstanceID,$NodeID ){
-	$rpc=$GLOBALS["rpc"];
-	$result=$rpc->ZW_RoutingTestNode( $InstanceID,$NodeID );
 	return $result;
 }
 
@@ -9265,6 +9548,20 @@ function ZW_StopRemoveDevice( $InstanceID ){
 }
 
 /**
+* ZW_SwitchAllMode
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Mode
+*/
+
+function ZW_SwitchAllMode( $InstanceID,$Mode ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_SwitchAllMode( $InstanceID,$Mode );
+	return $result;
+}
+
+/**
 * ZW_SwitchMode
 * 
 * @returns boolean
@@ -9275,6 +9572,33 @@ function ZW_StopRemoveDevice( $InstanceID ){
 function ZW_SwitchMode( $InstanceID,$DeviceOn ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ZW_SwitchMode( $InstanceID,$DeviceOn );
+	return $result;
+}
+
+/**
+* ZW_Test
+* 
+* @returns boolean
+* @param integer $InstanceID
+*/
+
+function ZW_Test( $InstanceID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_Test( $InstanceID );
+	return $result;
+}
+
+/**
+* ZW_TestDevice
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $NodeID
+*/
+
+function ZW_TestDevice( $InstanceID,$NodeID ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_TestDevice( $InstanceID,$NodeID );
 	return $result;
 }
 
@@ -9321,6 +9645,34 @@ function ZW_ThermostatModeSet( $InstanceID,$Mode ){
 function ZW_ThermostatSetPointSet( $InstanceID,$SetPoint,$Value ){
 	$rpc=$GLOBALS["rpc"];
 	$result=$rpc->ZW_ThermostatSetPointSet( $InstanceID,$SetPoint,$Value );
+	return $result;
+}
+
+/**
+* ZW_UserCodeLearn
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param boolean $Enabled
+*/
+
+function ZW_UserCodeLearn( $InstanceID,$Enabled ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_UserCodeLearn( $InstanceID,$Enabled );
+	return $result;
+}
+
+/**
+* ZW_UserCodeRemove
+* 
+* @returns boolean
+* @param integer $InstanceID
+* @param integer $Identifier
+*/
+
+function ZW_UserCodeRemove( $InstanceID,$Identifier ){
+	$rpc=$GLOBALS["rpc"];
+	$result=$rpc->ZW_UserCodeRemove( $InstanceID,$Identifier );
 	return $result;
 }
 
