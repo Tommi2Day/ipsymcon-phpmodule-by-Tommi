@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @version 4.2.2
+ * @date 2017-07-14
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -424,7 +424,7 @@ class CUL extends T2DModule
      * Main CUL data parsing function, will split into device specific parsing
      * @param string $line Received record from CUL
      */
-    public function Parse(string $line)
+    public function Parse(String $line)
     {
         $lmid = $this->GetIDForIdent('AuxMessage');
         //load error variable
@@ -1444,6 +1444,10 @@ class CUL extends T2DModule
                 switch ($cap) {
                     case 'Switch':
                         $fs20code = $val ? "11" : "00";
+                        break;
+                    case 'Timer':
+                        $times = FHZ_helper::fs20_times($val);
+                        $fs20code = sprintf("%02X", $times);
                         break;
                     case 'Dimmer':
                         $steps = FHZ_helper::fs20_intensity_steps($val);
