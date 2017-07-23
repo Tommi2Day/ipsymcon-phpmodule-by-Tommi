@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @version 4.2.2
+ * @date 2017-07-23
  */
 
 
@@ -123,6 +123,7 @@ class SwitchDev extends T2DModule
      * define default module actions
      * @param String $Ident
      * @param mixed $val
+     * @return void
      */
     public function RequestAction($Ident, $val)
     {
@@ -151,6 +152,7 @@ class SwitchDev extends T2DModule
     /**
      * Receive Data from Parent(IO)
      * @param string $JSONString
+     * @return void
      */
     public function ReceiveData($JSONString)
     {
@@ -200,8 +202,9 @@ class SwitchDev extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Forward command to Splitter parent
-     * @param $Data
+     * @param array $Data
      * @return bool
+     * @todo: for v4.3+ move to SendToParent with type hint
      */
     public function SendDataToParent($Data)
     {
@@ -372,6 +375,7 @@ class SwitchDev extends T2DModule
         $caps = $this->GetCaps();
         $type = $this->GetType();
         $cap = 'Dimmer';
+        $this->debug(__FUNCTION__, "Percent: $percent");
         if (!isset($caps[$cap])) {
             IPS_LogMessage(__CLASS__, __FUNCTION__ . "::failed, not capable for $type");
             return $res;
@@ -397,6 +401,7 @@ class SwitchDev extends T2DModule
             $state = GetValueBoolean($svid);
             $switch = ($val > 0);
             if ($state != $switch) {
+                $this->debug(__FUNCTION__, "Switch device ".($switch)?'On':'Off');
                 $this->SetSwitchMode($switch);
             }
         }
@@ -421,16 +426,20 @@ class SwitchDev extends T2DModule
      * Set Timer to execute Tasks defined in Var TimerActionCode
      *
      * @param integer $duration Duration in sec
+     * @param String $action initial action, otherewise will do the opposite
      * @return bool
      */
-    public function SetDuration(int $duration)
+    public function SetDuration(int $duration,string $action=null)
     {
         $res = false;
         $val = $duration;
         $caps = $this->GetCaps();
         $type = $this->GetType();
+        if (is_null($action)) $action='';
+
         $cap = 'Timer';
         $max = 3600 * 24;
+        $this->debug(__FUNCTION__, "Dur:$duration Action: $action");
         if (!isset($caps[$cap])) {
             IPS_LogMessage(__CLASS__, __FUNCTION__ . "::failed, not capable for $type");
             return $res;
@@ -445,22 +454,64 @@ class SwitchDev extends T2DModule
             return $res;
         }
 
-        $ident = $caps[$cap];
-        $vid = @$this->GetIDForIdent($ident);
-        if (!$vid) {
-            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
-            return $res;
-        }
-        $this->debug(__FUNCTION__, "Set $cap to $val ($vid)");
-        SetValueInteger($vid, $val);
-        //rearm timer
-        $this->SetTimerInterval('DeviceTimer', $val * 1000);
-
 
         if (!$this->HasActiveParent()) {
-            IPS_LogMessage(__CLASS__, __FUNCTION__ . "Parent not active, No real Action");
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::Parent not active, No real Action");
             return $res;
         }
+
+        // set action state or opposite current state
+        $state=null;
+        if (isset($action)) {
+            $state = $this->SwitchStatus($action);
+        } else {
+            $ident = $caps['Switch'];
+            $svid = @$this->GetIDForIdent($ident);
+            if ($svid) {
+                $state = ! GetValueBoolean($svid);
+            }else{
+                IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for $ident");
+                return $res;
+            }
+        }
+
+        //fs20 uses device timer, all other ips timer
+        switch ($type) {
+            case "FS20":
+                $val = 'Duration:' . $val;
+                $val.= ';State:' . ($state ? 'On' : 'Off');
+                //action will be handled by device, without ips
+                $ActionCode='';
+                $this->debug(__FUNCTION__, "use FS20 Timer: $val");
+                break;
+            default:
+                $ActionCode = 'Switch:' . ($state ? 'On' : 'Off');
+                $this->debug(__FUNCTION__, "use IPS Timer, Actioncode $val");
+                $this->setSwitchMode($state);
+
+                $ident = $caps[$cap];
+                $vid = @$this->GetIDForIdent($ident);
+
+                if (!$vid) {
+                    IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
+                    return $res;
+                }
+                $this->debug(__FUNCTION__, "Set IPS Timer to $val ($vid)");
+                SetValueInteger($vid, $val);
+                //rearm timer
+                $this->SetTimerInterval('DeviceTimer', $val * 1000);
+                break;
+        }
+        //set  or reset action code to set switch state after duration
+
+        $avid = @$this->GetIDForIdent($caps['TimerActionCode']);
+        if (!$avid) {
+                IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap 'TimerActionCode'");
+                return $res;
+        }
+        SetValueString($avid,$ActionCode);
+
+
         //forward to splitter
         $data = array(
             "DataID" => $this->module_interfaces["SWD-TX"],

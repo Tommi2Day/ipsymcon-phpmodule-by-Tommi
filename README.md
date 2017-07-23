@@ -39,6 +39,7 @@ forward data to splitter only, real actor control will need a Splitter with matc
 
 * SWD_SetSwitchMode($id,$state): set the switch to the desired state
 * SWD_SetIntensity($id,$percent): Dim to the given level
+* SWD_SetDuration($id,$seconds,$action=null): (FS20 via CUL only)  Switch to the given or opposite current state and reverse after time expires
 * SWD_DimUp($id): Dim one Level(Step) Up
 * SWD_DimDown($id): Dim one Level(Step) down
 

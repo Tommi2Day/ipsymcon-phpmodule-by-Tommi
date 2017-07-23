@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2017
- * @version 4.2.2
- * @date 2017-07-14
+ * @version 4.2.3
+ * @date 2017-07-23
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -289,6 +289,7 @@ class CUL extends T2DModule
     /**
      * Data Interface from Childs
      * @param string $JSONString
+     * @return void
      */
     public function ForwardData($JSONString)
     {
@@ -343,6 +344,7 @@ class CUL extends T2DModule
     /**
      * Data Interface from Parent(IO-RX)
      * @param string $JSONString
+     * @return void
      */
     public function ReceiveData($JSONString)
     {
@@ -423,8 +425,9 @@ class CUL extends T2DModule
     /**
      * Main CUL data parsing function, will split into device specific parsing
      * @param string $line Received record from CUL
+     * @return void
      */
-    public function Parse(String $line)
+    public function Parse(string $line)
     {
         $lmid = $this->GetIDForIdent('AuxMessage');
         //load error variable
@@ -1436,29 +1439,61 @@ class CUL extends T2DModule
     {
 
         $cap = $data['Cap'];
-        $val = $this->SwitchStatus($data['Value']);
+        $val = $data['Value'];
         $type = $data['Type'];
         $Device = $data['Device'];
+        $level=null;
+        $state=null;
+        $dur=null;
+        $this->debug(__FUNCTION__, "Typ: $type, Cap:$cap, Val:$val, Device:$Device ");
         switch ($type) {
             case 'FS20':
                 switch ($cap) {
                     case 'Switch':
-                        $fs20code = $val ? "11" : "00";
+                        $this->debug(__FUNCTION__,"Action: Switch $val");
+                        $fs20code = $this->SwitchStatus($val) ? "11" : "00";
                         break;
                     case 'Timer':
-                        $times = FHZ_helper::fs20_times($val);
-                        $fs20code = sprintf("%02X", $times);
+                        $this->debug(__FUNCTION__,"Action: Timer $val");
+                        $fs20code='00';
+                        $timecode='';
+                        $actions = explode(";", $val);
+                        foreach ($actions as $part) {
+                            list($ident, $val) = explode(":", $part);
+                            switch ($ident) {
+                                case 'State':
+                                    $state=$this->SwitchStatus($val);
+                                    $fs20code= $state ? "3A" : "38"; //extended bit 0x20 set
+                                    $this->debug(__FUNCTION__, "Type State:".($state?'On':'Off'));
+                                    break;
+                                case 'Intensitiy':
+                                    $level=$val;
+                                    $steps = FHZ_helper::fs20_intensity_steps($level);
+                                    $fs20code = sprintf("%02X", $steps);
+                                    $this->debug(__FUNCTION__, "Type Intensity: Level $level,Steps: $steps");
+                                    break;
+                                case 'Duration':
+                                    $timecode = FHZ_helper::fs20_timecode($val);
+                                    $this->debug(__FUNCTION__, "Type Duration $val,  Code: $timecode");
+                                    break;
+                                default:
+                                    $this->debug(__FUNCTION__, "Unsupported Ident $ident");
+                            }
+
+                        }
+                        $fs20code.=$timecode;
                         break;
                     case 'Dimmer':
+                        $this->debug("Action: Dimmer $val");
                         $steps = FHZ_helper::fs20_intensity_steps($val);
                         $fs20code = sprintf("%02X", $steps);
-                        break;
                         break;
 
                     default:
                         IPS_LogMessage(__CLASS__, __FUNCTION__.'invalid FS20 Action Command ' . $cap);
                         return;
                 }
+                $this->debug(__FUNCTION__, "FS20code: $fs20code");
                 $culaddr='';
                 if (strlen($Device)==12) {
                     $culaddr.=FHZ_helper::four2hex(substr($Device,0,8)); //hc

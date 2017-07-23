@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @version 4.2.2
+ * @date 2017-07-23
  */
 /**
 @mainpage Index
@@ -87,6 +87,7 @@ Displays depending of the capability of the connected sensor out of the followin
 (if supported by the attached splitter and the physical device. The Splitter must set the action flag in CapList property, see caplist)
 - Switch Status
 - Dimmer Intensity
+- Timer
 
 @par "Public Functions:"
 - \b SetSwitchMode: raise a switch command
@@ -109,6 +110,10 @@ SWD_DimDown($id);
 SWD_SetIntensity($id,$percent);
 @endcode
 
+- \b SetDuration : (FS20 via CUL only)  Switch to the given or opposite current state and reverse after time expires
+@code
+SWD_SetDuration($id,$seconds,$action=null);
+@endcode
 @section Splitter
 
 @subsection WS300PC

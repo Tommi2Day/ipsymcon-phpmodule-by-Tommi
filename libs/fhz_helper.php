@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016
- * @version 1.3
- * @date 2016-05-28
+ * @version 4.2.2
+ * @date 2017-07-23
  */
 
 /** @class FHZ_helper
@@ -295,6 +295,24 @@ class FHZ_helper
         return $res;
     }
 
+    /**
+     * translate duration in sec to fs20 time code
+     * @param int $dur
+     * @return string
+     */
+    public static function fs20_timecode($dur)
+    {
+        $step=0.25;
+        $j=(Integer)($dur/$step);
+        $i=0;
+        while ($j>8) {
+            $step=$step*2;
+            $i++;
+            $j=(Integer)($dur/$step);
+        }
+        $res=sprintf("%02X",$i*16+$j);
+        return $res;
+    }
     //------------------------------------------------------------------------------
     /**
      * returs fs20 dimmer intensity steps in percent
