@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2017
- * @version 4.2.3
- * @date 2017-07-23
+ * @version 4.2.4
+ * @date 2017-09-16
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -75,7 +75,7 @@ class CUL extends T2DModule
         $this->RegisterVariableString('AuxMessage', 'Last System Message', "", 1);
         $this->RegisterVariableString('Version', 'Version', "", 2);
         $this->RegisterVariableString('Modus', 'Modus', "", 2);
-        $this->RegisterVariableInteger('Errors', 'Errors', 0, 3);
+        $this->RegisterVariableInteger('Errors', 'Errors', "", 3);
 
         //reinit timer
         $this->RegisterTimer('ReInit', 58000, $this->module_data["prefix"] . '_ReInitEvent($_IPS[\'TARGET\']);');
