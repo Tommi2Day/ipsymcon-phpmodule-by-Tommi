@@ -5,9 +5,9 @@
  * Doxygen main page
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2017
- * @version 4.2.2
- * @date 2017-07-23
+ * @copyright Thomas Dressler 2016-2018
+ * @version 4.3.3
+ * @date 2018-01-01
  */
 /**
 @mainpage Index
@@ -19,7 +19,7 @@ This is a Library of PHP Modules for the home automation software <a href="https
 
 @section Installation
 @par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git
-@par Branch: 4.2
+@par Branch: 4.3
 
  - Within Symcon Konsole go to "Kern Instancen" ->Modules
  - Press "Hinzufügen" Button
@@ -204,6 +204,8 @@ File will be in csv format with one line per sensor. Header will be in the first
 
  FS20WUE Splittermodul for reading ELV %FS20WUE Receiver. The Receiver will be accessed via serial port provides WS300 Series Weather and FS20 Data records.
 
+@warning This module is deprecated/unsupported as of 2017. I dont have this anymore.
+
 @par "Supported Devices:"
 - Weather: The Receiver supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
 - FS20: reading of ELV FS20 telegrams for Switch devices, but cannot control such device.
@@ -281,32 +283,48 @@ TE923 :Splitter for %TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 9
 TE923_Query($id);
 @endcode
 
-@par Hint:
+@par Simple CGI Script to retrieve data:
 This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
 The following simple get_data.cgi script to be placed in your webservers cgi-bin directory is sufficient
-
 @code
 #!/bin/bash
-TE923=/usr/bin/te923con
+TE923=./te923con
 #header content type end empty line
 echo "Content-type: text/plain"
 echo
 #end header
 
 #parameter
-PARAM="$QUERY_STRING" #oder $1
+PARAM="${QUERY_STRING:-$1}"
 #run
 if [ -x $TE923 ]; then
 #binary must be placed into same dir
 #this runs only if apache user www-data is member of group plugdev
 #and udev rule is added
-  case "$PARAM" in
-    data) $TE923 -i 'i';;
-    status)  $TE923 -s -i 'i';;
-    debug)  $TE923 -D -i 'i';;
-    version)  $TE923 -v;;
-  esac
+case "$PARAM" in
+data) $TE923 -i 'i';;
+status)  $TE923 -s -i 'i';;
+debug)  $TE923 -D -i 'i';;
+version)  $TE923 -v;;
+esac
 fi
+@endcode
+
+@par Web Server configuration (example Raspbian Stretch):
+The webserver must support cgi execution. On Raspbian (stretch) install apache2 and enable cgi and cgid mods.
+You have to install a udev rule to permit the webserver user access to usb
+@code
+apt install apache2
+systemctl enable apache2
+a2enmod cgi cgid
+a2enconf serve-cgi-bin
+adduser www-data plugdev
+cat >/etc/udev/rules.d/99-te923.rules <<EOF
+ATTRS{idVendor}=="1130", ATTRS{idProduct}=="6801", MODE="0660", GROUP="plugdev", RUN="/bin/sh -c 'echo -n $id:1.0 > /sys/bus/usb/drivers/usbhid/unbind'"
+EOF
+udevadm control --reload-rules
+#reboot to activate changes
+reboot
 @endcode
 
 @subsection WS2500PC
@@ -335,6 +353,14 @@ WS2500PC_Query($id);
 @par Hint:
 This requires a running webservice providing output from <a href="http://userpages.uni-koblenz.de/~krienke/ftp/unix/ws2500/">ws2500</a> binary.
 The following simple get_ws2500_data.cgi script to be placed in your webservers cgi-bin directory  along ws2500 binary is sufficient
+The webserver must support cgi execution. On Raspbian (stretch) install apache2 and enable cgi and cgid mods
+@code
+apt install apache2
+a2enmod cgi cgid
+a2enconf serve-cgi-bin
+systemctl stop apache2
+systemctl start apache2
+@endcode
 
 @code
 #!/bin/bash
@@ -345,7 +371,7 @@ echo
 #end header
 
 #parameter
-PARAM="$QUERY_STRING" #oder $1
+PARAM="${QUERY_STRING:-$1}" #oder $1
 #run
 if [ -x $WS2500 ]; then
 #binary must be placed into same dir

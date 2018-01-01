@@ -118,17 +118,18 @@ Changes on the status will be transmitted to the connected actor
 ### TE923
 Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
  * This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
- The following simple get_data.cgi script is sufficient
+ The following simple get_data.cgi script is sufficient. Copy the te923con binary along with the cgi to your 
+ webserver cgi-bin directory
  <pre>
  #!/bin/bash
- TE923=/usr/bin/te923con
+ TE923=./te923con
  #header content type end empty line
  echo "Content-type: text/plain"
  echo
  #end header
 
  #parameter
- PARAM="$QUERY_STRING" #oder $1
+ PARAM="${QUERY_STRING:-$1}" 
  #run
  if [ -x $TE923 ]; then
  #binary must be placed into same dir
@@ -143,6 +144,21 @@ Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) 
  fi
  </pre>
 
+The webserver must support cgi execution. On Raspbian (Stretch) install apache2 and enable cgi and cgid mods
+You have to install a udev rule to permit the webserver user access to usb 
+<pre>
+apt install apache2
+systemctl enable apache2
+a2enmod cgi cgid
+a2enconf serve-cgi-bin
+adduser www-data plugdev
+cat >/etc/udev/rules.d/99-te923.rules << EOF 
+ATTRS{idVendor}=="1130", ATTRS{idProduct}=="6801", MODE="0660", GROUP="plugdev", RUN="/bin/sh -c 'echo -n $id:1.0 > /sys/bus/usb/drivers/usbhid/unbind'"
+EOF
+udevadm control --reload-rules
+#reboot to activate changes
+reboot
+</pre>
 ##### Supported Devices:
 5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
 
@@ -164,7 +180,7 @@ Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary outp
  #end header
 
  #parameter
- PARAM="$QUERY_STRING" #oder $1
+ PARAM="${QUERY_STRING:-$1}" 
  #run
  if [ -x $WS2500 ]; then
  #binary must be placed into same dir
@@ -178,6 +194,15 @@ Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary outp
  esac
  fi
  </pre>
+
+The webserver must support cgi execution. On Raspbian (Stretch) install apache2 and enable cgi and cgid mods 
+<pre>
+apt install apache2
+a2enmod cgi cgid
+a2enconf serve-cgi-bin
+systemctl stop apache2
+systemctl start apache2
+</pre>
 
 ##### Supported Devices:
 8 external Temp/Hum Sensors(1-8), Rain, Wind, UV(not seen yet),Light(Brighness)
