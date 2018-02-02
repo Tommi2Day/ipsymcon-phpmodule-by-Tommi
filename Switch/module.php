@@ -5,9 +5,9 @@
  * generic Switch Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2017
- * @version 4.2.2
- * @date 2017-07-23
+ * @copyright Thomas Dressler 2013-2018
+ * @version 4.3.3
+ * @date 2018-01-19
  */
 
 
@@ -35,7 +35,7 @@ class SwitchDev extends T2DModule
      */
 
     protected $capvars = array(
-        'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
+        'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '', "pos" => 0),
         "Switch" => array("ident" => 'Switch', "type" => self::VT_Boolean, "name" => 'Status', "profile" => 'Switch', "pos" => 1),
         "Dimmer" => array("ident" => 'Dimmer', "type" => self::VT_Integer, "name" => 'Dimmer', "profile" => 'Intensity.100', "pos" => 2),
         "Shutter" => array("ident" => 'Shutter', "type" => self::VT_Integer, "name" => 'Shutter', "profile" => 'Shutter', "pos" => 2),
@@ -270,13 +270,25 @@ class SwitchDev extends T2DModule
             foreach ($actions as $part) {
                 list($ident, $val) = explode(":", $part);
                 switch ($ident) {
+                    //change physical state
                     case 'Switch':
                         $val = ($val == 'On');
                         SetValueBoolean($swid, $val);
+                        $this->SetSwitchMode($val);
                         break;
                     case 'Dimmer':
                         SetValueInteger($dvid, $val);
+                        $this->SetIntensity($val);
                         break;
+                    //only set logical state as physical will be handled by actor itself(FS20)
+                    case 'State':
+                        $val = ($val == 'On');
+                        SetValueBoolean($swid, $val);
+                        break;
+                    case 'Intensity':
+                        SetValueInteger($dvid, $val);
+                        break;
+
                     default:
                         $this->debug(__FUNCTION__, "Unsupported Ident $ident");
                 }
@@ -480,28 +492,29 @@ class SwitchDev extends T2DModule
             case "FS20":
                 $val = 'Duration:' . $val;
                 $val.= ';State:' . ($state ? 'On' : 'Off');
-                //action will be handled by device, without ips
-                $ActionCode='';
+                //action will be handled by device, without ips, set only variables with Timer
+                $ActionCode='State:' . ($state ? 'Off' : 'On');
                 $this->debug(__FUNCTION__, "use FS20 Timer: $val");
                 break;
             default:
-                $ActionCode = 'Switch:' . ($state ? 'On' : 'Off');
-                $this->debug(__FUNCTION__, "use IPS Timer, Actioncode $val");
                 $this->setSwitchMode($state);
-
-                $ident = $caps[$cap];
-                $vid = @$this->GetIDForIdent($ident);
-
-                if (!$vid) {
-                    IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
-                    return $res;
-                }
-                $this->debug(__FUNCTION__, "Set IPS Timer to $val ($vid)");
-                SetValueInteger($vid, $val);
-                //rearm timer
-                $this->SetTimerInterval('DeviceTimer', $val * 1000);
+                //timer action is opposite
+                $ActionCode = 'Switch:' . ($state ? 'Off' : 'On');
                 break;
         }
+        $this->debug(__FUNCTION__, "IPS Timer Actioncode $ActionCode");
+
+        $ident = $caps[$cap];
+        $vid = @$this->GetIDForIdent($ident);
+
+        if (!$vid) {
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
+            return $res;
+        }
+        $this->debug(__FUNCTION__, "Set IPS Timer to $val ($vid)");
+        SetValueInteger($vid, $val);
+        //rearm timer
+        $this->SetTimerInterval('DeviceTimer', $val * 1000);
         //set  or reset action code to set switch state after duration
 
         $avid = @$this->GetIDForIdent($caps['TimerActionCode']);

@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @version 4.3.2
+ * @date 2018-01-19
  */
 
 
@@ -32,7 +32,7 @@ class EnergyDev extends T2DModule
      */
     ///[capvars]
     protected $capvars = array(
-        'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '~String', "pos" => 0),
+        'Name' => array("ident" => 'Name', "type" => self::VT_String, "name" => 'Name', 'profile' => '', "pos" => 0),
         "APower" => array("ident" => 'APower', "type" => self::VT_Float, "name" => 'Power Actual', "profile" => 'Power_W.3', "pos" => 1),
         "TPower" => array("ident" => 'TPower', "type" => self::VT_Float, "name" => 'Power Total', "profile" => 'Electricity', "pos" => 1),
         "PPower" => array("ident" => 'PPower', "type" => self::VT_Float, "name" => 'Power Peak', "profile" => 'Power_W.3', "pos" => 1),
@@ -59,7 +59,7 @@ class EnergyDev extends T2DModule
         'Watt' => array("ident" => 'Watt', "type" => self::VT_Float, "name" => 'Watt', 'profile' => 'Watt.3680', "pos" => 9),
         'TimeLeft' => array("ident" => 'TimeLeft', "type" => self::VT_Float, "name" => 'Time Left', 'profile' => 'Time.min', "pos" => 10),
 
-        'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => 'String', "pos" => 11),
+        'Status' => array("ident" => 'Status', "type" => self::VT_String, "name" => 'Status', 'profile' => '', "pos" => 11),
         'Alert' => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alert', 'profile' => 'Alert.Reversed', "pos" => 12),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 13,"hidden" => true),
         'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),

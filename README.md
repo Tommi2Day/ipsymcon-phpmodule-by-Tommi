@@ -5,13 +5,13 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 
 
 ### Requirements:
-* Symcon (https://www.symcon.de/en/) Version 4.2
+* Symcon (https://www.symcon.de/en/) Version 4.3
 
 ### Installation
 * Within Symcon Konsole go to "Kern Instancen" ->Modules
 * Press "Hinzufügen" Button
 * Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
-* Click on "Edit" Icon and change Branch(Zweig) to "4.2"
+* Click on "Edit" Icon and change Branch(Zweig) to "4.3"
 
 ### Modules provides in this library:
 

@@ -1,3 +1,15 @@
 Api/IPS_JSON_config.cfg
 .idea
 *.iml
+docs/html
+old/
+FHZDummy/
+includes/
+IPS2MQTT/
+MQTTPUB/ips_mqtt2db.yml
+docs/images/nut_config.jpg
+docs/images/nut_inst.jpg
+*.csv
+libs/Api/IPS_JSON_config.cfg
+WDE1/test_readRecord.php
+*.pptx

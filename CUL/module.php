@@ -5,9 +5,9 @@
  * CUL IPSymcon PHP Splitter Module  for busware.de CUL/CUN/COC receiver
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2017
- * @version 4.2.4
- * @date 2017-09-16
+ * @copyright Thomas Dressler 2011-2018
+ * @version 4.3.5
+ * @date 2018-01-19
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");

@@ -5,9 +5,9 @@
  * generic Weather Station Sensor PHP Device Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2009-2018
+ * @version 4.3.2
+ * @date 2018-01-19
  */
 
 /**
@@ -31,7 +31,7 @@ class WSDEV extends T2DModule
      * @var array $capvars
      */
     protected $capvars = array(
-        'Name'=>array("ident"=>'Name',"type"=>self::VT_String,"name"=>'Name','profile'=>'~String',"pos"=>0),
+        'Name'=>array("ident"=>'Name',"type"=>self::VT_String,"name"=>'Name','profile'=>'',"pos"=>0),
         "Temp" => array("ident" => 'Temperatur', "type" => self::VT_Float, "name" => 'Temperatur', "profile" => 'Temperature', "pos" => 0),
         "WindChill" => array("ident" => 'WindChill', "type" => self::VT_Float, "name" => 'Wind Chill', "profile" => 'Temperature', "pos" => 0),
         "Hum" => array("ident" => 'Humidity', "type" => self::VT_Integer, "name" => 'Feuchte', "profile" => 'Humidity', "pos" => 1),
