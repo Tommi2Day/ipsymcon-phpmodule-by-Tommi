@@ -19,12 +19,12 @@ This is a Library of PHP Modules for the home automation software <a href="https
 
 @section Installation
 @par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git
-@par Branch: 4.3
+@par Branch: 4.4
 
  - Within Symcon Konsole go to "Kern Instancen" ->Modules
  - Press "Hinzufügen" Button
  - Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
- - Click on "Edit" Icon and change Branch(Zweig) to "4.3"
+ - Click on "Edit" Icon and change Branch(Zweig) to "4.4"
 
 @section Devices
 
