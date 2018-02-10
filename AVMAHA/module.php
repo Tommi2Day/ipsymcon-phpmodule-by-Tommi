@@ -5,9 +5,9 @@
  * AVM AHA-API IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2013-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2013-2018
+ * @version 4.4.3
+ * @date 2018-02-10
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -415,6 +415,10 @@ class AVMAHA extends T2DModule
             $pname = (string)$device->attributes()['productname'];
             $name = (string)$device->name;
             $conn = (((integer)$device->present) == 1);
+            if (! $conn) {
+                $this->debug(__FUNCTION__ , "Device $name not connected, skip");
+                continue;
+            }
             $data['Id'] = $ain;
             $data['Typ'] = $pname;
             $data['Name'] = $name;
