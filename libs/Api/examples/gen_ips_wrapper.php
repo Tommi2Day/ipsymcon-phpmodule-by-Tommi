@@ -2,14 +2,16 @@
 /**
  * @file gen_ips_wrapper.php
  *
- * generiert include Script um die vorhandenen IPS Funktionen über JSON-API auszuführen
- * Innerhalb von IPS ausführen
+ * generate include Script to allow run of  internal IPS function over JSON-API
  *
+ * @see https://www.symcon.de
  * @see http://www.tdressler.net/ipsymcon/jsonapi.html
- * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
+ * @see http://www.symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
  *
  * @copyright (C) Thomas Dreßler 2013-2018
  * @version V0.8 25.02.2018
+ *
+ * @include gen_ips_wrapper.php
  */
 
 if (!function_exists('IPS_GetKernelVersion')) {
@@ -59,6 +61,7 @@ if (!$version) {
 
 //build header
 $header="
+ 
 /**
  * @file
  * @brief generated ipsymcon functions wrapper using gen_ips_wrapper.php
@@ -71,7 +74,6 @@ $header="
  * @version $script_version (gen_ips_wrapper.php)
  * @version $version (IPSymcon)
  * @date $date (generated)
- * @see http://www.tdressler.net/ipsymcon/funktionsliste.html
  * @see http://www.tdressler.net/ipsymcon/jsonapi.html
  * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
  *
@@ -194,3 +196,4 @@ fclose($log);
 //echo $all;
 echo "finished"."\n";
 ?>
+

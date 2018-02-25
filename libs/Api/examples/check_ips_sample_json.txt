@@ -1,0 +1,81 @@
+
+/*
+Icinga Konfiguration
+#icinga.cfg
+#add
+cfg_dir=<icinga_home>/etc/templates
+cfg_dir=<icinga_home>/etc/servers
+#-------------
+
+#resource definition
+#-------------
+#resource.cfg
+#add path to the scripts (etc/ownchecks)
+$USER2$=<icinga_home>/etc/ownchecks
+#define ips host/port and auth to connect
+$USER3$=-H ips -P 82 -u apiuser -p apipass
+#or use config file IPS_JSON_config.cfg with -c option as below
+#-------------
+#IPS_JSON_config.cfg for PHP and Perl
+#commandline parameter will have precedence over this
+#this code will be executed by the calling script, no <? ?> Tags allowed
+$host='ips';
+$user="user@ipsymcon.de";
+$password="ipsymcon";
+$port=82;
+$age=3600;
+
+#--------------
+
+#Command definition
+#--------------
+#create new file for icinga commands (ips_commands.cfg in etc/templates) 
+define command {
+         #special multi variable check
+         command_name check_ips_temperature
+         command_line $USER2$/check_ips_temperature_json.pl -c $USER2$/IPS_JSON_config.cfg -H $ARG1$ -t $ARG2$ -f $ARG3$ $ARG4$
+         }
+
+define command {
+         #single variable check
+         command_name check_ips_perl
+         command_line $USER2$/check_ips_json.pl  -f $USER2$/IPS_JSON_config.cfg -H $ARG1$ -i $ARG2$ $ARG3$ $ARG4$
+         }
+#---------------
+define command {
+         #single variable check
+         command_name check_ips_php
+         command_line $USER2$/check_ips_json.php  -f $USER2$/IPS_JSON_config.cfg -H $ARG1$ -i $ARG2$ $ARG3$ $ARG4$
+         }
+
+#---------------
+#Service definition
+#---------------
+#ips.cfg in etc/servers anlegen und anpassen
+define host{
+        use             windows-server ; Inherit default values from a template
+        host_name       ips ; The name we're giving to this server
+        alias           IPS Server ; A longer name for the server
+        address         192.168.xxx.yyy ; IP address of the server
+}
+#ips checks
+define service {
+         use generic-service,srv-pnp
+         host_name ips
+         service_description Temperatur Terasse
+         check_command check_ips_temperature!$HOSTADDRESS$!10295!44934!-a 300
+         notification_interval 0
+         }
+
+define service {
+         use generic-service,srv-pnp
+         host_name ips
+         service_description Stromverbrauch
+         check_command check_ips_perl!$HOSTADDRESS!50474!-a 600
+         notification_interval 0
+         }
+#--------------
+#sample call with IPS_JSON_config
+ ./check_ips_json.php -i 43491
+OK - HMS_Temperatur_2:-18.3 ¦C, Age=128s |HMS_Temperatur_2=-18.3;;;;
+*/

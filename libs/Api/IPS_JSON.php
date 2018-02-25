@@ -1,13 +1,14 @@
 <?php
+
 /**
  * @file
  * 
 * Mapper class for IP-Symcon JSON API
 * 
 *  @author Thomas Dressler
-*  @copyright Thomas Dressler 2013-2016
-*  @version 4.1
-*  @date 2016-05-14
+*  @copyright Thomas Dressler 2013-2018
+*  @version 4.4
+*  @date 2018-02-25
 */
 /** @class IPS_JSON
  * 
@@ -49,7 +50,7 @@ class IPS_JSON {
 	/**
 	 * last Error
 	 * 
-	 *	@var array
+	 *	@var array of String $password
 	 *
 	 *	$error=array('message'=>$message,'code'=>$code)
 	 *	@param String $message
@@ -70,7 +71,7 @@ class IPS_JSON {
 	/**
 	 * IPS Variable Types
 	 *
-	 * @var array
+	 * @var array of String $exception_flag
 	 *
 	 * matches IPS Variable API type return codes to API type field names ("ValueXYZ")
 	 */
