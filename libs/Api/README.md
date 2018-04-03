@@ -54,11 +54,18 @@ $password='remote-access';
   - [check_ips_temperature_json.pl](examples/check_ips_temperature_json.pl): read an IPS temperature sensor for Icinga/Nagios
   - [check_ips_sample_json.txt](examples/check_ips_sample_json.txt): icinga/nagios check configuration steps
  
+ #### additional documentation
+ You may generate additional documentation using <a href="http://www.stack.nl/~dimitri/doxygen/index.html"> Doxygen</a>
+ ```
+ cd doc
+ doxygen doc_wrapper.doxygen
+ ```
+ see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_wrapper/html/)
+ 
  #### see also (mostly in german)
   - examples in [examples](examples)
-  
   - [JSON Wrapper Homepage](http://www.tdressler.net/ipsymcon/jsonapi.html)
-  
   - [Symcon API](http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/)
   
-  
+ ### License:
+  CC By-NC 4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

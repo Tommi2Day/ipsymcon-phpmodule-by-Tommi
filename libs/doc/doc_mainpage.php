@@ -606,14 +606,6 @@ IPS/status/42440/Watt/APCUPSD_Devices/Back-UPS_RS_900G/Watt
 
 A sample consumer script ips_mqtt2db.py for logging into a mysql database is provided
 
-@section adddoc additional documentation in german
-
-- %WS300PC, %FS20WUE, %WDE1: http://www.tdressler.net/ipsymcon/ws300series.html
-- %AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
-- %TE923 Weather Station Module: http://www.tdressler.net/ipsymcon/te923.html
-- %NUT Module: http://www.tdressler.net/ipsymcon/nut_ips.html
-- %OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
-- %XS1 Module: http://www.tdressler.net/ipsymcon/xs1_ips.html
 
 @section debug Debug:
 
@@ -622,11 +614,8 @@ By activating the Instance Debug Tab a lot of noise will appear
 @section gendoc general documentation
 
  - https://www.symcon.de
-
  - https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/
-
- - http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
-
+ - http://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
  - https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi
 
  */

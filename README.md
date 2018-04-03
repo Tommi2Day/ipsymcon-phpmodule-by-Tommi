@@ -375,7 +375,7 @@ Payload is a Json string with the following components:
  ```
 ##### Sample consumer script
 you can retrieve the published data from MQTT with simple scripts. A sample python script 
-[ips_mqtt2db.py](https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi/blob/4.2/MQTTPUB/ips_mqtt2db.py) 
+[ips_mqtt2db.py](MQTTPUB/ips_mqtt2db.py) 
 demonstrates how to write the payload into a mysql database
 
 How to use:
@@ -412,24 +412,19 @@ How to use:
    python ips_mqtt2db.py
    ```
 
-### see also (in german)
-* WS300PC, FS20WUE, WDE1, Weather Device: http://www.tdressler.net/ipsymcon/ws300series.html
-* AVMAHA Module: http://www.tdressler.net/ipsymcon/fritz_aha.html
-* TE923 weather Station: http://www.tdressler.net/ipsymcon/te923.html
-* NUT attached USV: http://www.tdressler.net/ipsymcon/nut_ips.html
-* APCUPSD attached USV: http://www.tdressler.net/ipsymcon/apcupsd_ips.html
-* CUL Module: http://www.tdressler.net/ipsymcon/cun_ips.html
-* IPS_JSON Wrapper API: http://www.tdressler.net/ipsymcon/jsonapi.html
-* OWNet Module: http://www.tdressler.net/ipsymcon/ownet_reader.html
-* XS1 Module: http://www.tdressler.net/ipsymcon/xs1_ips.html
 
 #### Debug:
 By activating the Instance Debug Tab a lot of noise will appear
 
-### additional documentation
+#### additional documentation
 You may generate additional documentation using <a href="http://www.stack.nl/~dimitri/doxygen/index.html"> Doxygen</a>
 <pre>
-doxygen ./Doxyfile
+doxygen libs/doc/Doxyfile
 </pre>
+see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_module/html/)
+
+#### see also
+* [IPS_JSON Wrapper API](libs/Api)
+
 ### License:
 CC By-NC 4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
