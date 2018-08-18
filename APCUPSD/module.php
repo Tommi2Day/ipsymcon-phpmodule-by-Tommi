@@ -25,7 +25,7 @@ class APCUPSD extends T2DModule
     /**
      * Field for ID definition
      */
-    const idname = 'UPSNAME';
+    const idname = 'SERIALNO';
 
     /**
      * Nominal power map
