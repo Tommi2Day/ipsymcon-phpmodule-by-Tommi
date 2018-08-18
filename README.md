@@ -1,5 +1,5 @@
 # ipsymcon-phpmodule
-PHPModules for Symcon V4+
+PHPModules for Symcon V5+
 
 This is a Library of PHP Modules for the home automation software "Symcon"
 
