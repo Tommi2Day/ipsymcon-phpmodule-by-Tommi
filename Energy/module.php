@@ -5,9 +5,9 @@
  * generic Energy Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2017
- * @version 4.3.2
- * @date 2018-01-19
+ * @copyright Thomas Dressler 2016-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 
@@ -192,10 +192,10 @@ class EnergyDev extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Forward command to Splitter parent
-     * @param $Data
+     * @param string $Data
      * @return bool
      */
-    public function SendDataToParent($Data)
+    protected function SendDataToParent($Data)
     {
         $json = json_encode($Data);
         $this->debug(__FUNCTION__, $json);

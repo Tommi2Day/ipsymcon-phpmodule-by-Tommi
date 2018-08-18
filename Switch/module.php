@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2018
- * @version 4.3.3
- * @date 2018-01-19
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 
@@ -202,11 +202,10 @@ class SwitchDev extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Forward command to Splitter parent
-     * @param array $Data
+     * @param string $Data
      * @return bool
-     * @todo: for v4.3+ move to SendToParent with type hint
      */
-    public function SendDataToParent($Data)
+    protected function SendDataToParent($Data)
     {
         $json = json_encode($Data);
         $this->debug(__FUNCTION__, $json);

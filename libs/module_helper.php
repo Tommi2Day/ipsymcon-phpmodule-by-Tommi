@@ -5,9 +5,9 @@
  * IPS Module Helper Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016
- * @version 4.1.4
- * @date 2016-10-22
+ * @copyright Thomas Dressler 2016-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 //disable html errors in modules
 ini_set("html_errors", "0");

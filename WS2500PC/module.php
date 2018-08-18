@@ -5,9 +5,9 @@
  * WS2500 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2009-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -209,7 +209,7 @@ class WS2500PC extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Data Interface from Childs
-     * @param $JSONString
+     * @param string $JSONString
      */
     public function ForwardData($JSONString)
     {
@@ -243,9 +243,9 @@ class WS2500PC extends T2DModule
 
     /**
      * Data Interface to Childs
-     * @param $Data
+     * @param string $Data
      */
-    public function SendDataToChildren($Data)
+    protected function SendDataToChildren($Data)
     {
         parent::SendDataToChildren($Data);
     }

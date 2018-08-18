@@ -5,9 +5,9 @@
  * NUT Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2011-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -385,7 +385,7 @@ class NUT extends T2DModule
      * Data Interface to Childs
      * @param string $Data
      */
-    public function SendDataToChildren($Data)
+    protected function SendDataToChildren($Data)
     {
         parent::SendDataToChildren($Data);
     }
@@ -421,6 +421,11 @@ class NUT extends T2DModule
             if (isset($lines[1]) && preg_match('/^UPS\s+(\w+)\s+"(.*)"/', $lines[1], $res)) {
                 $ups = $res[1];
                 $this->SetUPSname($ups);
+            }elseif(preg_match('/^ERR/',$in)){
+                $this->debug(__FUNCTION__,"Error: ".$in);
+                IPS_LogMessage(__CLASS__,__FUNCTION__." found ERROR:".$in);
+            }else{
+                $this->debug(__FUNCTION__,"unexpected data: ".$in);
             }
 
         }
@@ -466,7 +471,7 @@ class NUT extends T2DModule
      * @param String $Data
      * @return bool
      */
-    private function SendText($Data)
+    private function SendText(string $Data)
     {
         $res = false;
         $json = json_encode(
@@ -485,10 +490,10 @@ class NUT extends T2DModule
     /**
      * parses an record string
      *
-     * @param string $nut
+     * @param array $nut
      * @return array
      */
-    private function Parse(string $nut)
+    private function Parse(array $nut)
     {
 
         $data = array();
@@ -768,9 +773,15 @@ class NUT extends T2DModule
             if (!$line || strlen($line) < 5) continue;
             //Valid Line 'VAR <ups> <key> "<value>"'
             if (preg_match('/^VAR\s+(\w+)\s+([\w\.]+)\s+"(.*)"/', $line, $words)) {
+                $this->debug(__FUNCTION__,"matched data: $line");
                 $key = trim($words[2]);
                 $value = trim($words[3]);
                 $nut[$key] = $value;
+            }elseif(preg_match('/^ERR/',$line)){
+                $this->debug(__FUNCTION__,"Error: $line");
+                IPS_LogMessage(__CLASS__,__FUNCTION__." found ERROR:".$line);
+            }else{
+                $this->debug(__FUNCTION__,"Unused data: $line");
             }
         }
         return $nut;

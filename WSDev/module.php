@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2018
- * @version 4.3.2
- * @date 2018-01-19
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 /**

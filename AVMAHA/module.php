@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2018
- * @version 4.4.3
- * @date 2018-02-10
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");

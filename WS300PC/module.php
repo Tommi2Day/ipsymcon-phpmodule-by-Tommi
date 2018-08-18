@@ -5,9 +5,9 @@
  * WS300PC Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2009-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 /**
@@ -476,7 +476,7 @@ class WS300PC extends T2DModule
     //------------------------------------------------------------------------------
     /**
      * Data Interface from Childs
-     * @param $JSONString
+     * @param string $JSONString
      */
     public function ForwardData($JSONString)
     {
@@ -559,7 +559,7 @@ class WS300PC extends T2DModule
      * Forward commands to childs
      * @param String $Data Json encoded
      */
-    public function SendDataToChildren($Data)
+    protected function SendDataToChildren($Data)
     {
         parent::SendDataToChildren($Data);
     }
@@ -571,7 +571,7 @@ class WS300PC extends T2DModule
      * @param String $Data
      * @return bool
      */
-    public function SendDataToParent($Data)
+    protected function SendDataToParent($Data)
     {
         $res = false;
         $json = json_encode(

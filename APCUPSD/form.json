@@ -7,6 +7,7 @@
 		{ "name": "Category", "type": "ValidationTextBox", "caption": "Category Name" },
 		{ "name": "ParentCategory", "type": "NumberSpinner", "caption": "Category Parent" },
         { "name": "UpdateInterval", "type": "IntervalBox", "caption": "Read Interval in Sec" },
+		{ "name": "IDfield", "type": "ValidationTextBox", "caption": "APC ID Field" },
 		{ "type": "Label", "label": "--- optional settings ---------" },
 		{ "name": "AutoCreate", "type": "CheckBox", "caption": "Enable automatic creation of new devices" },
 		{ "name": "LogFile", "type": "ValidationTextBox", "caption": "LogFile (full qualified)" }

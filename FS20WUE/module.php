@@ -5,9 +5,9 @@
  * FS20WUE IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2011-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -160,7 +160,7 @@ class FS20WUE extends T2DModule
      * Limit 200..500, default 295
      * @param Integer $rainpercount
      */
-    public function SetRainPerCount($rainpercount)
+    public function SetRainPerCount(int $rainpercount)
     {
         if (IPS_GetProperty($this->InstanceID, 'RainPerCount') != $rainpercount) {
             if (($rainpercount > 500) || ($rainpercount < 200)) {
@@ -404,7 +404,7 @@ class FS20WUE extends T2DModule
      * @param String $Data
      * @return bool
      */
-    public function SendDataToParent($Data)
+    protected function SendDataToParent($Data)
     {
         $res = false;
         $json = json_encode(

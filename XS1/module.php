@@ -5,8 +5,8 @@
  * Ezcontrol XS1 IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2012-2017
- * @version 4.2.1
+ * @copyright Thomas Dressler 2012-2018
+ * @version 5.0.1
  * @date 2017-04-22
  */
 

@@ -5,9 +5,9 @@
  * APCUPSD Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2017
- * @version 4.2.2
- * @date 2017-07-17
+ * @copyright Thomas Dressler 2011-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -25,7 +25,7 @@ class APCUPSD extends T2DModule
     /**
      * Field for ID definition
      */
-    const idname = 'SERIALNO';
+    const idname = 'UPSNAME';
 
     /**
      * Nominal power map
@@ -82,6 +82,7 @@ class APCUPSD extends T2DModule
         $this->RegisterPropertyInteger('ParentCategory', 0); //parent cat is root
         $this->RegisterPropertyInteger('Port', 3551);
         $this->RegisterPropertyInteger('UpdateInterval', 300);
+        $this->RegisterPropertyString('IDfield', self::idname);
         $this->RegisterPropertyString('Host', '');
         $this->RegisterPropertyString('LogFile', '');
         $this->RegisterPropertyBoolean('Debug', false);
@@ -206,7 +207,15 @@ class APCUPSD extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
 
-
+    //------------------------------------------------------------------------------
+    /**
+     * Get ID field
+     * @return string
+     */
+    private function GetIDfield()
+    {
+        return (String)IPS_GetProperty($this->InstanceID, 'IDfield');
+    }
 
     //------------------------------------------------------------------------------
     //---Events
@@ -334,7 +343,7 @@ class APCUPSD extends T2DModule
      * Data Interface to Childs
      * @param string $Data
      */
-    public function SendDataToChildren($Data)
+    protected function SendDataToChildren($Data)
     {
         parent::SendDataToChildren($Data);
     }
@@ -440,11 +449,12 @@ class APCUPSD extends T2DModule
     {
 
         $data = array();
-        if (isset($apc[self::idname])) {
-            $dev = $apc[self::idname];
+        $idfield=$this->GetIDfield();
+        if (isset($apc[$idfield])) {
+            $dev = $apc[$idfield];
             $data['Id'] = $dev;
         } else {
-            IPS_LogMessage(__CLASS__, "Identifier " . self::idname . " not found");
+            IPS_LogMessage(__CLASS__, "Identifier " . $idfield . " not found");
             return $data;
         }
 

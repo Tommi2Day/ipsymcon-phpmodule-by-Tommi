@@ -6,9 +6,9 @@
  * uses IPSphpMQTT.php
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2017
- * @version 4.2.1
- * @date 2017-04-22
+ * @copyright Thomas Dressler 2016-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");

@@ -3,7 +3,7 @@ Api/IPS_JSON_config.cfg
 *.iml
 docs/html
 old/
-FHZDummy/
+old/FHZDummy/
 includes/
 IPS2MQTT/
 MQTTPUB/ips_mqtt2db.yml
