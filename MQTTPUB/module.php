@@ -7,8 +7,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @version 5.0.2
+ * @date 2018-08-19
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -454,6 +454,10 @@ class MQTTPUB extends T2DModule
             $ident=$obj['ObjectIdent'];
             $name=$obj['ObjectName'];
             if (!$ident) $ident=$name;
+            //replace float comma
+            if($var['VariableType']==2) {
+                $val=str_replace(',','.',$val);
+            }
             $path=$this->create_path(IPS_GetParent($id));
             $path=$path.$name;
             $data['Path']=$path;
