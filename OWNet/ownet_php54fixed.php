@@ -4,8 +4,8 @@
  * ownet.php from owfs distribution
  * fixed PHP5.4+ reference warnings
  * Tommi2Day 2014-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @version 5.02
+ * @date 2018-09-09
  */
 /*
 VERSION: 2007.01.11 - 17:05  BRST
@@ -294,7 +294,7 @@ class OWNet{
 				$num_changed_sockets = stream_select($read, $write , $except, $t1,$t2);	// use stream_select
 			if ($num_changed_sockets===false){	// error handling select
 				$this->disconnect();
-				trigger_error("Error handling get_msg#1",E_USER_NOTICE);
+				//trigger_error("Error handling get_msg#1",E_USER_NOTICE);
 				return(false);			// return false when have error
 			}elseif($num_changed_sockets>0){	// we can read!
 				if ($this->link_type==OWNET_LINK_TYPE_SOCKET){
@@ -311,7 +311,7 @@ class OWNet{
 					$read_data=fread($this->link,$msg_size);			// read with streams
 				if ($read_data==''){		// disconnected :'(
 					$this->disconnect();
-					trigger_error("Disconnected",E_USER_NOTICE);
+					//trigger_error("Disconnected",E_USER_NOTICE);
 					return(false);			// return false when have error
 				}else
 					$last_read		=microtime(1);
@@ -338,7 +338,7 @@ class OWNet{
 				$num_changed_sockets = stream_select($read , $write , $except, 0,1000);	// use stream_select
 			if ($num_changed_sockets===false){		// error handling
 				$this->disconnect();
-				trigger_error("Error handling send_msg#1",E_USER_NOTICE);
+				//trigger_error("Error handling send_msg#1",E_USER_NOTICE);
 				return(false);				// return false on error
 			}
 		}
@@ -356,7 +356,7 @@ class OWNet{
 			if ($ret===false){
 				// error sending
 				$this->disconnect();
-				trigger_error("Error writing send_msg#1",E_USER_NOTICE);
+				//trigger_error("Error writing send_msg#1",E_USER_NOTICE);
 				return(false);				// return false on error
 			}
 			$sent+=$ret;	// add sent bytes
@@ -406,7 +406,7 @@ class OWNet{
 		$this->disconnect();		// be sure that we are disconnected
 		$this->connect();		// try to connect
 		if (!$this->link_connected){
-			trigger_error("Can't connect get#1",E_USER_NOTICE);
+			//trigger_error("Can't connect get#1",E_USER_NOTICE);
 			return(NULL);
 		}
 		// get value
@@ -419,11 +419,11 @@ class OWNet{
 			$msg=$this->pack(OWNET_MSG_READ		,strlen($path)+1,8192	);
 		}
 		if ( $this->send_msg($msg)===false ){
-			trigger_error("Can't write to resource get#1",E_USER_NOTICE);
+			//trigger_error("Can't write to resource get#1",E_USER_NOTICE);
 			return(NULL);	// error sending
 		}
 		if ( $this->send_msg($path.chr(0))===false){
-			trigger_error("Can't write to resource get#2",E_USER_NOTICE);
+			//trigger_error("Can't write to resource get#2",E_USER_NOTICE);
 			return(NULL);	// error sending
 		}
 		if ($parse_php_type)
@@ -437,7 +437,7 @@ class OWNet{
 			while(1){
 				$tmp_ret=$this->get_msg(24);
 				if ($tmp_ret===false){
-					trigger_error("Can't read from resource get#3",E_USER_NOTICE);
+					//trigger_error("Can't read from resource get#3",E_USER_NOTICE);
 					$this->disconnect();
 					return(NULL);
 				}
@@ -476,7 +476,7 @@ class OWNet{
 					while(1){
 						$tmp_ret=$this->get_msg($data_len);
 						if ($tmp_ret===false){
-							trigger_error("Can't read from resource get#4",E_USER_NOTICE);	// error receiving
+							//trigger_error("Can't read from resource get#4",E_USER_NOTICE);	// error receiving
 							$this->disconnect();
 							return(NULL);		// return NULL on error
 						}
@@ -486,7 +486,7 @@ class OWNet{
 							break;
 					}
 				if (!$return_full_info_array && strlen($data)!=$data_len){	// if just return value and data < data_len return as an error
-					trigger_error("Can't read full data get#1",E_USER_NOTICE);
+					//trigger_error("Can't read full data get#1",E_USER_NOTICE);
 					$this->disconnect();
 					return(NULL);		// return NULL on error
 				}
@@ -534,7 +534,7 @@ class OWNet{
 							$ret['data_php']=bcadd($ret['data_php'],0,0);	// integer (using bcmath for bigger precision)
 						}elseif($type[0]=='u'){
 							$ret['data_php']=bcadd($ret['data_php'],0,0);	// unsigned integer (using bcmath for bigger precision)
-							if (bccmp($ret['data_php'],0,0)==-1){
+							if (bccomp($ret['data_php'],0,0)==-1){
 								$ret['data_php']=substr($ret['data_php'],1);		// be shure that it's unsigned
 							}
 						}elseif(in_array($type[0],array('f','t',chr(152)))){
@@ -625,7 +625,7 @@ class OWNet{
 		}
 		if ($type!==false){
 			if ($type[3]=='ro'){	// read only file
-				trigger_error("Read only value set#1 [$path]",E_USER_NOTICE);
+				//trigger_error("Read only value set#1 [$path]",E_USER_NOTICE);
 				return(false);	// return false on error
 			}
 		}
@@ -634,18 +634,18 @@ class OWNet{
 		$this->disconnect();
 		$this->connect();
 		if (!$this->link_connected){
-			trigger_error("Can't connect set#1",E_USER_NOTICE);
+			//trigger_error("Can't connect set#1",E_USER_NOTICE);
 			return(false);		// return false on error
 		}
 		if (!is_string($value))
 			$value=(string)$value;	// be sure that's an string
 		$msg=$this->pack(OWNET_MSG_WRITE,strlen($path)+1+strlen($value)+1,strlen($value)+1);	// pack data
 		if ( $this->send_msg($msg)===false ){
-			trigger_error("Can't write to resource set#1",E_USER_NOTICE);
+			//trigger_error("Can't write to resource set#1",E_USER_NOTICE);
 			return(false);	// error sending
 		}
 		if ( $this->send_msg($path.chr(0).$value.chr(0))===false ){
-			trigger_error("Can't write to resource set#2",E_USER_NOTICE);
+			//trigger_error("Can't write to resource set#2",E_USER_NOTICE);
 			return(false);	// error sending value
 		}
 
@@ -654,7 +654,7 @@ class OWNet{
 		while(1){
 			$tmp_ret=$this->get_msg(24);
 			if ($tmp_ret===false){
-				trigger_error("Can't read from resource set#1",E_USER_NOTICE);
+				//trigger_error("Can't read from resource set#1",E_USER_NOTICE);
 				$this->disconnect();
 				return(false);	// error reading return
 			}
@@ -665,7 +665,7 @@ class OWNet{
 		}
 		$ret=$this->unpack($data);	// unpack data return
 		if (count($ret)<6){
-			trigger_error("Error unpacking data set#1 [".strlen($data)."] ".$data,E_USER_NOTICE);
+			//trigger_error("Error unpacking data set#1 [".strlen($data)."] ".$data,E_USER_NOTICE);
 			$this->disconnect();
 			return(false);		// return false on error
 		}
