@@ -214,7 +214,7 @@ class OWNet{
 					if (!$ok){
 						$errno	=@socket_last_error();				// get error when connecting
 						$errstr	=@socket_strerror(socket_last_error());
-						trigger_error("Can't create socket [ow://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
+						//trigger_error("Can't create socket [ow://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
 						@socket_shutdown($this->link,2);			// unload socket
 						@socket_close($this->link);
 						$this->link=NULL;
@@ -223,7 +223,7 @@ class OWNet{
 				}else{
 					$errno	=@socket_last_error();					// get error when creating socket
 					$errstr	=@socket_strerror(@socket_last_error());
-					trigger_error("Can't create socket [ow://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
+					//trigger_error("Can't create socket [ow://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
 					return(false);							// return false on error or can't connect
 				}
 			}else{	// udp
@@ -233,7 +233,7 @@ class OWNet{
 				}else{
 					$errno	=@socket_last_error();					// get error when creating socket
 					$errstr	=@socket_strerror(@socket_last_error());
-					trigger_error("Can't create socket [ow-udp://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
+					//trigger_error("Can't create socket [ow-udp://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
 					return(false);							// return false on error or can't connect
 				}
 			}
@@ -242,7 +242,7 @@ class OWNet{
 				($this->sock_type==OWNET_LINK_TYPE_TCP?'tcp://':'udp://').
 				$this->host.":".$this->port, $errno, $errstr, $this->timeout);		// connect with streams, could be with fsockopen but stream_socket_client is faster (we will use PHP 5+)
 			if (!$this->link){
-				trigger_error("Can't create stream [ow-stream".($this->sock_type!=OWNET_LINK_TYPE_TCP?'-udp':'')."://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
+				//trigger_error("Can't create stream [ow-stream".($this->sock_type!=OWNET_LINK_TYPE_TCP?'-udp':'')."://".$this->host.":".$this->port."], errno: $errno, error: $errstr",E_USER_NOTICE);
 				return(false);							// return false on error or can't connect
 			}
 		}
@@ -279,6 +279,9 @@ class OWNet{
 		$last_read		=microtime(1);
 		$tmp_host='';
 		$tmp_port=0;
+		if (!$msg_size || $msg_size>1024*1024) {
+		    $msg_size=24;
+        }
 		$t1=intval($this->timeout);
 		$t2=($this->timeout*1000000)%1000000;
 		while ($num_changed_sockets<=0){	// can loop forever? owserver must send something! or disconnect!
@@ -315,7 +318,7 @@ class OWNet{
 				break;
 			}else
 				break;
-			if (microtime(1)-$last_read>$this->timeout)
+			if ((microtime(1)-$last_read)>$this->timeout)
 				break;
 		}
 		return($read_data);			// return data
