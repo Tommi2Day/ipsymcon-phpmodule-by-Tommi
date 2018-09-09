@@ -2,8 +2,10 @@
 /**  @file
  *
  * ownet.php from owfs distribution
- * fixed PHP5.4+ reference warnings 
- * @date 10/2014 TD
+ * fixed PHP5.4+ reference warnings
+ * Tommi2Day 2014-2018
+ * @version 5.0.1
+ * @date 2018-08-18
  */
 /*
 VERSION: 2007.01.11 - 17:05  BRST
@@ -95,6 +97,7 @@ if (!defined('TCP_NODELAY'))
 	define('TCP_NODELAY',1);
 if (!defined('IPPROTO_TCP'))
 	define('IPPROTO_TCP',6);
+
 
 $OWNET_GLOBAL_CACHE_STRUCTURE=array();	// cache value types length read write....
 /**
@@ -274,6 +277,8 @@ class OWNet{
 		$num_changed_sockets	=0;
 		$read_data		='';
 		$last_read		=microtime(1);
+		$tmp_host='';
+		$tmp_port=0;
 		$t1=intval($this->timeout);
 		$t2=($this->timeout*1000000)%1000000;
 		while ($num_changed_sockets<=0){	// can loop forever? owserver must send something! or disconnect!
@@ -419,7 +424,7 @@ class OWNet{
 			return(NULL);	// error sending
 		}
 		if ($parse_php_type)
-			global $OWNET_GLOBAL_CACHE_STRUCTURE;	// we will use for parse_php_type
+            global $OWNET_GLOBAL_CACHE_STRUCTURE;	// we will use for parse_php_type
 		// get return
 		$return=NULL;		// set to NULL if nothing returned
 		while(1){
@@ -444,7 +449,7 @@ class OWNet{
 				if ($get_type==OWNET_MSG_DIR_ALL)	// old servers
 					return($this->get($path,OWNET_MSG_DIR,$return_full_info_array,$parse_php_type));	
 				$data=substr($data,0,24);
-				trigger_error("Error unpacking data get#1 [".strlen($data)."] ".$data,E_USER_NOTICE);
+				//trigger_error("Error unpacking data get#1 [".strlen($data)."] ".$data,E_USER_NOTICE);
 				$this->disconnect();
 				return(NULL);
 			}
@@ -597,6 +602,7 @@ class OWNet{
 		$path=trim($path);	// trim path
 		$tmp	=explode('/',$path);$c=count($tmp)-1;
 		$type=false;
+		global $OWNET_GLOBAL_CACHE_STRUCTURE;
 		if ($c>0){	// try to get information about structure, if file is readonly or not
 			$variavel	=$tmp[$c];
 			$ow		=$tmp[$c-1];
