@@ -6,9 +6,9 @@
  *
  * @author Blue Rhinos Consulting, modified by Thomas Dressler
  * @copyright 2010 Blue Rhinos Consulting | Andrew Milsted
- * @copyright Thomas Dressler 2016
- * @version 4.1.1
- * @date 2016-10-22
+ * @copyright Thomas Dressler 2016-2018
+ * @version 5.0.2
+ * @date 2018-09-13
  */
 
 /*
@@ -246,7 +246,11 @@ class IPSphpMQTT {
         fwrite($this->socket,  $buffer);
 
         $string = $this->read(4);
-
+        if (!$string) {
+            IPS_LogMessage(__CLASS__,__FUNCTION__.": Connection failed! No Data");
+            $this->debugtxt(__FUNCTION__,"Connection failed! No Data");
+            return false;
+        }
         if(ord($string{0})>>4 == 2 && $string{3} == chr(0)){
             $this->debugtxt(__FUNCTION__,"Connected to Brocker");
         }else{
