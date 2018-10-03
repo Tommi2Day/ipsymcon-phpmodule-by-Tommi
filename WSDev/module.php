@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @version 5.0.2
+ * @date 2018-10-03
  */
 
 /**
@@ -254,7 +254,7 @@ class WSDEV extends T2DModule
                 case 'TS'; //TimeStamp
                 case 'Lost'://lost
                 case 'Signal':
-                    if(strlen($s)==0) continue;
+                    if(strlen($s)==0) continue 2;
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
@@ -268,7 +268,7 @@ class WSDEV extends T2DModule
                 case 'RainDaily'://rain this day
                 case 'RainHourly'://rain 1h
                 case 'RainLastDay'://rain 24h
-                    if(strlen($s)==0) continue;
+                    if(strlen($s)==0) continue 2;
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;
