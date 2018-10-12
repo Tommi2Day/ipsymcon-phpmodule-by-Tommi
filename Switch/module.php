@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @version 5.0.2
+ * @date 2018-10-12
  */
 
 
@@ -690,7 +690,7 @@ class SwitchDev extends T2DModule
                     if ($tvid) $timer = GetValueInteger($tvid);
                     if ($avid) $acode = GetValueString($avid);
                     $ac = ord($action) & 0x1f;
-                    $timed = (($action & 0x20) > 0);
+                    $timed = ((ord($action) & 0x20) > 0);
                     $this->debug(__FUNCTION__, "FS20 AC:" . $ac . "PrevD:$intensity, PrevS:" . ($state ? "On" : "Off"));
                     switch ($ac) {
                         case 0: //off
