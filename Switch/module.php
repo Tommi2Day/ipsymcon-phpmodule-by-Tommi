@@ -701,7 +701,7 @@ class SwitchDev extends T2DModule
                             }
                             break;
                         case ($ac < 0x0f): //Dim to value
-                            $intensity = FHZ_helper::fs20_intensity_percent($action & 0x0f);
+                            $intensity = FHZ_helper::fs20_intensity_percent($ac & 0x0f);
                             $state = true;
                             if ($timed) {
                                 $actioncode = 'Switch:Off';
