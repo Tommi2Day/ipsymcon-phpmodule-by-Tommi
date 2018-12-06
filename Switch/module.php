@@ -485,6 +485,14 @@ class SwitchDev extends T2DModule
                 return $res;
             }
         }
+        $ident = $caps[$cap];
+        $vid = @$this->GetIDForIdent($ident);
+
+        if (!$vid) {
+            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
+            return $res;
+        }
+
 
         //fs20 uses device timer, all other ips timer
         switch ($type) {
@@ -499,22 +507,14 @@ class SwitchDev extends T2DModule
                 $this->setSwitchMode($state);
                 //timer action is opposite
                 $ActionCode = 'Switch:' . ($state ? 'Off' : 'On');
+                $this->debug(__FUNCTION__, "Set IPS Timer to $val ($vid)");
+                SetValueInteger($vid, $val);
+                //rearm timer
+                $this->SetTimerInterval('DeviceTimer', $val * 1000);
+                //set  or reset action code to set switch state after duration
                 break;
         }
         $this->debug(__FUNCTION__, "IPS Timer Actioncode $ActionCode");
-
-        $ident = $caps[$cap];
-        $vid = @$this->GetIDForIdent($ident);
-
-        if (!$vid) {
-            IPS_LogMessage(__CLASS__, __FUNCTION__ . "::No vid for cap $cap('$ident')");
-            return $res;
-        }
-        $this->debug(__FUNCTION__, "Set IPS Timer to $val ($vid)");
-        SetValueInteger($vid, $val);
-        //rearm timer
-        $this->SetTimerInterval('DeviceTimer', $val * 1000);
-        //set  or reset action code to set switch state after duration
 
         $avid = @$this->GetIDForIdent($caps['TimerActionCode']);
         if (!$avid) {
