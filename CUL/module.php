@@ -933,11 +933,14 @@ class CUL extends T2DModule
             if ($len < 12) {                 #  S300TH
                 $sgn = ($firstbyte & 8) ? -1 : 1;
                 $tmp = $sgn * ($a[6] . $a[3] . "." . $a[4]);
-                $hum = ($a[7] . $a[8]);
+                $hum=0;
+                if ($len>7) {
+                    $hum = ($a[7] . $a[8]);
+                }
+                $data['Hum'] = $hum;
                 $val = "T: $tmp  H: $hum";
                 $caps .= 'Temp;Hum;';
                 $data['Temp'] = $tmp;
-                $data['Hum'] = $hum;
                 $data['Typ'] = "WS300 T/F";
 
                 //signal
