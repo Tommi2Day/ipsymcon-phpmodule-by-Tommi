@@ -6,7 +6,7 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2011-2018
- * @version 4.3.5
+ * @version 5.0.2
  * @date 2018-01-19
  */
 
@@ -930,7 +930,7 @@ class CUL extends T2DModule
 
         } else {
 
-            if ($len < 12) {                 #  S300TH
+            if ($len < 12 && $len>6) {                 #  S300TH
                 $sgn = ($firstbyte & 8) ? -1 : 1;
                 $tmp = $sgn * ($a[6] . $a[3] . "." . $a[4]);
                 $hum=0;
