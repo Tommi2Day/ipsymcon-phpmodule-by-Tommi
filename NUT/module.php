@@ -5,9 +5,9 @@
  * NUT Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @copyright Thomas Dressler 2011-2019
+ * @version 5.0.2
+ * @date 2019-01-24
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -446,7 +446,7 @@ class NUT extends T2DModule
                 //parse
                 $nut_data = $this->Parse($nut);
             } else {
-                IPS_LogMessage(__CLASS__, 'no valid VAR data found for UPS $ups');
+                IPS_LogMessage(__CLASS__, "no valid VAR data found for UPS $ups");
             }
         }else{
             $this->debug(__FUNCTION__,"UPSname property not set and no UPS found");
