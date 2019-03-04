@@ -5,9 +5,9 @@
  * TE923 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2018
- ** @version 5.0.1
- * @date 2018-08-18
+ * @copyright Thomas Dressler 2009-2019
+ ** @version 5.0.2
+ * @date 2019-03-04
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -456,7 +456,7 @@ class TE923 extends T2DModule
                 $te_data['Wind']['WindDir'] = $data[17] * 22.5;
                 $te_data['Wind']['WindGust'] = $data[19] * self::ms_to_kmh;
                 $te_data['Wind']['WindChill'] = (float)$data[20];
-                $te_data['Wind']['Bat'] = $status[7];
+                $te_data['Wind']['Bat'] = $status[7]; //todo: undefined index
             }
 
             //rain
@@ -470,6 +470,10 @@ class TE923 extends T2DModule
                 $daily = GetValueInteger($dailyid);
                 $diff = $new - $old;
                 $dailydiff=$new-$daily;
+
+                //handle counter overflow
+                if ($diff<0) $diff=6553+$new-$old;
+                if ($dailydiff<0) $dailydiff=6553+$new-$daily;
 
                 $rain = $diff * $factor;
                 $raindaily = $dailydiff * $factor;
@@ -486,12 +490,12 @@ class TE923 extends T2DModule
                     $te_data['Rain']['RainLastDay']=$lastday;
                     $this->debug(__FUNCTION__,"::NewDay, Store old Counter($old) and Daily($lastday)");
                 }
-                if ($new>$old) SetValueInteger($rcid,$new);
+                SetValueInteger($rcid,$new);
                 if (($rain < 0) or ($rain > 100)) $rain = 0;
                 $te_data['Rain']['Rain'] = $rain;
                 if (($raindaily < 0) or ($raindaily > 500)) $raindaily = 0;
                 $te_data['Rain']['RainDaily'] = $raindaily;
-                $te_data['Rain']['Bat'] = $status[5];
+                $te_data['Rain']['Bat'] = $status[5]; //todo: undefined index
             }
             //fill standard fields
             foreach (array('Wind','Rain','UV','Indoor') as $dev) {
@@ -538,8 +542,8 @@ class TE923 extends T2DModule
             if (!isset($weather_data[$Device])) continue;
             $data=array();
             $caps='';
-            $id = $weather_data[$Device]['Id']; 
-            $typ = $weather_data[$Device]['Typ'];
+            $id = $weather_data[$Device]['Id']; //todo: undefined index
+            $typ = $weather_data[$Device]['Typ']; //todo: undefined index
             $data['Date']=$datum;
 
             foreach ($this->fieldlist as $cap) {
@@ -608,8 +612,8 @@ class TE923 extends T2DModule
     private function CreateWSDevice($data, $caps)
     {
         $instID = 0;
-        $Device = $data['Id'];
-        $typ = $data['Typ'];
+        $Device = $data['Id']; //todo: undefined index
+        $typ = $data['Typ']; //todo: undefined index
         $ModuleID = $this->module_interfaces['WSDEV'];
         if (IPS_ModuleExists($ModuleID)) {
             //return $result;
@@ -617,9 +621,9 @@ class TE923 extends T2DModule
             $instID = IPS_CreateInstance($ModuleID);
             if ($instID > 0) {
                 IPS_ConnectInstance($instID, $this->InstanceID);  //Parents are ourself!
-                IPS_SetProperty($instID, 'DeviceID', $Device); 
+                IPS_SetProperty($instID, 'DeviceID', $Device); //todo: parameter type Value is not supported
                 IPS_SetProperty($instID, 'Class', __CLASS__);
-                IPS_SetProperty($instID, 'Typ', $typ);
+                IPS_SetProperty($instID, 'Typ', $typ); //todo: parameter type Value is not supported
                 IPS_SetProperty($instID, 'CapList', $caps);
                 IPS_SetProperty($instID, 'Debug', $this->isDebug()); //follow debug settings from splitter
                 switch ($Device) {
