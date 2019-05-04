@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2016-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 //disable html errors in modules
 ini_set("html_errors", "0");

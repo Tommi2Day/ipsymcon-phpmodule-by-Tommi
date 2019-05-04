@@ -5,9 +5,9 @@
  * AVM AHA-API IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2013-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @copyright Thomas Dressler 2013-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");

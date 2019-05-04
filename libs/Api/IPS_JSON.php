@@ -6,9 +6,9 @@
 * Mapper class for IP-Symcon JSON API
 * 
 *  @author Thomas Dressler
-*  @copyright Thomas Dressler 2013-2018
-*  @version 4.4
-*  @date 2018-02-25
+*  @copyright Thomas Dressler 2013-2019
+*  @version 5.1
+*  @date 2019-05-04
 */
 /** @class IPS_JSON
  * 

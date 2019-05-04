@@ -7,9 +7,9 @@
  * read 1wire devices via OWServer and OWNet Library
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2014-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @copyright Thomas Dressler 2014-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  *
  */
 

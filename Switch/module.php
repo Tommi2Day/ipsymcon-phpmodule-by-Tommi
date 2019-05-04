@@ -5,9 +5,9 @@
  * generic Switch Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2013-2018
- * @version 5.0.2
- * @date 2018-10-12
+ * @copyright Thomas Dressler 2013-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 

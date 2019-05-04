@@ -3,7 +3,10 @@
 "author": "Thomas Dressler",
 "name": "Modules by Tommi",
 "url": "http://www.tdressler.net/ipsymcon",
-"version": "5.0",
-"build": 2019020601,
+"version": "5.1",
+"compatibility": {
+    "version": "5.1"
+},
+"build": 5101,
 "date": 0
 }

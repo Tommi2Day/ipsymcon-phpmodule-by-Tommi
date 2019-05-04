@@ -5,9 +5,9 @@
  * generic Weather Station Sensor PHP Device Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2018
- * @version 5.0.2
- * @date 2018-10-03
+ * @copyright Thomas Dressler 2009-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 /**

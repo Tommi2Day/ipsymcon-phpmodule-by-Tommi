@@ -6,9 +6,9 @@
  *
  * @author Blue Rhinos Consulting, modified by Thomas Dressler
  * @copyright 2010 Blue Rhinos Consulting | Andrew Milsted
- * @copyright Thomas Dressler 2016-2018
- * @version 5.0.2
- * @date 2018-09-13
+ * @copyright Thomas Dressler 2016-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 /*

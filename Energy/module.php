@@ -5,9 +5,9 @@
  * generic Energy Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2018
- * @version 5.0.1
- * @date 2018-08-18
+ * @copyright Thomas Dressler 2016-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 

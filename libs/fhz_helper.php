@@ -5,9 +5,9 @@
  * FHZ/FS20 functions Helper Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016
- * @version 4.2.2
- * @date 2017-07-23
+ * @copyright Thomas Dressler 2016-2019
+ * @version 5.1.0
+ * @date 2019-05-04
  */
 
 /** @class FHZ_helper
