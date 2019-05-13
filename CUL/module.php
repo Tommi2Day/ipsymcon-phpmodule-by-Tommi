@@ -5,9 +5,9 @@
  * CUL IPSymcon PHP Splitter Module  for busware.de CUL/CUN/COC receiver
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2011-2018
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2011-2019
+ * @version 5.1.1
+ * @date 2019-05-13
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -977,7 +977,7 @@ class CUL extends T2DModule
                 $this->debug(__FUNCTION__, "WS300: Invalid record: $line");
             }
         }
-        if (!$data['Typ']) $data['Typ'] = ($typid ? $typid : 'unknown');
+        if (!isset($data['Typ'])) $data['Typ'] = ($typid ? $typid : 'unknown');
         $text = "Dev $dev ($typid): $val";
         $this->debug(__FUNCTION__, "WS300:" . $text);
         $this->SendWSData($data, $caps);
