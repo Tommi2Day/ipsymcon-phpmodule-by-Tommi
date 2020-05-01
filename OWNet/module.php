@@ -330,7 +330,7 @@ class OWN extends T2DModule
                                     $data['Name']=$name;
                                     $data['Id']=$addr;
                                     $data['Typ']=$type;
-                                    $data['Temp']=sprintf("%4.1F",$temp);
+                                    $data['Temp']=sprintf("%4.2F",$temp);
                                     //print " Alias '$alias',Temp $temp\n";
                                     $caps.=';Temp';
                                     $this->SendWSData($caps,$data);
