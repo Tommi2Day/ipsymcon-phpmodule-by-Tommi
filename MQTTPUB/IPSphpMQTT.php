@@ -6,9 +6,9 @@
  *
  * @author Blue Rhinos Consulting, modified by Thomas Dressler
  * @copyright 2010 Blue Rhinos Consulting | Andrew Milsted
- * @copyright Thomas Dressler 2016-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2016-2020
+ * @version 5.5.0
+ * @date 2020-07-09
  */
 
 /*
@@ -239,8 +239,8 @@ class IPSphpMQTT {
         if($this->password) $buffer .= $this->strwritestring($this->password,$i);
 
         $head = "  ";
-        $head{0} = chr(0x10);
-        $head{1} = chr($i);
+        $head[0] = chr(0x10);
+        $head[1] = chr($i);
 
         fwrite($this->socket, $head, 2);
         fwrite($this->socket,  $buffer);
@@ -251,13 +251,13 @@ class IPSphpMQTT {
             $this->debugtxt(__FUNCTION__,"Connection failed! No Data");
             return false;
         }
-        if(ord($string{0})>>4 == 2 && $string{3} == chr(0)){
+        if(ord($string[0])>>4 == 2 && $string[3] == chr(0)){
             $this->debugtxt(__FUNCTION__,"Connected to Brocker");
         }else{
             IPS_LogMessage(__CLASS__,__FUNCTION__.":: ".sprintf("Connection failed! (Error: 0x%02x 0x%02x)\n",
-                    ord($string{0}),ord($string{3})));
+                    ord($string[0]),ord($string[3])));
             $this->debugtxt(__FUNCTION__,
-                sprintf("Connection failed! (Error: 0x%02x 0x%02x)\n",ord($string{0}),ord($string{3})));
+                sprintf("Connection failed! (Error: 0x%02x 0x%02x)\n",ord($string[0]),ord($string[3])));
             return false;
         }
 
@@ -345,8 +345,8 @@ class IPSphpMQTT {
      */
     public function disconnect(){
         $head = " ";
-        $head{0} = chr(0xe0);
-        $head{1} = chr(0x00);
+        $head[0] = chr(0xe0);
+        $head[1] = chr(0x00);
         fwrite($this->socket, $head, 2);
         $this->debugtxt(__FUNCTION__, "disconnected");
     }
@@ -392,7 +392,7 @@ class IPSphpMQTT {
         if($qos) $cmd += $qos << 1;
         if($retain) $cmd += 1;
 
-        $head{0} = chr($cmd);
+        $head[0] = chr($cmd);
         $head .= $this->setmsglength($i);
 
         fwrite($this->socket, $head, strlen($head));
@@ -407,7 +407,7 @@ class IPSphpMQTT {
      * @param string $msg Received Message
      */
     private function message($msg){
-        $tlen = (ord($msg{0})<<8) + ord($msg{1});
+        $tlen = (ord($msg[0])<<8) + ord($msg[1]);
         $topic = substr($msg,2,$tlen);
         $msg = substr($msg,($tlen+2));
         $found = 0;
@@ -514,7 +514,7 @@ class IPSphpMQTT {
         $multiplier = 1;
         $value = 0 ;
         do{
-            $digit = ord($msg{$i});
+            $digit = ord($msg[$i]);
             $value += ($digit & 127) * $multiplier;
             $multiplier *= 128;
             $i++;
@@ -567,9 +567,9 @@ class IPSphpMQTT {
     private function printstr($string){
         $strlen = strlen($string);
         for($j=0;$j<$strlen;$j++){
-            $num = ord($string{$j});
+            $num = ord($string[$j]);
             if($num > 31)
-                $chr = $string{$j}; else $chr = " ";
+                $chr = $string[$j]; else $chr = " ";
             $this->debugtxt(__FUNCTION__, sprintf("%4d: %08b : 0x%02x : %s ",$j,$num,$num,$chr));
         }
     }
