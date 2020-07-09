@@ -5,9 +5,9 @@
  * AVM AHA-API IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2013-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2013-2020
+ * @version 5.1.1
+ * @date 2020-05-15
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -473,11 +473,14 @@ class AVMAHA extends T2DModule
                     $actual = $power / 1000; //mW->W
                     $counter = (integer)$device->powermeter->energy;
                     $new_total = $counter / 1000;//Wh ->KWh
-                    $caps = 'APower;TPower;Counter';
+                    $voltage=(integer)$device->powermeter->voltage;
+                    $voltage=$voltage/1000;
+                    $caps = 'APower;TPower;Counter;VoltIn';
                     $data['Counter'] = $counter;
                     $data['APower'] = $actual;
                     $data['TPower'] = $new_total;
-                    $txt = " Power(Act:" . $actual . " W, Power: $power mW, Counter:$new_total); ";
+                    $data['VoltIn'] = $voltage;
+                    $txt = " Power(Volt: ". $voltage. "V, Act:" . $actual . " W, Power: $power mW, Counter:$new_total); ";
                     $this->debug(__FUNCTION__ . "_Power", $txt);
                     $this->SendENData($caps, $data);
                 }

@@ -5,9 +5,9 @@
  * generic Weather Station Sensor PHP Device Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2009-2020
+ * @version 5.1.1
+ * @date 2020-05-01
  */
 
 /**
@@ -269,6 +269,7 @@ class WSDEV extends T2DModule
                 case 'RainHourly'://rain 1h
                 case 'RainLastDay'://rain 24h
                     if(strlen($s)==0) continue 2;
+                    $s=str_replace(",",".",$s);
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;

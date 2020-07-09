@@ -7,9 +7,9 @@
  * read 1wire devices via OWServer and OWNet Library
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2014-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2014-2020
+ * @version 5.3.0
+ * @date 2020-05-01
  *
  */
 
@@ -323,13 +323,14 @@ class OWN extends T2DModule
                             case '10': //DS18S20 temperature sensors
                             case '22': //DS1820 temperature sensors
                                 $temp=trim($ow->read("$dev/temperature",true));
+                                $temp=str_replace(",",".",$temp);
                                 if (strlen($temp)>0) {
                                     //store new temperature value
                                     $this->debug(__FUNCTION__, "$type $id ($alias): $temp");
                                     $data['Name']=$name;
                                     $data['Id']=$addr;
                                     $data['Typ']=$type;
-                                    $data['Temp']=sprintf("%4.1f",$temp);
+                                    $data['Temp']=sprintf("%4.2F",$temp);
                                     //print " Alias '$alias',Temp $temp\n";
                                     $caps.=';Temp';
                                     $this->SendWSData($caps,$data);

@@ -5,9 +5,9 @@
  * WDE1 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2009-2020
+ * @version 5.1.1
+ * @date 2020-06-14
  */
 
 
@@ -437,7 +437,7 @@ class WDE1 extends T2DModule
         for ($p = 0; $p < self::MAXSENSORS; $p++) {
             $records[$p] = array('typ' => '', 'id' => '', 'sensor' => '', 'temp' => '', 'hum' => '', 'lost' => '');
         }
-
+        $wde1_data['date'] = time();
         $wde1_data['records'] = $records;
         $wde1_data['wind'] = '';
         $wde1_data['rain'] = '';
@@ -502,7 +502,6 @@ class WDE1 extends T2DModule
         $this->debug(__FUNCTION__, 'Prepare');
         $data = array();
         //$wue_data['date']=time();
-        $weather_data['date'] = time();
         $dt = $weather_data['date'];
         $datum = date('Y-m-d H:i:s', $dt);
 
@@ -690,12 +689,18 @@ class WDE1 extends T2DModule
         if (!$exists) {
             fwrite($o, self::fieldlist . "\r\n");
         } //if exists
-        //DateSeperator:='-';
-        $dt = $weather_data['date'];
-        if ($dt == 0) {
+
+        //dates
+        if (isset($weather_data['date'])) {
+            $dt = $weather_data['date'];
+        }else{
             $dt = time();
-        }//if date
+        }//has date
+        if ( $dt == 0 ) {
+            $dt = time();
+        }//if date == 0
         $datum = date('Y-m-d H:i:s', $dt);
+
         $rain = $weather_data['rain'];
         $rainc = $weather_data['rainc'];
         $israining = $weather_data['israining'];
@@ -708,7 +713,7 @@ class WDE1 extends T2DModule
             $temp = $weather_data['records'][$i]['temp'];
             $hum = $weather_data['records'][$i]['hum'];
             $data = sprintf('%s;%s;%s;%s;%s;%s;;;', $datum, $typ, $id, $sensor, $temp, $hum);
-            if ($i == 8) $data = sprintf('%s;%s;%s;%s;%s;%s;;;%s;%s;%s;%s;', $datum, $typ, $id, $sensor, $temp, $wind, $rain, $israining, $rainc);
+            if ($i == 8) $data = sprintf('%s;%s;%s;%s;%s;%s;;;%s;%s;%s;', $datum, $typ, $id, $sensor, $temp, $wind, $rain, $israining, $rainc);
             if ($temp > 0) {
                 @fwrite($o, $data);
                 fwrite($o, "\r\n");

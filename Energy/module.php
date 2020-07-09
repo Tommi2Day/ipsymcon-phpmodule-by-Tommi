@@ -5,9 +5,9 @@
  * generic Energy Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2016-2020
+ * @version 5.1.2
+ * @date 2020-05-01
  */
 
 
@@ -455,6 +455,7 @@ class EnergyDev extends T2DModule
                 case 'AWater'://Actual 
                 case 'TWater'://Total
                 case 'PWater'://Peak
+                    $s=str_replace(",",".",$s);
                     $fv = (float)$s;
                     $factor=$this->GetCounterFactor();
                     $val=$fv*$factor;
@@ -468,6 +469,7 @@ class EnergyDev extends T2DModule
                 case 'Watt'://Absolute Load
                 case 'Freq'://Frequency
                 case 'TimeLeft'://TimeLeft
+                    $s=str_replace(",",".",$s);
                     $fv = (float)$s;
                     SetValueFloat($vid, $fv);
                     break;

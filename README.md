@@ -5,7 +5,7 @@ This is a Library of PHP Modules for the home automation software "Symcon"
 
 
 ### Requirements:
-* Symcon (https://www.symcon.de/en/) Version 5.1
+* Symcon (https://www.symcon.de/en/) Version 5.1+
 
 ### Installation
 * Within Symcon Konsole go to "Kern Instancen" ->Modules
@@ -69,7 +69,7 @@ See ws300pc_history.pl for an idea running it outside using IPS_JSON Wrapper Api
 Splittermodul for reading ELV WDE1 Datalogger.  The Logger will be accessed via serial port.
 
 <span style="color:red">
-This module is deprecated/unsupported as of 2017. I dont have this anymore.
+This module is deprecated/unsupported as of 2017. I dont have this device anymore.
 </span>
 
 ##### Supported Devices:
@@ -101,7 +101,7 @@ read AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.)
 
 ##### supported Devices: 
 * Fritz Powerline 546E
-* Fritz Dect200(need FritzOS6.20+ for Temperature), 
+* Fritz Dect200(need FritzOS6.20+ for Temperature, 6.98 for Voltage), 
 * Repeater 100 (need FritzOS6.50+)
 
 ##### Data Handling:
