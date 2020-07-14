@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2020
- * @version 5.1.1
- * @date 2020-05-15
+ * @version 5.1.2
+ * @date 2020-07-15
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -455,14 +455,25 @@ class AVMAHA extends T2DModule
                     } elseif ($tsoll == 253) {
                         $tsoll = -1;
                     }
-                    $caps = 'Tist;Tsoll;Treduced;TComfort';
-                    $data['tist'] = $tist;
-                    $data['tsoll'] = $tist;
-                    $data['reduced'] = $absenk;
-                    $data['comfort'] = $komfort;
+                    $caps = 'Temp;TempSoll;TempReduced;TempComfort';
+                    $data['Temp'] = $tist;
+                    $data['TempSoll'] = $tist;
+                    $data['TempReduced'] = $absenk;
+                    $data['TempComfort'] = $komfort;
                     $txt = sprintf(" HKR(Act:%02.1fC ,Target:%02.1fC ,Sink:%02.1fC, Comfort:%02.1fC); ", $tist, $tsoll, $absenk, $komfort);
                     $this->debug(__FUNCTION__ . "_HKR", $txt);
-                    $this->SendHKRData($caps, $data);
+                    //Battery Dect301
+                    if (isset($device->hkr->battery)) {
+                        $battery_pct=$device->hkr->battery;
+                        $battery=($device->hkr->batterylow=="1")?"LOW":"OK";
+                        $txt = sprintf(" HKR(Battery:%02.1f ,Battery_Low: %s); ", $battery_pct, $battery);
+                        $this->debug(__FUNCTION__ . "_HKR", $txt);
+                        $caps = $caps.';BatteryPct;Battery';
+                        $data['Battery']=$battery;
+                        $data['BatteryPct']=$battery_pct;
+
+                    }
+                    $this->SendWSData($caps, $data);
                 }
             }
             if ($has_powermeter) {

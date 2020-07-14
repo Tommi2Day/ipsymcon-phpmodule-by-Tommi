@@ -50,6 +50,7 @@ class WSDEV extends T2DModule
         "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
         "Level" => array("ident" => "Level", "type" => self::VT_Float, "name" => 'Level', "profile" => '', "pos" => 9),
         "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
+        "BatteryPct" => array("ident" => 'BatteryPct', "type" => self::VT_Integer, "name" => 'Battery Load', "profile" => '', "pos" => 10),
         "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => '', "pos" => 11,"hidden" => true),
         "UV" => array("ident" => "UV", "type" => self::VT_Integer, "name" => 'UV Index', "profile" => 'UVIndex', "pos" => 12),
         'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
