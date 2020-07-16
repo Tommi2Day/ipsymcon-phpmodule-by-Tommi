@@ -5,9 +5,9 @@
  * generic Switch Device Module
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2013-2019
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2013-2020
+ * @version 5.1.2
+ * @date 2020-07-16
  */
 
 
@@ -44,7 +44,8 @@ class SwitchDev extends T2DModule
         "FS20" => array("ident" => 'FS20', "type" => self::VT_String, "name" => 'last FS20 code', "profile" => '', "pos" => 4,"hidden" => true),
         "Lock" => array("ident" => 'Lock', "type" => self::VT_Boolean, "name" => 'Locked', "profile" => 'Lock', "pos" => 5),
         "Alert" => array("ident" => 'Alert', "type" => self::VT_Boolean, "name" => 'Alarm', "profile" => 'Alert.Reversed', "pos" => 5),
-        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
+        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10),
+        "BatteryPct" => array("ident" => "BatteryPct", "type" => self::VT_Integer, "name" => 'Battery percent', "profile" => 'Battery.100', "pos" => 10),
         'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
         "TS" => array("ident" => "TS", "type" => self::VT_Integer, "name" => 'Timestamp', "profile" => 'UnixTimestamp', "pos" => 41,"hidden" => true)
     );
@@ -643,6 +644,7 @@ class SwitchDev extends T2DModule
                 case 'Timer'://Duration code
                 case 'Dimmer'://intensity 100%
                 case 'Shutter'://intensity 100%
+                case 'BatteryPct': //BatterPercent
                     $iv = (int)$s;
                     SetValueInteger($vid, $iv);
                     break;
