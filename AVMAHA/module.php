@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @file
  *
@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2020
- * @version 5.1.2
- * @date 2020-07-15
+ * @version 5.1.3
+ * @date 2020-07-16
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -376,16 +376,12 @@ class AVMAHA extends T2DModule
 
 
     }
-    //------------------------------------------------------------------------------
-    //internal functions
-    //------------------------------------------------------------------------------
-    
 
     //------------------------------------------------------------------------------
     /**
      * @param $xmlstring string XML Data
      */
-    private function Parse($xmlstring)
+    public function Parse(string $xmlstring)
     {
 
         $xml = simplexml_load_string($xmlstring);
@@ -408,8 +404,24 @@ class AVMAHA extends T2DModule
                  $hkr->addChild('tsoll',44);
         //
         */
+        /*
+            //button test
+            $dev=$xml->addChild('device');
+            $dev->addAttribute('identifier','10045 67895');
+            $dev->addAttribute('functionbitmask',(1<<5));
+            $dev->addChild('name','Dect400 Test #1');
+            $dev->addChild('present',1);
+            $btn=$dev->addChild('button');
+            $btn->addAttribute('identifier','10045 67895-0');
+            $btn->addChild('name','Button1 kurz');
+            $btn->addChild('lastpressedtimestamp','');
+            $btn2=$dev->addChild('button');
+            $btn2->addAttribute('identifier','10045 67895-9');
+            $btn2->addChild('name','Button1 lang');
+            $btn2->addChild('lastpressedtimestamp',1594582930);
+        */
         foreach ($xml->device as $device) {
-            $data = array();
+            $devdata = array();
             //attributes
             $ain = (string)$device->attributes()['identifier'];
             $pname = (string)$device->attributes()['productname'];
@@ -419,16 +431,17 @@ class AVMAHA extends T2DModule
                 $this->debug(__FUNCTION__ , "Device $name not connected, skip");
                 continue;
             }
-            $data['Id'] = $ain;
-            $data['Typ'] = $pname;
-            $data['Name'] = $name;
-            $data['Connect'] = $conn;
+            $devdata['Id'] = $ain;
+            $devdata['Typ'] = $pname;
+            $devdata['Name'] = $name;
+            $devdata['Connect'] = $conn;
             $enc = mb_internal_encoding();
             if ($enc == 'ISO-8859-1') {
                 $name = mb_convert_encoding($name, 'ISO-8859-1', 'UTF-8');
             }
             //capabilities
             $mask = (integer)$device->attributes()['functionbitmask'];
+            $has_button = ($mask & (1 << 5)) > 0;
             $has_hkr = ($mask & (1 << 6)) > 0;
             $has_powermeter = ($mask & (1 << 7)) > 0;
             $has_temperatur = ($mask & (1 << 8)) > 0;
@@ -438,16 +451,46 @@ class AVMAHA extends T2DModule
 
             //analyze data
             $txt = '';
-            if ($has_hkr) {
-                //bit6=HKR heating Device Comet , as of Fritz!OS 6.50
-                if (isset($device->hkr)) {
-                    //data available
-                    //values are 0.5C steps 16-56 or 253(On) or 254(off)
+            $caps='';
+            if ($has_button) {
+                $data=$devdata;
+                $data['AltTyp']='Button';
+                //bit 5 Button (Dect400) as of FritzOS 7-08+
+                if (isset($device->battery)) {
+                    $battery_pct = (integer)$device->battery;
+                    $battery = ($device->batterylow == "1") ? "LOW" : "OK";
+                    $txt = sprintf(" Button(Battery:%d ,Battery_Low: %s); ", $battery_pct, $battery);
+                    $this->debug(__FUNCTION__ . "_Button", $txt);
+                    $caps = $caps . ';BatteryPct;Battery';
+                    $data['Battery'] = $battery;
+                    $data['BatteryPct'] = $battery_pct;
 
-                    $tist = $device->hkr->tist / 2;
-                    $komfort = $device->hkr->komfort / 2;
-                    $absenk = $device->hkr->absenk / 2;
-                    $tsoll = $device->hkr->tsoll;
+                }
+                foreach ($device->button as $button) {
+                    $id=(string)$button->attributes()['identifier'];
+                    $ts=(integer)$button->lastpressedtimestamp;
+                    $bname=(string)$button->name;
+                    $data['Id'] = $id;
+                    $data['Name'] = $bname;
+                    $data['TS'] = $ts;
+                    $caps=$caps.";TS";
+                    $txt = sprintf(" Button(Name: %s, TS: %d); ", $bname, $ts);
+                    $this->debug (__FUNCTION__. "_Button:", $txt);
+                    $this->SendSwitchData($caps, $data);
+                }
+            }
+            if ($has_hkr) {
+                $data=$devdata;
+                //bit6=HKR heating Device Comet, Dect301 , as of Fritz!OS 6.50,Dect301 ab 7.0
+                if (isset($device->hkr)) {
+                    //modify ID to get diffent WSDevice
+                    $data['Id']=$data['Id'].'-HKR';
+                    $data['AltTyp']='Heating';
+                    //values are 0.5C steps 16-56 or 253(On) or 254(off)
+                    $tist = (integer)$device->hkr->tist / 2;
+                    $komfort = (integer)$device->hkr->komfort / 2;
+                    $absenk = (integer)$device->hkr->absenk / 2;
+                    $tsoll = (integer)$device->hkr->tsoll;
                     if (($tsoll >= 16) && ($tsoll <= 56)) {
                         $tsoll = $tsoll / 2;
                     } elseif ($tsoll == 254) {
@@ -455,28 +498,38 @@ class AVMAHA extends T2DModule
                     } elseif ($tsoll == 253) {
                         $tsoll = -1;
                     }
-                    $caps = 'Temp;TempSoll;TempReduced;TempComfort';
-                    $data['Temp'] = $tist;
-                    $data['TempSoll'] = $tist;
-                    $data['TempReduced'] = $absenk;
-                    $data['TempComfort'] = $komfort;
+                    $caps = 'Tist;Tsoll;Treduced;Tcomfort';
+                    $data['Tist'] = $tist;
+                    $data['Tsoll'] = $tsoll;
+                    $data['Treduced'] = $absenk;
+                    $data['Tcomfort'] = $komfort;
                     $txt = sprintf(" HKR(Act:%02.1fC ,Target:%02.1fC ,Sink:%02.1fC, Comfort:%02.1fC); ", $tist, $tsoll, $absenk, $komfort);
                     $this->debug(__FUNCTION__ . "_HKR", $txt);
-                    //Battery Dect301
+                    //Battery
                     if (isset($device->hkr->battery)) {
-                        $battery_pct=$device->hkr->battery;
+                        $battery_pct=(integer)$device->hkr->battery;
                         $battery=($device->hkr->batterylow=="1")?"LOW":"OK";
-                        $txt = sprintf(" HKR(Battery:%02.1f ,Battery_Low: %s); ", $battery_pct, $battery);
+                        $txt = sprintf(" HKR(Battery:%d ,Battery_Low: %s); ", $battery_pct, $battery);
                         $this->debug(__FUNCTION__ . "_HKR", $txt);
                         $caps = $caps.';BatteryPct;Battery';
                         $data['Battery']=$battery;
                         $data['BatteryPct']=$battery_pct;
 
                     }
-                    $this->SendWSData($caps, $data);
+                    if (isset($device->hkr->windowopenactiv)) {
+                        $caps=$caps.';WindowOpen';
+                        $data['WindowOpen']=(string)$device->hkr->windowopenactiv;
+                    }
+                    if (isset($device->hkr->boostactive)) {
+                        $caps=$caps.';BoostActive';
+                        $data['BoostActive']=(string)$device->hkr->boostactive;
+                    }
+                    $this->SendHKRData($caps, $data);
                 }
             }
+
             if ($has_powermeter) {
+                $data=$devdata;
                 //bit7=enery meter
                 if (isset($device->powermeter)) {
                     //data available
@@ -497,19 +550,35 @@ class AVMAHA extends T2DModule
                 }
             }
             if ($has_temperatur) {
+                $data=$devdata;
                 //bit8=temperature sensor
                 if (isset($device->temperature)) {
                     $temperatur = ((integer)$device->temperature->celsius) / 10;
                     /* offset is already added */
                     $offset = ((integer)$device->temperature->offset) / 10;
-                    $caps = 'Temp';
+                    $caps = 'Temp;TempOffset;TempKorr';
                     $data['Temp'] = $temperatur;
-                    $txt = sprintf(" Temperature:(Temp:%02.1fC, Offset:%02.1f) ;", $temperatur, $offset);
+                    $data['TempOffset']=$offset;
+                    $data['TempKorr']=$temperatur+$offset;
+                    $txt = sprintf(" Temperature:(Temp:%02.1fC, Offset:%02.1f, Korr: %02.1f C) ;", $temperatur, $offset,$temperatur+$offset);
                     $this->debug(__FUNCTION__ . "_Temp", $txt);
-                    $this->SendWSData($caps, $data);
                 }
+                if (isset($device->battery)) {
+                    $battery_pct=(integer)$device->battery;
+                    $battery=($device->batterylow=="1")?"LOW":"OK";
+                    $txt = sprintf(" (Battery:%d ,Battery_Low: %s); ", $battery_pct, $battery);
+                    $this->debug(__FUNCTION__ . "_Temp", $txt);
+                    $caps = $caps.';BatteryPct;Battery';
+                    $data['Battery']=$battery;
+                    $data['BatteryPct']=$battery_pct;
+                }
+                if ($has_hkr) {
+                    $data['AltTyp']='HKR Temperature Sensor';
+                }
+                $this->SendWSData($caps,$data);
             }
             if ($has_switch) {
+                $data=$devdata;
                 //bit9=power switch
                 if (isset($device->switch)) {
                     $status = (string)$device->switch->state;
@@ -522,14 +591,20 @@ class AVMAHA extends T2DModule
                 }
             }
             if ($has_repeater) {
+                $data=$devdata;
                 //bit10=Repeater, no special variables as of now FritzOS 6.50
                 $txt = " Repeater(detected); ";
                 $this->debug(__FUNCTION__ . "_Rep", $txt);
             }
             //logging
-            $this->debug(__FUNCTION__, $name . ":" . ($conn ? 'connected' : 'disconnected') . $txt);
+            $this->debug(__FUNCTION__, $devdata['Name'] . ":" . ($conn ? 'connected' : 'disconnected') . $txt);
         }
     }
+
+    //------------------------------------------------------------------------------
+    //internal functions
+    //------------------------------------------------------------------------------
+
     //-------------------------------------------------------------------------------
     /**
      * login into fritz and get sid
@@ -662,6 +737,8 @@ class AVMAHA extends T2DModule
         $instID = 0;
         $Device = $data['Id'];
         $typ = $data['Typ'];
+        $typename='Temperature Sensor';
+        if (isset($data['AltTyp'])) $typename=$data['AltTyp'];
         $name = $data['Name'];
         if (!$name) $name = "$typ ($Device)";
         $host = $this->GetHost();
@@ -678,7 +755,7 @@ class AVMAHA extends T2DModule
                 IPS_SetProperty($instID, 'Typ', $typ);
                 IPS_SetProperty($instID, 'CapList', $caps);
                 IPS_SetProperty($instID, 'Debug', $this->isDebug()); //follow debug settings from splitter
-                IPS_SetName($instID, "Temperatur Sensor on '$name'");
+                IPS_SetName($instID, "$typename on '$name'");
                 $ident = $class . "_$Device on $host";
                 $ident = preg_replace("/\W/", "_", $ident);//nicht-Buchstaben/zahlen entfernen
                 IPS_SetIdent($instID, $ident);
@@ -788,6 +865,8 @@ class AVMAHA extends T2DModule
         $instID = 0;
         $Device = $data['Id'];
         $typ = $data['Typ'];
+        $typename='Switch';
+        if (isset($data['AltTyp'])) $typename=$data['AltTyp'];
         $name = $data['Name'];
         if (!$name) $name = "$typ ($Device)";
         $host = $this->GetHost();
@@ -803,7 +882,7 @@ class AVMAHA extends T2DModule
                 IPS_SetProperty($instID, 'Typ', $typ);
                 IPS_SetProperty($instID, 'CapList', $caps);
                 IPS_SetProperty($instID, 'Debug', $this->isDebug()); //follow debug settings from splitter
-                IPS_SetName($instID, "Switch on '$name'");
+                IPS_SetName($instID, "$typename on '$name'");
                 $ident = $class . "_$Device on $host";
                 $ident = preg_replace("/\W/", "_", $ident);//nicht-Buchstaben/zahlen entfernen
                 IPS_SetIdent($instID, $ident);
@@ -981,7 +1060,8 @@ class AVMAHA extends T2DModule
      */
     private function SendHKRData($caps, $data)
     {
-        IPS_LogMessage(__CLASS__, __FUNCTION__ . '::Not implemented yet');
+        //send heating devices as wsdev
+        $this->SendWSData($caps,$data);
 
     }
 

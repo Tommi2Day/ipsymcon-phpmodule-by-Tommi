@@ -97,12 +97,14 @@ Splittermodul for reading ELV FS20WUE Receiver.  The Receiver will be accessed v
 
 AVM AHA-API IPSymcon PHP Splitter Module Class
 
-read AVM AHA Smarthome Services from Fritz!OS (Ftritz!Box etc.)
+read AVM AHA Smarthome Services from Fritz!OS (Fritz!Box etc.)
 
 ##### supported Devices: 
 * Fritz Powerline 546E
-* Fritz Dect200(need FritzOS6.20+ for Temperature, 6.98 for Voltage), 
-* Repeater 100 (need FritzOS6.50+)
+* Fritz Dect200 Switch: need FritzOS6.20+ for Temperature, 6.98 for Voltage 
+* Fritz Repeater 100: need FritzOS6.50+
+* Fritz Dect301 Heating: show Temperature and battery, no heating control implemented, need FritzOS 7.08+
+* Fritz Dect400 Button: lastpressed Timestamp as SwitchDev and Batttery), need FritzOS 7.08+
 
 ##### Data Handling:
 * Power measures will be displayed in an Energey Device instance

@@ -235,8 +235,10 @@ File will be in csv format with one line per sensor. Header will be in the first
 
 @par "supported Devices:"
 - Fritz Powerline 546E
-- Fritz Dect200(need FritzOS6.20+ for Temperature),
-- Repeater 100 (need FritzOS6.50+)
+- Fritz Dect200 Switch: need FritzOS6.20+ for Temperature, 6.98 for Voltage
+- Fritz Repeater 100: need FritzOS6.50+
+- Fritz Dect301 Heating: show Temperature and battery, no heating control implemented, need FritzOS 7.08+
+- Fritz Dect400 Button: lastpressed Timestamp as SwitchDev and Batttery), need FritzOS 7.08+
 
 @par "Data Handling:"
 - Power measures will be displayed in an Energey Device instance

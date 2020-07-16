@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2020
- * @version 5.1.1
- * @date 2020-05-01
+ * @version 5.1.3
+ * @date 2020-07-16
  */
 
 /**
@@ -33,6 +33,14 @@ class WSDEV extends T2DModule
     protected $capvars = array(
         'Name'=>array("ident"=>'Name',"type"=>self::VT_String,"name"=>'Name','profile'=>'',"pos"=>0),
         "Temp" => array("ident" => 'Temperatur', "type" => self::VT_Float, "name" => 'Temperatur', "profile" => 'Temperature', "pos" => 0),
+        "TempOffset" => array("ident" => 'TempOffset', "type" => self::VT_Float, "name" => 'Temperatur Offset', "profile" => 'Temperature', "pos" => 0,"hidden"=>true),
+        "TempKorr" => array("ident" => 'TempKorr', "type" => self::VT_Float, "name" => 'Temperatur corrected', "profile" => 'Temperature', "pos" => 0),
+        "Tist" => array("ident" => 'Tist', "type" => self::VT_Float, "name" => 'Temperatur Ist', "profile" => 'Temperature', "pos" => 1),
+        "Tsoll" => array("ident" => 'Tsoll', "type" => self::VT_Float, "name" => 'Temperatur Soll', "profile" => 'Temperature', "pos" => 1),
+        "Treduced" => array("ident" => 'Treduced', "type" => self::VT_Float, "name" => 'Temperatur reduced', "profile" => 'Temperature', "pos" => 1),
+        "Tcomfort" => array("ident" => 'Tcomfort', "type" => self::VT_Float, "name" => 'Temperatur comfort', "profile" => 'Temperature', "pos" => 1),
+        "WindowOpen" => array("ident" => "WindowOpen", "type" => self::VT_Boolean, "name" => 'Window Open', "profile" => '~Window', "pos" => 2),
+        "BoostActive" => array("ident" => "BoostActive", "type" => self::VT_Boolean, "name" => 'Boost active', "profile" => '', "pos" => 3),
         "WindChill" => array("ident" => 'WindChill', "type" => self::VT_Float, "name" => 'Wind Chill', "profile" => 'Temperature', "pos" => 0),
         "Hum" => array("ident" => 'Humidity', "type" => self::VT_Integer, "name" => 'Feuchte', "profile" => 'Humidity', "pos" => 1),
         "Press" => array("ident" => 'Pressure', "type" => self::VT_Integer, "name" => 'Pressure', "profile" => 'AirPressure', "pos" => 2),
@@ -49,8 +57,8 @@ class WSDEV extends T2DModule
         "Light" =>array("ident" => 'Light', "type" => self::VT_Integer, "name" => 'Brightness', "profile" => 'Illumination', "pos" => 8),
         "Forecast" => array("ident" => "Forecast", "type" => self::VT_Integer, "name" => 'Forecast', "profile" => '', "pos" => 9),
         "Level" => array("ident" => "Level", "type" => self::VT_Float, "name" => 'Level', "profile" => '', "pos" => 9),
-        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10,"hidden" => true),
-        "BatteryPct" => array("ident" => 'BatteryPct', "type" => self::VT_Integer, "name" => 'Battery Load', "profile" => '', "pos" => 10),
+        "Battery" => array("ident" => "Battery", "type" => self::VT_Boolean, "name" => 'Battery', "profile" => 'Battery.Reversed', "pos" => 10),
+        "BatteryPct" => array("ident" => "BatteryPct", "type" => self::VT_Integer, "name" => 'Battery percent', "profile" => 'Battery.100', "pos" => 10),
         "Lost" => array("ident" => "Lost", "type" => self::VT_Integer, "name" => 'Lost Records', "profile" => '', "pos" => 11,"hidden" => true),
         "UV" => array("ident" => "UV", "type" => self::VT_Integer, "name" => 'UV Index', "profile" => 'UVIndex', "pos" => 12),
         'Signal' => array("ident" => 'Signal', "type" => self::VT_Integer, "name" => 'Signal', 'profile' => 'Signal', "pos" => 40,"hidden" => true),
@@ -254,6 +262,7 @@ class WSDEV extends T2DModule
                 case 'Level': //level
                 case 'TS'; //TimeStamp
                 case 'Lost'://lost
+                case 'BatteryPct': //Battery percent
                 case 'Signal':
                     if(strlen($s)==0) continue 2;
                     $iv = (int)$s;
@@ -261,6 +270,12 @@ class WSDEV extends T2DModule
                     break;
                 //float
                 case 'Temp'://temp
+                case 'TempOffset': //temp offset AVM
+                case 'TempKorr': //temp+Offset
+                case 'Tist': //hkr
+                case 'Tsoll': //hkr
+                case 'Treduced': //hkr
+                case 'Tcomfort': //hkr
                 case 'Wind'://wind
                 case 'WindChill'://wind
                 case 'WindGust'://wind
@@ -305,8 +320,11 @@ class WSDEV extends T2DModule
                     $state=(!preg_match("/LOW|WARN/i",$s)); //reversed
                     SetValueBoolean($vid, $state);
                     break;
-
-
+                case 'WindowOpen':
+                case 'BoostActive':
+                    $state=(preg_match("/YES|1/i",$s));
+                    SetValueBoolean($vid, $state);
+                    break;
                 default:
                     $this->debug(__FUNCTION__, "$cap not handled");
             }
