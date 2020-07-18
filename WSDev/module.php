@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2009-2020
- * @version 5.1.3
- * @date 2020-07-16
+ * @version 5.1.4
+ * @date 2020-07-18
  */
 
 /**
@@ -34,7 +34,7 @@ class WSDEV extends T2DModule
         'Name'=>array("ident"=>'Name',"type"=>self::VT_String,"name"=>'Name','profile'=>'',"pos"=>0),
         "Temp" => array("ident" => 'Temperatur', "type" => self::VT_Float, "name" => 'Temperatur', "profile" => 'Temperature', "pos" => 0),
         "TempOffset" => array("ident" => 'TempOffset', "type" => self::VT_Float, "name" => 'Temperatur Offset', "profile" => 'Temperature', "pos" => 0,"hidden"=>true),
-        "TempKorr" => array("ident" => 'TempKorr', "type" => self::VT_Float, "name" => 'Temperatur corrected', "profile" => 'Temperature', "pos" => 0),
+        "TempMeasured" => array("ident" => 'TempMeasured', "type" => self::VT_Float, "name" => 'Temperatur measured', "profile" => 'Temperature', "pos" => 0,"hidden"=>true),
         "Tist" => array("ident" => 'Tist', "type" => self::VT_Float, "name" => 'Temperatur Ist', "profile" => 'Temperature', "pos" => 1),
         "Tsoll" => array("ident" => 'Tsoll', "type" => self::VT_Float, "name" => 'Temperatur Soll', "profile" => 'Temperature', "pos" => 1),
         "Treduced" => array("ident" => 'Treduced', "type" => self::VT_Float, "name" => 'Temperatur reduced', "profile" => 'Temperature', "pos" => 1),
@@ -271,7 +271,7 @@ class WSDEV extends T2DModule
                 //float
                 case 'Temp'://temp
                 case 'TempOffset': //temp offset AVM
-                case 'TempKorr': //temp+Offset
+                case 'TempMeasured': //=temp-Offset
                 case 'Tist': //hkr
                 case 'Tsoll': //hkr
                 case 'Treduced': //hkr
