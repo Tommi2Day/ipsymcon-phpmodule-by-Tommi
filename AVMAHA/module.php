@@ -6,8 +6,8 @@
  *
  * @author Thomas Dressler
  * @copyright Thomas Dressler 2013-2020
- * @version 5.1.3
- * @date 2020-07-16
+ * @version 5.1.4
+ * @date 2020-07-18
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
@@ -556,11 +556,11 @@ class AVMAHA extends T2DModule
                     $temperatur = ((integer)$device->temperature->celsius) / 10;
                     /* offset is already added */
                     $offset = ((integer)$device->temperature->offset) / 10;
-                    $caps = 'Temp;TempOffset;TempKorr';
-                    $data['Temp'] = $temperatur;
+                    $caps = 'Temp;TempOffset;TempMeasured';
+                    $data['Temp'] = $temperatur; //already corrected temperature
                     $data['TempOffset']=$offset;
-                    $data['TempKorr']=$temperatur+$offset;
-                    $txt = sprintf(" Temperature:(Temp:%02.1fC, Offset:%02.1f, Korr: %02.1f C) ;", $temperatur, $offset,$temperatur+$offset);
+                    $data['TempMeasured']=$temperatur-$offset; //measured temperature is temperature value - offset
+                    $txt = sprintf(" Temperature:(Temp:%02.1fC, Offset:%02.1f, Measured: %02.1f C) ;", $temperatur, $offset,$data['TempMeasured']);
                     $this->debug(__FUNCTION__ . "_Temp", $txt);
                 }
                 if (isset($device->battery)) {
