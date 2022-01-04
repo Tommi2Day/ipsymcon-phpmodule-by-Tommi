@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @file
  *
@@ -7,9 +7,9 @@
  * read 1wire devices via OWServer and OWNet Library
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2014-2020
- * @version 5.3.0
- * @date 2020-05-01
+ * @copyright Thomas Dressler 2014-2022
+ * @version 6.0.1
+ * @date 2022-01-04
  *
  */
 
@@ -68,6 +68,7 @@ class OWN extends T2DModule
         $this->RegisterPropertyInteger('ParentCategory', 0); //parent cat is root
         $this->RegisterPropertyInteger('Port', 4304);
         $this->RegisterPropertyInteger('UpdateInterval', 300);
+        $this->RegisterPropertyInteger('Timeout', 10);
         $this->RegisterPropertyString('Host', '');
         $this->RegisterPropertyString('LogFile', '');
         $this->RegisterPropertyBoolean('AutoCreate', true);
@@ -184,6 +185,16 @@ class OWN extends T2DModule
         return (Integer)IPS_GetProperty($this->InstanceID, 'ParentCategory');
     }
 
+    //--------------------------------------------------------
+
+    /**
+     * Get Property Timeout
+     * @return int
+     */
+    private function GetTimeout()
+    {
+        return (Integer)IPS_GetProperty($this->InstanceID, 'Timeout');
+    }
 
     //------------------------------------------------------------------------------
     //---Events
@@ -276,25 +287,31 @@ class OWN extends T2DModule
     {
         $host=$this->GetHost();
         $port=$this->GetPort();
+        $timeout=$this->GetTimeout();
         $connect="$host:$port";
-        $ow=new OWNet("tcp://".$connect);
+        $ow=new OWNet("tcp://".$connect,$timeout);
         if ($ow) {
             //we are connected, proceed
-            $this->debug(__FUNCTION__, "Connected to '$connect'");
+            $this->debug(__FUNCTION__, "Connected to '$connect', timeout: $timeout");
             // retrieve owfs directory from given root
             $ow_dir=$ow->dir($this->ow_path);
             if ($ow_dir && isset($ow_dir['data_php'])) {
+                $this->debug(__FUNCTION__, "ow_dir_data: ".print_r($ow_dir,true));
                 //walk through the retrieved tree
                 $dirs=explode(",",$ow_dir['data_php']);
                 if (is_array($dirs) && (count($dirs)>0)) {
                     foreach ($dirs as $dev) {
-                        #print_r($ow->dir($dev));
+                        $this->debug(__FUNCTION__, "dev: $dev");
+                        //print_r($ow->dir($dev,true));
                         $data=array();
                         $caps='';
                         /* read standard device details */
                         //get family id
                         $fam=$ow->read("$dev/family");
-                        if (!$fam) continue; //not a device path
+                        if (!$fam) {
+                            $this->debug(__FUNCTION__, "$dev is not related to a device family");
+                            continue; //not a device path
+                        }
                         //get device id
                         $id=$ow->read("$dev/id");
                         //get alias (if any) and owfs detected device description as type
@@ -315,14 +332,17 @@ class OWN extends T2DModule
 
                         //get varids
                         $addr="$fam.$id";
-                        //print "$id ($alias): Type $type Family $fam\n";
+                        $this->debug(__FUNCTION__, "ID: $id ($alias): Type $type Family $fam");
 
                         //retrieve device specific data
                         switch ($fam) {
                             case '28': //DS18B20 temperature sensors
                             case '10': //DS18S20 temperature sensors
                             case '22': //DS1820 temperature sensors
+                                $temp=$ow->get("$dev/temperature",OWNET_MSG_READ,true);
+                                $this->debug(__FUNCTION__, "get $dev/temperature first, temp:".print_r($temp,true));
                                 $temp=trim($ow->read("$dev/temperature",true));
+                                $this->debug(__FUNCTION__, "read $dev/temperature again, temp:".print_r($temp,true));
                                 $temp=str_replace(",",".",$temp);
                                 if (strlen($temp)>0) {
                                     //store new temperature value
@@ -335,14 +355,19 @@ class OWN extends T2DModule
                                     $caps.=';Temp';
                                     $this->SendWSData($caps,$data);
                                     $this->log_data($data);
+                                }else{
+                                    $this->debug(__FUNCTION__,"ID $id: reading temp empty");
                                 }
                                 break;
                             default:
+                                $this->debug(__FUNCTION__, "$id ($alias): Type $type Family $fam not implemented yet");
                                 IPS_LogMessage(__CLASS__, "$id ($alias): Type $type Family $fam not implemented yet");
+                                break;
                         }
                     } //for
                 }else {
                     //no device fount
+                    $this->debug(__FUNCTION__, "No 1Wire Device found");
                     IPS_LogMessage(__CLASS__, "No 1Wire Device found");
                 }
             }else{
@@ -351,8 +376,9 @@ class OWN extends T2DModule
             }
         }else{
             //no object, connect has been failed, stop here
+            $this->debug(__FUNCTION__, "Connect to '$connect' failed");
             IPS_LogMessage(__CLASS__, "Connect to '$connect' failed");
-        }
+        }        
 
     }//function
     //------------------------------------------------------------------------------

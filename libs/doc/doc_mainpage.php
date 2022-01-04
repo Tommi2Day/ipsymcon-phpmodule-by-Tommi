@@ -505,6 +505,8 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 - \b ParentCategory (Default 0): ID of parent category for newly created category
 - \b Host: Host to query remote %OWNet daemon
 - \b Port (Default:4304): Port to query remote %OWNet daemon
+- \b UpdateInterval (Default:300): Refresh interval in sec
+- \b Timeout (Default:10): Read Timeout
 - \b AutoCreate (Default: On/True): Flag to allow autocreation of new Device Instances below Category
 
 @par Actions (if supported by the attached splitter and the physical device)

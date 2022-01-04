@@ -1,11 +1,12 @@
 # ipsymcon-phpmodule
-PHPModules for Symcon V5+
+PHPModules for Symcon V6+
 
 This is a Library of PHP Modules for the home automation software "Symcon"
 
 
 ### Requirements:
-* Symcon (https://www.symcon.de/en/) Version 5.1+
+* Symcon (https://www.symcon.de/en/) Version 6.0+
+  (most modules are known working from Version 5.1)
 
 ### Installation
 * Within Symcon Konsole go to "Kern Instancen" ->Modules
@@ -246,6 +247,10 @@ The Data will be presented as Energy Device instances
 ### CUL
 
 CUL IPSymcon PHP Splitter Module Class
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2022. I dont have this anymore.
+</span>
 
 receives Data from a CULFW driven tranceiver gadget like Busware
 These devices receives and decodes a lot of common smarthome protocols used by ELV Sensors and devices
