@@ -9,10 +9,10 @@ This is a Library of PHP Modules for the home automation software "Symcon"
   (most modules are known working from Version 5.1)
 
 ### Installation
-* Within Symcon Konsole go to "Kern Instancen" ->Modules
+* Within Symcon Konsole go to `Kern Instancen->Modules`
 * Press "Hinzufügen" Button
 * Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
-* Click on "Edit" Icon and change Branch(Zweig) to "5.1"
+* Click on "Edit" Icon and change Branch(Zweig) to `6.0`
 
 ### Modules provides in this library:
 
@@ -83,6 +83,11 @@ The Data will be presented as Weather Device instances
 
 ### FS20WUE
 Splittermodul for reading ELV FS20WUE Receiver.  The Receiver will be accessed via serial port.
+
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2021. I dont have this device anymore.
+</span>
 
 ##### Supported Devices:
 * Weather: The Receiver supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
@@ -172,6 +177,12 @@ The Data will be presented as Weather Device instances
 
 ### WS2500PC
 Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary output
+
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2022.
+</span>
+
  * This requires a running webservice providing output from <a href="http://userpages.uni-koblenz.de/~krienke/ftp/unix/ws2500/">ws2500</a> binary.
    The following simple get_ws2500_data.cgi script to be placed in your webservers cgi-bin directory  along ws2500 binary is sufficient
  <pre>
@@ -428,7 +439,7 @@ You may generate additional documentation using <a href="http://www.stack.nl/~di
 <pre>
 doxygen libs/doc/Doxyfile
 </pre>
-see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_module/html/)
+
 
 #### see also
 * [IPS_JSON Wrapper API](libs/Api)
