@@ -5,9 +5,9 @@
  * Doxygen main page
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2018
- * @version 5.1.0
- * @date 2019-05-04
+ * @copyright Thomas Dressler 2016-2023
+ * @version 7.0.0
+ * @date 2023-11-18
  */
 /**
 @mainpage Index
@@ -19,12 +19,12 @@ This is a Library of PHP Modules for the home automation software <a href="https
 
 @section Installation
 @par "Github Modul URL:" https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git
-@par Branch: 5.1
+@par Branch: 7.0
 
- - Within Symcon Konsole go to "Kern Instancen" ->Modules
+ - Within Symcon Konsole go to Kern Instancen ->Modules
  - Press "Hinzufügen" Button
  - Enter Module Repository "https://github.com/Tommi2Day/ipsymcon-phpmodule-by-Tommi.git"
- - Click on "Edit" Icon and change Branch(Zweig) to "5.1"
+ - Click on "Edit" Icon and change Branch(Zweig) to "7.0"
 
 @section Devices
 
@@ -119,6 +119,8 @@ SWD_SetDuration($id,$seconds,$action=null);
 @subsection WS300PC
 
 WS300PC Splittermodul for reading ELV %WS300PC Datalogger. The Logger will be accessed via USB serial port.
+
+@warning This module is deprecated/unsupported as of 2022. I dont have this anymore.
 
 @par "Supported Devices:"
 The logger supports 8 external T/H WS300 Series Sensor (S300TH,PS50), one KS300 Kombisensor (T/H, Wind, Rain)
@@ -268,6 +270,7 @@ Switching of capable Devices like DECT!200 and Fritz!Powerline 546. Changes on s
 
 TE923 :Splitter for %TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
 
+ * @warning This module is deprecated/unsupported as of 2023. I dont have this anymore.
 @par "Supported Devices:" 5 external Temp/Hum Sensors(1-5), Rain, Wind, UV(not seen yet) and the internal indoor Sensor
 @par "Data Handling:" The Data will be presented as Weather Device instances
 @par Prefix: TE923_
@@ -332,6 +335,8 @@ reboot
 @subsection WS2500PC
 
 WS2500PC :Splitter for %WS2500PC Receiver of WS2000 based Sensors using ws2500 binary output
+
+@warning This module is deprecated/unsupported as of 2022.
 
 @par "Supported Devices:" 8 external Temp/Hum Sensors(1-8), Rain, Wind, UV(not seen yet),Light(Brighness) 
 and the Indoor Sensor with Temp/Hum and Pressure 
@@ -459,6 +464,8 @@ For explanation see http://networkupstools.org/documentation.html
  
 These devices receives and decodes a lot of common smarthome protocols used by ELV Sensors and devices. 
 
+@warning This module is deprecated/unsupported as of 2022. I dont have this anymore.
+
 @par "Supported Busware Devices: CUL,CUN,CUNO,COC
 
 - decoded Protocols
@@ -522,7 +529,6 @@ OWN: The %OWNet Splitter will query a OWServer via OWNet daemon for attached 1Wi
 XS1: The %XS1 Splitter queries an Ezcontrol XS1 Homeautomation Receiver/Controler
 
 @warning This module is deprecated/unsupported as of 2017. I dont have this anymore.
-
 
 @par Prefix: XS1_
 

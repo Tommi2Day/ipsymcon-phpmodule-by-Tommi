@@ -47,6 +47,10 @@ forward data to splitter only, real actor control will need a Splitter with matc
 ### WS300PC
 Splittermodul for reading ELV WS300PC Datalogger. The Logger will be accessed via serial port.
 
+<span style="color:red">
+This module is deprecated/unsupported as of 2022.
+</span>
+
 ##### Supported Devices:
 
 The logger supports 8 external T/H WS300 Series Sensor (S300TH,PS50), one KS300 Kombisensor (T/H, Wind, Rain)
@@ -86,7 +90,7 @@ Splittermodul for reading ELV FS20WUE Receiver.  The Receiver will be accessed v
 
 
 <span style="color:red">
-This module is deprecated/unsupported as of 2021. I dont have this device anymore.
+This module is deprecated/unsupported as of 2017. I dont have this device anymore.
 </span>
 
 ##### Supported Devices:
@@ -125,6 +129,11 @@ Changes on the status will be transmitted to the connected actor
 
 ### TE923
 Splitter for TE923 based weather stations (TFA Nexus,Ventus 831, Mebus 923 etc) using TE923con output
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2023.
+</span>
+
  * This requires a running webservice providing output from <a href="http://te923.fukz.org/">te923con</a> binary.
  The following simple get_data.cgi script is sufficient. Copy the te923con binary along with the cgi to your 
  webserver cgi-bin directory
@@ -435,11 +444,13 @@ How to use:
 By activating the Instance Debug Tab a lot of noise will appear
 
 #### additional documentation
-You may generate additional documentation using <a href="http://www.stack.nl/~dimitri/doxygen/index.html"> Doxygen</a>
+You may generate additional documentation using <a href="https://www.doxygen.nl/index.html"> Doxygen</a> 
+in `docs/doc_module/html`
 <pre>
-doxygen libs/doc/Doxyfile
+cd libs/doc/
+doxygen ./Doxyfile 
 </pre>
-
+see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_module/html/)
 
 #### see also
 * [IPS_JSON Wrapper API](libs/Api)
