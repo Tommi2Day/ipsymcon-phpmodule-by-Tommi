@@ -1,7 +1,7 @@
 Api/IPS_JSON_config.cfg
 .idea
 *.iml
-docs/html
+docs/doc_module/html
 old/
 old/FHZDummy/
 includes/
