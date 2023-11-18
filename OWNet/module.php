@@ -7,14 +7,14 @@
  * read 1wire devices via OWServer and OWNet Library
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2014-2022
- * @version 6.0.1
- * @date 2022-01-04
+ * @copyright Thomas Dreßler 2014-2023
+ * @version 7.0.1
+ * @date 2023-11-18
  *
  */
 
 include_once(__DIR__ . "/../libs/module_helper.php");
-require "ownet_php54fixed.php";
+require "ownet_php82fixed.php";
 
 /** @class OWN
  * 
