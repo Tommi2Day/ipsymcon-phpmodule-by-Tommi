@@ -1,13 +1,13 @@
-<?
+<?php
 /**
  * @file
  *
  * WDE1 Gateway IPSymcon PHP Splitter Module Class
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2009-2020
- * @version 5.1.1
- * @date 2020-06-14
+ * @copyright Thomas Dressler 2009-2024
+ * @version 7.0.0
+ * @date 2024-01-25
  */
 
 
@@ -441,6 +441,7 @@ class WDE1 extends T2DModule
         $wde1_data['records'] = $records;
         $wde1_data['wind'] = '';
         $wde1_data['rain'] = '';
+        $wde1_data['rainc'] = '';
         $wde1_data['israining'] = '';
         $fields = explode(';', $data);
         $f = 0;
