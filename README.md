@@ -133,6 +133,21 @@ your CUL instance as parent for yourself
 
 ##### Prefix: CUL_
 
+### WDE1
+Splittermodul for reading ELV WDE1 Datalogger.  The Logger will be accessed via serial port.
+
+<span style="color:red">
+This module is deprecated/unsupported as of 2017. I dont have this device anymore.
+</span>
+
+##### Supported Devices:
+The Logger supports 8 external T/H WS300 Series Sensor (T/H WS300Sensor (S300TH,PS50)) and one KS300 Kombisensor (T/H, Wind, Rain).
+
+##### Data Handling:
+The Data will be presented as Weather Device instances
+
+##### Prefix: WDE1_
+
 ##### IPS Device module learning
 
 Its important for the proper creation of IPS devices these must be received from the CUx Splitter
