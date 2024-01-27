@@ -270,7 +270,7 @@ in `docs/doc_module/html`
 cd libs/doc/
 doxygen ./Doxyfile 
 </pre>
-see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_module/html/)
+see [generated output](https://www.tdressler.net/ipsymcon/doc_module/html/index.html)
 
 #### see also
 * [IPS_JSON Wrapper API](libs/Api)
