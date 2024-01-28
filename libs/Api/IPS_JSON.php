@@ -3,17 +3,17 @@
 /**
  * @file
  * 
-* Mapper class for IP-Symcon JSON API
+* Mapper class for Symcon JSON API
 * 
 *  @author Thomas Dressler
-*  @copyright Thomas Dressler 2013-2019
-*  @version 5.1
-*  @date 2019-05-04
+*  @copyright Thomas Dreßler 2013-2024
+*  @version 7.0
+*  @date 2024-01-28
 */
 
 /** @class IPS_JSON
  *
- * IPSymcon JSON API wrapper class
+ * Symcon JSON API wrapper class
  * @throws Exception (disabled by default)
  *
  * @version 7.0
@@ -40,7 +40,7 @@
  */
 class IPS_JSON {
 	/** 
-	 * URL to reach IPSymcon
+	 * URL to reach Symcon
 	 *
 	 * @var string $url
 	 */
@@ -55,7 +55,7 @@ class IPS_JSON {
 	 */
 	private string $user;
 	/**
-	 *API Password (Fernzugriff Kennword)
+	 *API Password (remote access = Fernzugriff Kennwort)
 	 *
 	 *@var string $password
 	 */
@@ -297,10 +297,10 @@ class IPS_JSON {
     *
     * @param string $name method
     * @param mixed $arguments
-    * @return mixed|null result of called function
+    * @return mixed result of called function
     * @throws Exception
     */
-   public function __call(string $name, mixed $arguments): mixed{
+   public function __call(string $name, mixed $arguments):mixed {
 	$this->error=array();
 	$this->method=$name;
 	$rpc = Array(
