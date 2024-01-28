@@ -23,7 +23,7 @@ print $version;
 ```
  
 ### Prepare
- - install mbstring extension (`apt-get install php-mbstring`)
+ - install json and mbstring extension (`apt-get install php-json php-mbstring`)
  - enable IPS remote access from   [IPS Tray](https://www.symcon.de/service/dokumentation/komponenten/tray/fernzugriff/)
  - create a new script object with the content of gen_ips_wrapper.php using
   [IPS console](http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/)
@@ -64,7 +64,7 @@ $password='remote-access';
  cd doc
  doxygen doc_wrapper.doxygen
  ```
- see [generated output](http://www.tdressler.net/ipsymcon/docs/doc_wrapper/html/)
+ see [generated output](https://www.tdressler.net/ipsymcon/doc_wrapper/html/index.html)
  
  #### see also (mostly in german)
   - examples in [examples](examples)
