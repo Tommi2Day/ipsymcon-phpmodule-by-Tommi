@@ -4,7 +4,10 @@
  using IPSymcon JSON API. It defines all of known functions and will map this to a JSON call.
  
  ### Requirements:
- * Symcon (https://www.symcon.de/en/) Version 3.1+
+ * Symcon (https://www.symcon.de/en/) Version 6.0+
+ * PHP 8.0+ (https://www.php.net/)
+ * PHP JSON extension (https://www.php.net/manual/en/book.json.php)
+ * MBString extension (https://www.php.net/manual/en/book.mbstring.php)
  
 ### Usage:
  
@@ -20,6 +23,7 @@ print $version;
 ```
  
 ### Prepare
+ - install mbstring extension (`apt-get install php-mbstring`)
  - enable IPS remote access from   [IPS Tray](https://www.symcon.de/service/dokumentation/komponenten/tray/fernzugriff/)
  - create a new script object with the content of gen_ips_wrapper.php using
   [IPS console](http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/)

@@ -4,12 +4,12 @@
  * @file
  * @brief
  * Nagios/Icinga check plugin for IP-Symcon
- * (www.ipsymcon.de)
+ * (https://www.symcon.de)
  * retrieves value of a given variable via id using json api (need IPS V3.1+)
  *
- * @copyright Thomas Dressler 2013-2018
- * @version 2.1
- * @date 25.02.2018
+ * @copyright Thomas Dreßler 2013-2024
+ * @version 2.3
+ * @date 27.02.2024
  *
  * @see http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
  * @see http://www.tdressler.net/ipsymcon/ipsymcon_api.html
@@ -163,9 +163,10 @@ exit ($retcode['RC_OK']);
 
 /**
  * print usage information
+ *
+ * @return void
  */
-function usage() {
+function usage():void {
 	echo "Usage: check_ips_json.php [-h]|-i <VariableID> [-c <critical level>(absolute)] [-w <warning level>(absolute)] [-f <config_file>] | [-H <IPSHOST> -P <IPSAPIPORT> [-a <maxage> in sec ] [-u <apiuser>] [-p <apipassword>]\n";
 	exit (3);
 }
-?>

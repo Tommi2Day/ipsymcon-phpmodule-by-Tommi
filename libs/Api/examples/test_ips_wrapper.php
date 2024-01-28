@@ -3,14 +3,14 @@
  * @file
  * @brief
  * Demo script for checking a running JSON API
- * requires IPSymcon V3.0+
+ * requires IPSymcon V6.0+
  *
- * @copyright Thomas Dressler 2013-2018
- * @version 1.1
- * @date 25.02.2018
+ * @copyright Thomas Dreßler 2013-2024
+ * @version 1.2
+ * @date 27.01.2024
  *
- * @see http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
- * @see http://www.tdressler.net/ipsymcon/ipsymcon_api.html
+ * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
+ * @see https://www.tdressler.net/ipsymcon/ipsymcon_api.html
  * @include examples/test_ips_wrapper.php
  */
 if (!function_exists('IPS_GetKernelVersion')) {
@@ -20,4 +20,3 @@ if (!function_exists('IPS_GetKernelVersion')) {
 //now you can call ips functions as usual
 $version=IPS_GetKernelVersion();
 print $version;
-?>

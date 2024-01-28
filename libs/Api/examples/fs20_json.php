@@ -3,20 +3,20 @@
  * @file
  * @brief
  * Demo script for switching an actor via JSON API
- * requires IPSymcon V3.0+
+ * requires IPSymcon V6.0+
  *
- * @copyright Thomas Dressler 2013-2018
- * @version 0.3
- * @date 25.02.2018
+ * @copyright Thomas Dreßler 2013-2024
+ * @version 0.4
+ * @date 27.01.2024
  *
- * @see http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
- * @see http://www.tdressler.net/ipsymcon/ipsymcon_api.html
+ * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
+ * @see https://www.tdressler.net/ipsymcon/ipsymcon_api.html
 
  * @include examples/fs20_json.php
  */
 include ('../IPS_JSON.php');
 //default configuration
-$id=undef;
+
 $host="";
 $port="3777";
 $user="apiuser";
@@ -47,8 +47,8 @@ if (isset($options['p'])) {$password=$options['p'];}
 if (isset($options['i'])) {$id=$options['i'];}
 if (isset($options['s'])) {$state=$options['s'];}
 
-if (is_null($id) || is_null($state)) {
-	print "Error - need atleast FS20 Instance ID and switch state\n";
+if (empty($id) || empty($state)) {
+	print "Error - need least FS20 Instance ID and switch state\n";
     usage();
 	exit(0) ;
 }
@@ -71,10 +71,7 @@ $url="http://".$host.":".$port."/api/";
 
 
 try {
-	/**
-	* @var IPS_JSON $ips
-	*/
-	$ips = new IPS_JSON($url,$user,$password);
+    $ips = new IPS_JSON($url,$user,$password);
 	$res=$ips->IPS_InstanceExists($id);
 	if (!isset($res)) {
 		print "Error - IPS_InstanceExists Request failed:".$ips->getErrorMessage()."\n";
@@ -91,7 +88,7 @@ try {
 	}
 	$name=$inst['ModuleInfo']['ModuleName'];
 	if ($name == "FS20") {
-		$switch=preg_match("/On|Ein|1/i",$state)?true:false;
+		$switch= (bool)preg_match("/On|Ein|1/i", $state);
 		$res=$ips->FS20_SwitchMode($id,$switch);
 		if (!$res) {
 			print "Error - Set FS20 Switch $id to ".($switch?"On":"Off")." failed=".$ips->getErrorMessage()."\n";
@@ -116,8 +113,7 @@ exit (0);
 /**
  * print usage information
  */
-function usage(){
+function usage():void{
     print "usage: ".basename(__FILE__)." -i <instanceid> -s <state> [-h] [-c <config_file>] | [-H <ipshost> -P <apiport> -u <apiuser> -p <apipass>] \n";
     print "state: use On|Ein|1 for 'on', others means 'off'>\n";
 }
-?>

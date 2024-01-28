@@ -5,9 +5,9 @@
  * Doxygen main page
  *
  * @author Thomas Dressler
- * @copyright Thomas Dressler 2016-2018
- * @version 2.1
- * @date 2018-02-25
+ * @copyright Thomas Dressler 2016-2024
+ * @version 2.2
+ * @date 2024-01-28
  */
 /** @mainpage IPSymon JSON API wrapper
  *
@@ -67,8 +67,8 @@ $password='remote-access';
  *
  * More readings (in german):
  * - [JSON Wrapper Homepage](http://www.tdressler.net/ipsymcon/jsonapi.html)
- * - [Symcon API](http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/)
- * - [IPS console](http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/)
+ * - [Symcon API](http://www.symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/)
+ * - [IPS console](http://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/)
  * - [IPS Tray](https://www.symcon.de/service/dokumentation/komponenten/tray/fernzugriff/)
  * - [Examples](examples.html)
 

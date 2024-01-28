@@ -5,11 +5,11 @@
  * generate include Script to allow run of  internal IPS function over JSON-API
  *
  * @see https://www.symcon.de
- * @see http://www.tdressler.net/ipsymcon/jsonapi.html
- * @see http://www.symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
+ * @see https://www.tdressler.net/ipsymcon/jsonapi.html
+ * @see https://www.symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
  *
- * @copyright (C) Thomas Dreßler 2013-2018
- * @version V0.8 25.02.2018
+ * @copyright (C) Thomas Dreßler 2013-2024
+ * @version V0.9 28.01.2024
  *
  * @include gen_ips_wrapper.php
  */
@@ -20,7 +20,7 @@ if (!function_exists('IPS_GetKernelVersion')) {
     exit;
 }
 //default configuration
-$script_version='0.8';
+$script_version='0.9';
 $date=date('Y-m-d');
 $file="ips_wrapper.php";
 $config=dirname(__FILE__).'/IPS_JSON_config.cfg';
@@ -47,9 +47,10 @@ if (!$log) {
     exit;
 }
 
-
-$typestr = Array("boolean", "integer", "float", "string", "variant", "array");
-array_walk ($typestr, function(&$item, $key){
+// https://www.symcon.de/de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunction/
+// Variablentyp des Parameters/Rückgabewerts: 0=Boolean, 1=Integer, 2=Float, 3=String, 4=Variant, 5=Array
+$typestr = Array("bool", "int", "float", "string", "mixed", "array");
+array_walk ($typestr, function(&$item ){
     $item = str_replace("Value","",$item);
 });
 //query version
@@ -67,15 +68,15 @@ $header="
  * @brief generated ipsymcon functions wrapper using gen_ips_wrapper.php
  *
  * This wrapper helps you to execute Scripts written for IPSymcon also on other PHP boxes
- * using IPSymcon JSON API. It defines all of known functions and map this to a JSON call
+ * using IPSymcon JSON API. It defines all known functions and map this to a JSON call
  *
  * @pre All functions are located in ips_wrapper.php. You need the class file IPS_JSON.php as well.
- * @copyright Thomas Dressler 2013-2018
+ * @copyright Thomas Dressler 2013-2024
  * @version $script_version (gen_ips_wrapper.php)
  * @version $version (IPSymcon)
  * @date $date (generated)
- * @see http://www.tdressler.net/ipsymcon/jsonapi.html
- * @see http://www.ip-symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
+ * @see https://www.tdressler.net/ipsymcon/jsonapi.html
+ * @see https://www.symcon.de/service/dokumentation/befehlsreferenz/programminformationen/ips-getfunctionlist/
  *
  */
 
@@ -129,14 +130,14 @@ $url="http://".$host.":".$port."/api/";
 *
 * @var IPS_JSON $rpc
 */
-$rpc = new IPS_JSON($url,$user,$password);
+$rpc = null;
 ';
 
 //retrieve function list
 $instanceid = 0; //0 = Alle Funktionen, sonst Filter auf InstanzID
 $fs = IPS_GetFunctionList($instanceid);
 if (!$fs) {
-    echo "IPS_GetFunctionList Request failed:".$rpc->getErrorMessage();
+    echo "IPS_GetFunctionList Request failed";
     exit;
 }
 asort($fs);
@@ -150,6 +151,7 @@ foreach($fs as $fn) {
     $fun=$f['FunctionName'];
     $res=$f['Result'];
     $proto='';
+    $fproto='';
 
     //write phpdoc header
     fwrite ($log,"\n"."/**"."\n");
@@ -166,34 +168,36 @@ foreach($fs as $fn) {
             foreach($p['Enumeration'] as $k => $v) {
                 $b[] = $k."=".$v;
             }
-            $type = "integer";
+            $type = "int";
             $enum= "enum[".implode(", ", $b)."]";
         } else {
             $type = $typestr[$p['Type_']];
         }
+
         $pname=$p['Description'];
         $pname=preg_replace("/[\(\)]+/","",$pname);
+        $fproto.=$type." $".$pname.",";
         $proto.="$".$pname.",";
         fwrite ($log,"* @param ". $type. ' $'.$pname. "\n");
         if ($enum) fwrite ($log,"*   ".$enum."\n");
     }
     fwrite ($log,"*/"."\n"."\n");
     $proto=substr($proto,0,strlen($proto)-1);
+    $fproto=substr($fproto,0,strlen($fproto)-1);
 
     //write function block
-    $txt="function ".$fn."( ".$proto." ){"."\n";
+    $txt="function ".$fn."( ".$fproto." ):".$typestr[$res['Type_']]." {"."\n";
     $txt.="\t".'$rpc=$GLOBALS["rpc"];'."\n";
-    $txt.="\t".'$result=$rpc->'.$fn."( ".$proto." );"."\n";
-    $txt.="\t".'return $result;'."\n";
+    $txt.="\t".'return $rpc->'.$fn."( ".$proto." );"."\n";
     $txt.="}"."\n";
     fwrite ($log,$txt);
 }
-fwrite ($log, "?>"."\n");
+
 fflush($log);
 fclose($log);
 //control: output written file to screen
 //$all=file_get_contents($file);
 //echo $all;
 echo "finished"."\n";
-?>
+
 

@@ -10,63 +10,76 @@
 *  @version 5.1
 *  @date 2019-05-04
 */
+
 /** @class IPS_JSON
- * 
+ *
  * IPSymcon JSON API wrapper class
  * @throws Exception (disabled by default)
  *
- *  @version 4.1
- *  @date 2016-05-11
+ * @version 7.0
+ * @date 2024-01-24
  *
  *  Descriptions :
- *  @see http://www.tdressler.net/ipsymcon/jsonapi.html
- *  @see http://www.ip-symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
- *  @see http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
+ * @see https://www.tdressler.net/ipsymcon/jsonapi.html
+ * @see https://www.symcon.de/service/dokumentation/entwicklerbereich/datenaustausch/
+ * @see https://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
  *
+ * // ips methods used in this class via _call (to make ide happy)
+ * @method IPS_GetObject(int $id)
+ * @method IPS_VariableExists(int $id)
+ * @method IPS_GetVariable(int $id)
+ * @method IPS_GetVariableProfile($profilename)
+ * @method GetValue(int $id)
+ * @method IPS_ScriptExists(int $id)
+ * @method IPS_GetScript(int $id)
+ * @method IPS_RunScriptWait(int $script_id)
+ * @method IPS_GetKernelVersion()
+ * @method IPS_InstanceExists(int $id)
+ * @method IPS_GetInstance(int $id)
+ * @method FS20_SwitchMode(int $id, bool $switch)
  */
 class IPS_JSON {
-
 	/** 
 	 * URL to reach IPSymcon
 	 *
-	 * @var String $url
+	 * @var string $url
 	 */
-    private $url;
+    private string $url;
 	/**
 	 * API Username (Lizenz-Benutzername e.g. Email)
 	 * @see http://www.ip-symcon.de/service/dokumentation/komponenten/verwaltungskonsole/
 	 *
-	 * @var String $user
+	 * @var string $user
 	 * 
 	
 	 */
-	private $user;
+	private string $user;
 	/**
 	 *API Password (Fernzugriff Kennword)
 	 *
-	 *@var String $password
+	 *@var string $password
 	 */
-	private $password;
+	private string $password;
 	/**
 	 * last Error
 	 * 
-	 *	@var array of String $password
+	 *	@var array of string $password
 	 *
 	 *	$error=array('message'=>$message,'code'=>$code)
-	 *	@param String $message
-	 *	@param Integer $code
+	 *	@param string $message
+	 *	@param int $code
 	 */
-    private $error;
+    private array $error=array();
 	/**
 	 * last called method
 	 * @var String $method
 	 */
-    private $method;
+    private string $method;
 	/**
 	 * should throw an Exception in case of error
 	 * @var Boolean $exception_flag
 	 */
-	private $exception_flag;
+	private bool $exception_flag;
 	
 	/**
 	 * IPS Variable Types
@@ -75,19 +88,21 @@ class IPS_JSON {
 	 *
 	 * matches IPS Variable API type return codes to API type field names ("ValueXYZ")
 	 */
-	private $ips_vartypes=array(0=>'ValueBoolean',
-		   1=>'ValueInteger',
+	private array $ips_vartypes=array(0=>'ValueBoolean',
+		   1=>'Valueint',
 		   2=>'ValueFloat',
 		   3=>'ValueString',
 		   4=>'ValueArray',
-		   5=>'ValueVariant');
-    
+		   5=>'Valuemixed');
+
+
 	/**
 	 * return $ips_vartypes
 	 * @return array
 	 *
 	*/	   
-	public function get_ips_vartypes() {
+	public function get_ips_vartypes(): array
+    {
 		return $this->ips_vartypes;
 	}
     /**
@@ -99,7 +114,7 @@ class IPS_JSON {
 	* @param boolean $exception_flag indicates if aan exception should occur
 	* @throws Exception
 	*/
-    function __construct($url,$user,$password,$exception_flag=false) {
+    function __construct(string $url, string $user, string $password, bool $exception_flag=false) {
 		$this->exception_flag=$exception_flag;
 	//json needed, should be standard in IPS2.6 with PHP 5.4
 	if ( !function_exists('json_encode') || !function_exists('json_decode'))
@@ -116,28 +131,20 @@ class IPS_JSON {
     * retrieves last error message
     * @return string
     */
-    public function getErrorMessage() {
-	if (is_array($this->error)) {
+    public function getErrorMessage(): string
+    {
+	if (isset($this->error["message"])) {
             return $this->error["message"];
         }
 		return '';
    }
-   /**
-    * retrieves last error code
-    * @return integer
-    */
-   public function getErrorCode()
-   {
-	   if (is_array($this->error)) {
-		   return (integer)$this->error["code"];
-	   }
-	   return null;
-   }
+
    /**
     * retrieves last called method
-    * @return String
+    * @return string
     */
-   public function getMethod() {
+   public function getMethod(): string
+   {
     return $this->method;
    }
    
@@ -145,31 +152,54 @@ class IPS_JSON {
     * check if an error occured
     * @return bool
     */
-   public function isError() {
-	return is_array($this->error);
+   public function isError(): bool
+   {
+	return isset($this->error["message"]) && !empty($this->error["message"]);
    }
    
    /**
     * set error variable
     *
-    * @param String $message Error Message
-    * @param int $code Error Code
+    * @param string $message Error Message
     */
-   private function setError($message,$code) {
+   private function setError(string $message): void
+   {
 	$this->error['message'] = $message;
-	if (!is_null($code)) {
-		$this->error['code'] = (String)$code;	
-	}
    }
-    
+
+   /**
+    * retrieves name of object
+    *
+    * @param int $id IPS Object-ID
+    * @return string
+    */
+   private function get_object_name(int $id): string
+   {
+       $obj=$this->IPS_GetObject($id);
+       //print_r($obj);
+       if (!$obj) {
+           $this->setError("IPS_GetObject Request failed:".$this->getErrorMessage());
+           return '';
+       }
+       #query object detail
+       $name=$obj["ObjectName"];
+       //name should not have spaces
+       if ($name) {
+           $name=preg_replace('/\s+/','/_/',$name);
+       }else{
+           $name='Value';
+       }
+         return $name;
+   }
 	/**
 	 * retrieves IPS Variable details
 	 *
 	 * @param int $id IPS Variable-ID
-	 * @return array
+	 * @return ?array
 	 * 	Assoc Array mit Value(value), Type(type), Name(name),Last Update(last), Suffix(suffix),Digits(digits) vom Profile
 	 */ 
-	public function get_var($id) {
+	public function get_var(int $id): ?array
+    {
 	$res=$this->IPS_VariableExists($id);
 	if (is_null($res)) {
 	    $error=$this->getErrorMessage();
@@ -177,24 +207,14 @@ class IPS_JSON {
 		return null;
 	}
 	if (!$res) {
-	    $this->setError( "Variable $id doesnt exist",'-1');
+	    $this->setError( "Variable $id doesnt exist");
 		return null;
 	}
 	//print $version;
-	$obj=$this->IPS_GetObject($id);
-	//print_r($obj);
-	if (!$obj) {
-		$this->setError("IPS_GetObject Request failed:".$this->getErrorMessage());
-		return null;
-	}
-	#query object detail
-	$name=$obj["ObjectName"];
-	//name should not have spaces
-	if ($name) {
-		$name=preg_replace('/\s+/','/_/',$name);
-	}else{
-		$name='Value';
-	}
+	$name=$this->get_object_name($id);
+    if ($name== '') {
+        return null;
+    }
 	$var=$this->IPS_GetVariable($id);
 	//print_r($var);
 	if (!$var) {
@@ -205,15 +225,16 @@ class IPS_JSON {
 	//type aware value retrieving
 	$res=null;
 	$type=$var["VariableType"];
-	$typname=$this->ips_vartypes[$type];
+	// $typname=$this->ips_vartypes[$type];
 	$res=$this->GetValue($id);
 	
 	
 	//last update time
-	$last=(integer)$var["VariableUpdated"];
+	$last=(int)$var["VariableUpdated"];
 	
 	//retrieve suffix and digits from profile
 	$suffix='';
+    $digits=0;
 	$profilename=$var['VariableCustomProfile'];
 	if (!$profilename) $profilename=$var['VariableProfile'];
 	if ($profilename) {
@@ -232,10 +253,11 @@ class IPS_JSON {
 	 * get script details
 	 *
 	 * @param int $id IPS Script-ID
-	 * @return array
+	 * @return ?array
 	 * 	Assoc Array mit Last Execution Time(last), ScriptName(name), FileName(file), Broken(is_broken)
 	 */
-	public function get_script($id) {
+	public function get_script(int $id): ?array
+    {
 	$res=$this->IPS_ScriptExists($id);
 	if (is_null($res)) {
 	    $error=$this->getErrorMessage();
@@ -243,23 +265,15 @@ class IPS_JSON {
 		return null;
 	}
 	if (!$res) {
-	    $this->setError( "Script $id doesnt exist",'-1');
+	    $this->setError( "Script $id doesnt exist");
 		return null;
 	}
 	
 	#query object detail
-	$obj=$this->IPS_GetObject($id);
-	if (!$obj) {
-		$this->setError("IPS_GetObject Request failed:".$this->getErrorMessage());
-		return null;
-	}
-	$name=$obj["ObjectName"];
-	//name should not have spaces
-	if ($name) {
-		$name=preg_replace('/\s+/','/_/',$name);
-	}else{
-		$name='Value';
-	}
+	$name=$this->get_object_name($id);
+    if ($name== '') {
+        return null;
+    }
 	
 	#query script details
 	$var=$this->IPS_GetScript($id);
@@ -271,23 +285,23 @@ class IPS_JSON {
 	$last=$var['LastExecute'];
 	$file=$var['ScriptFile'];
 	$is_broken=$var['IsBroken'];
-	$data=array('last'=>$last,'name'=>$name,'file'=>$file,'is_broken'=>$is_broken);
-	return $data;
+        return array('last'=>$last,'name'=>$name,'file'=>$file,'is_broken'=>$is_broken);
+
 	}
+
    /**
     * main function (class autoloader)
     * 
-    * called if a method with a given name doesnt exist
+    * called if a method with a given name doesn't exist
     * will catch method name and translate into api call
     *
     * @param string $name method
-    * @param variant $arguments
-    * @return  variant result of called function
+    * @param mixed $arguments
+    * @return mixed|null result of called function
     * @throws Exception
     */
-   public function __call($name, $arguments) {
-   
-	$this->error=null;
+   public function __call(string $name, mixed $arguments): mixed{
+	$this->error=array();
 	$this->method=$name;
 	$rpc = Array(
          "jsonrpc" => "2.0",
@@ -296,8 +310,8 @@ class IPS_JSON {
          "id" => "null"
 	);
    
-	array_walk_recursive($rpc, function(&$item, $key){
-	    if ( is_string($item) ) $item = utf8_encode($item);
+	array_walk_recursive($rpc, function(&$item){
+	    if ( is_string($item) ) $item = mb_convert_encoding($item, 'UTF-8', 'ISO-8859-1');
 	});
 	$content=json_encode($rpc);
 	$header=array('Authorization: Basic '. base64_encode($this->user.":".$this->password),
@@ -317,9 +331,9 @@ class IPS_JSON {
 	}
 	//decoding needs assoc flag to be compatible with returned IPS arrays
 	$result = (array) json_decode($result,true);	
-	array_walk_recursive($result, function(&$item, $key){
+	array_walk_recursive($result, function(&$item){
 	    if ( is_string($item) )
-		$item = utf8_decode($item);
+		$item = mb_convert_encoding($item, 'ISO-8859-1', 'UTF-8');
 	});
 	
 	if(isset($result['error'])) {
